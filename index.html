@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ham Radio Lab – Practical Amateur Radio for Engineers & Operators</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCANLINE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .logo-svg { flex-shrink: 0; }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 5rem 2rem 4.5rem;
+    background: var(--charcoal);
+    text-align: center;
+  }
+
+  /* Grid background */
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Radial glow */
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(240,90,0,0.12), transparent 70%);
+  }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(240,90,0,0.1); border: 1px solid rgba(240,90,0,0.35);
+    color: var(--orange); padding: 5px 14px; border-radius: 2px;
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero h1 {
+    font-family: var(--head);
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--white); letter-spacing: -1px;
+    margin-bottom: 1.2rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 em { color: var(--orange); font-style: normal; }
+  .hero h1 .dim-word { color: var(--muted); }
+
+  .hero-sub {
+    font-size: 1.05rem; color: var(--dim); max-width: 560px;
+    margin: 0 auto 2rem; line-height: 1.7;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+    margin-bottom: 3rem;
+  }
+
+  .btn-primary {
+    background: var(--orange); color: #fff;
+    padding: 13px 26px; border-radius: 3px;
+    font-weight: 700; font-size: 0.92rem;
+    text-decoration: none; letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { background: var(--orange-dim); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent; color: var(--body);
+    padding: 13px 26px; border-radius: 3px;
+    font-weight: 600; font-size: 0.92rem;
+    text-decoration: none; letter-spacing: 0.5px;
+    border: 1px solid var(--border2);
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-outline:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+
+  /* Signal meter stats */
+  .hero-stats {
+    display: flex; justify-content: center; gap: 0;
+    animation: fadeUp 0.7s 0.4s ease both;
+    border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+    max-width: 600px; margin: 0 auto;
+    background: var(--panel);
+  }
+
+  .stat {
+    flex: 1; padding: 1rem 0.8rem; text-align: center;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 1.5rem; color: var(--orange);
+    display: block; line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    display: block; margin-top: 3px;
+  }
+
+  /* ─── SECTION BASE ─── */
+  section { padding: 4rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 0.7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--orange);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.6rem;
+  }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+
+  .sec-title {
+    font-family: var(--head);
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 900; color: var(--white); line-height: 1;
+    margin-bottom: 0.7rem;
+  }
+
+  .sec-sub { color: var(--muted); font-size: 0.95rem; max-width: 500px; }
+
+  /* ─── CATEGORIES ─── */
+  .cats-sec { background: var(--panel); }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px; margin-top: 2.5rem;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+
+  .cat-card {
+    background: var(--panel2); padding: 1.6rem 1.3rem;
+    text-decoration: none; display: block;
+    position: relative; overflow: hidden;
+    transition: background 0.2s;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--orange);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s;
+  }
+
+  .cat-card:hover { background: #282828; }
+  .cat-card:hover::before { transform: scaleX(1); }
+
+  .cat-emoji { font-size: 1.8rem; display: block; margin-bottom: 0.8rem; }
+  .cat-name { font-family: var(--head); font-size: 1.05rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; letter-spacing: 0.3px; }
+  .cat-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .cat-count { font-family: var(--mono); font-size: 0.68rem; color: var(--orange); margin-top: 0.7rem; }
+
+  /* ─── FEATURED POSTS ─── */
+  .posts-sec { background: var(--charcoal); }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem; margin-top: 2.5rem;
+  }
+
+  .post-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .post-card:hover { border-color: var(--orange); transform: translateY(-3px); }
+
+  .post-thumb {
+    height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; position: relative; overflow: hidden;
+  }
+
+  .thumb-a { background: linear-gradient(135deg, #1A0800, #3A1000); }
+  .thumb-b { background: linear-gradient(135deg, #001408, #002A10); }
+  .thumb-c { background: linear-gradient(135deg, #000E1A, #001C35); }
+  .thumb-d { background: linear-gradient(135deg, #0E001A, #200040); }
+
+  .tag-new {
+    color: #39D98A; font-size: 0.62rem;
+    background: rgba(57,217,138,0.1);
+    border: 1px solid rgba(57,217,138,0.3);
+    padding: 1px 5px; border-radius: 2px;
+    letter-spacing: 1px; font-style: normal;
+  }
+
+  .post-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(0,0,0,0.5), transparent 60%);
+  }
+
+  .post-body { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; }
+
+  .post-tag {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.4rem;
+  }
+
+  .post-title {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 700;
+    color: var(--white); line-height: 1.2; margin-bottom: 0.5rem;
+  }
+
+  .post-excerpt { font-size: 0.82rem; color: var(--muted); line-height: 1.55; flex: 1; }
+
+  .post-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 1rem; padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .post-meta { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); }
+  .post-arrow { color: var(--orange); font-size: 1.1rem; }
+
+  /* ─── ABOUT ─── */
+  .about-sec {
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-inner { display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+
+  .about-avatar {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.2rem; flex-shrink: 0;
+    box-shadow: 0 0 0 4px var(--panel), 0 0 0 5px var(--border2);
+  }
+
+  .about-text h3 {
+    font-family: var(--head); font-size: 1.4rem; font-weight: 900;
+    color: var(--white); margin-bottom: 0.4rem;
+  }
+
+  .callsign {
+    font-family: var(--mono); font-size: 0.8rem;
+    background: var(--panel2); border: 1px solid var(--orange);
+    color: var(--orange); padding: 2px 8px; border-radius: 2px;
+    margin-left: 8px;
+  }
+
+  .about-text p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; max-width: 600px; }
+
+  /* ─── GEAR PICKS ─── */
+  .gear-sec { background: var(--charcoal); }
+
+  .gear-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px; margin-top: 2.5rem;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+
+  .gear-card {
+    background: var(--panel); padding: 1.4rem;
+    text-decoration: none; display: block;
+    transition: background 0.2s;
+  }
+  .gear-card:hover { background: var(--panel2); }
+
+  .gear-badge {
+    font-family: var(--mono); font-size: 0.62rem;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 2px;
+    display: inline-block; margin-bottom: 0.9rem;
+  }
+
+  .badge-budget { background: rgba(57,217,138,0.1); color: var(--green); }
+  .badge-top { background: rgba(240,90,0,0.12); color: var(--orange); }
+  .badge-upgrade { background: rgba(74,158,255,0.1); color: var(--blue); }
+
+  .gear-name { font-family: var(--head); font-size: 1.1rem; font-weight: 700; color: var(--white); }
+  .gear-type { font-size: 0.75rem; color: var(--muted); margin: 2px 0 8px; }
+  .gear-price { font-family: var(--mono); font-size: 1.2rem; color: var(--orange); font-weight: 700; }
+  .gear-note { font-size: 0.78rem; color: var(--muted); margin-top: 6px; line-height: 1.4; }
+
+  /* ─── EMAIL ─── */
+  .email-sec {
+    background: var(--panel);
+    border-top: 2px solid var(--orange);
+    text-align: center;
+  }
+
+  .email-sec h2 {
+    font-family: var(--head); font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900; color: var(--white); margin-bottom: 0.5rem;
+  }
+
+  .email-sec p { color: var(--muted); margin-bottom: 1.8rem; font-size: 0.95rem; }
+
+  .email-form {
+    display: flex; gap: 0.7rem;
+    max-width: 440px; margin: 0 auto;
+    flex-wrap: wrap; justify-content: center;
+  }
+
+  .email-input {
+    flex: 1; min-width: 210px;
+    background: var(--panel2); border: 1px solid var(--border2);
+    border-radius: 3px; padding: 11px 15px;
+    color: var(--white); font-size: 0.9rem;
+    font-family: var(--body-font);
+    transition: border-color 0.2s;
+  }
+  .email-input:focus { outline: none; border-color: var(--orange); }
+  .email-input::placeholder { color: var(--muted); }
+
+  .email-btn {
+    background: var(--orange); color: #fff; border: none;
+    padding: 11px 22px; border-radius: 3px;
+    font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    font-family: var(--body-font); letter-spacing: 0.5px;
+    transition: background 0.2s;
+  }
+  .email-btn:hover { background: var(--orange-dim); }
+
+  .email-note { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); margin-top: 0.7rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 900;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .footer-logo span { color: var(--orange); }
+
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .cat-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero h1 { font-size: 2.8rem; }
+    .about-inner { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      On Air — Engineer-Written Content
+    </div>
+    <h1>Ham Radio<br><em>Built on</em> <span class="dim-word">Real</span><br><em>Engineering</em></h1>
+    <p class="hero-sub">Practical guides, honest gear reviews, and hands-on projects for operators who want to actually understand how radio works — not just pass the exam.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary">📋 Start Here: Get Licensed →</a>
+      <a href="#" class="btn-outline">🔧 Browse Projects</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">3</span>
+        <span class="stat-label">License Classes</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">50+</span>
+        <span class="stat-label">Gear Reviews</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">30+</span>
+        <span class="stat-label">Build Projects</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Engineer-Written</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="cats-sec">
+  <div class="container">
+    <div class="sec-label">Explore the Lab</div>
+    <div class="sec-title">What Do You Want to Do?</div>
+    <p class="sec-sub">Whether you're just getting licensed or building your own telemetry system, there's a guide here for you.</p>
+    <div class="cat-grid">
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">📋</span>
+        <div class="cat-name">Get Licensed</div>
+        <div class="cat-desc">Technician, General, and Extra class study guides — written to understand, not just memorize.</div>
+        <div class="cat-count">// 12 guides</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">📻</span>
+        <div class="cat-name">Gear Reviews</div>
+        <div class="cat-desc">Honest, engineer-tested reviews of handhelds, base stations, antennas, SDRs, and power supplies.</div>
+        <div class="cat-count">// 50+ reviews</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">🔧</span>
+        <div class="cat-name">Build Projects</div>
+        <div class="cat-desc">Antenna builds, telemetry systems, Raspberry Pi integrations, and electronics bench projects.</div>
+        <div class="cat-count">// 30+ projects</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">🚨</span>
+        <div class="cat-name">EmComm</div>
+        <div class="cat-desc">Emergency communications, ARES/RACES, go-kit builds, NVIS antennas, and disaster prep.</div>
+        <div class="cat-count">// 20+ guides</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-emoji">📡</span>
+        <div class="cat-name">Telemetry & APRS</div>
+        <div class="cat-desc">Remote sensing, APRS tracking, signal telemetry, and real-world data transmission applications.</div>
+        <div class="cat-count">// 15+ articles</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED POSTS -->
+<section class="posts-sec">
+  <div class="container">
+    <div class="sec-label">Latest from the Lab</div>
+    <div class="sec-title">Featured Articles</div>
+    <div class="posts-grid">
+      <a href="#" class="post-card">
+        <div class="post-thumb thumb-a">📋</div>
+        <div class="post-body">
+          <div class="post-tag">// get licensed</div>
+          <div class="post-title">Technician License Study Guide: Pass in 2 Weeks (The Engineer's Method)</div>
+          <div class="post-excerpt">Stop memorizing. Start understanding. Here's how a chemical engineer approaches the Technician exam — with actual theory comprehension baked in.</div>
+          <div class="post-foot">
+            <span class="post-meta">12 min read · Beginner</span>
+            <span class="post-arrow">→</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="post-card">
+        <div class="post-thumb thumb-b">📻</div>
+        <div class="post-body">
+          <div class="post-tag">// gear review</div>
+          <div class="post-title">Best Handheld Ham Radios in 2025: Ranked by an Actual Operator</div>
+          <div class="post-excerpt">I've tested the Baofeng UV-5R, Yaesu FT-65R, and Kenwood TH-D74A side by side. Here's what I actually recommend — and why the price difference matters.</div>
+          <div class="post-foot">
+            <span class="post-meta">15 min read · All levels</span>
+            <span class="post-arrow">→</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="post-card">
+        <div class="post-thumb thumb-c">📡</div>
+        <div class="post-body">
+          <div class="post-tag">// build project</div>
+          <div class="post-title">Build a Remote Sensor Telemetry System Using Ham Radio & APRS</div>
+          <div class="post-excerpt">How I used amateur radio to transmit real-time environmental sensor data from a remote site with no internet connection required.</div>
+          <div class="post-foot">
+            <span class="post-meta">20 min read · Intermediate</span>
+            <span class="post-arrow">→</span>
+          </div>
+        </div>
+      </a>
+      <a href="/technician-2026-question-pool" class="post-card post-card-new">
+        <div class="post-thumb thumb-d">📝</div>
+        <div class="post-body">
+          <div class="post-tag">// get licensed · <span class="tag-new">new</span></div>
+          <div class="post-title">Technician Exam: What Changed in the 2026–2030 Question Pool</div>
+          <div class="post-excerpt">26 new questions, 29 removed, 69 reworded — effective July 1, 2026. Here's exactly what's different and what you need to study.</div>
+          <div class="post-foot">
+            <span class="post-meta">8 min read · Beginner</span>
+            <span class="post-arrow">→</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-sec">
+  <div class="container">
+    <div class="about-inner">
+      <div class="about-avatar">👨‍🔬</div>
+      <div class="about-text">
+        <h3>Written by a Licensed Engineer, Not a Content Farm <span class="callsign">KF0WEW</span></h3>
+        <p>I'm a chemical engineer who works with remote sensing, process controls, and signal telemetry every day — and a recently licensed Technician based in Colorado Springs. Ham Radio Lab exists because I couldn't find a single site that explained radio the way an engineer would. So I built one. Every article here is written from hands-on experience, not SEO templates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GEAR PICKS -->
+<section class="gear-sec">
+  <div class="container">
+    <div class="sec-label">Top Gear Picks</div>
+    <div class="sec-title">Engineer-Approved Equipment</div>
+    <p class="sec-sub">Gear I've personally tested or thoroughly benchmarked. No sponsored placements — just honest recommendations.</p>
+    <div class="gear-grid">
+      <a href="#" class="gear-card">
+        <span class="gear-badge badge-budget">Best Budget</span>
+        <div class="gear-name">Baofeng UV-5R</div>
+        <div class="gear-type">Dual-Band Handheld</div>
+        <div class="gear-price">~$25</div>
+        <div class="gear-note">The best first radio for new Technicians. Cheap enough to experiment and learn without worry.</div>
+      </a>
+      <a href="#" class="gear-card">
+        <span class="gear-badge badge-top">Top Pick</span>
+        <div class="gear-name">Yaesu FT-65R</div>
+        <div class="gear-type">Dual-Band Handheld</div>
+        <div class="gear-price">~$80</div>
+        <div class="gear-note">Better build quality than Baofeng with a more reliable receiver. Great daily driver for EmComm.</div>
+      </a>
+      <a href="#" class="gear-card">
+        <span class="gear-badge badge-upgrade">Best Upgrade</span>
+        <div class="gear-name">ICOM IC-7300</div>
+        <div class="gear-type">HF Base Station</div>
+        <div class="gear-price">~$1,100</div>
+        <div class="gear-note">The gold standard for a first HF rig. The built-in SDR waterfall display is genuinely excellent.</div>
+      </a>
+      <a href="#" class="gear-card">
+        <span class="gear-badge badge-top">Best SDR</span>
+        <div class="gear-name">RTL-SDR Blog v4</div>
+        <div class="gear-type">Software Defined Radio</div>
+        <div class="gear-price">~$40</div>
+        <div class="gear-note">Essential for any technically-minded ham. Explore APRS, spectrum analysis, and signal decoding.</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL SIGNUP -->
+<section class="email-sec">
+  <div class="container">
+    <h2>Get the Free Ham Radio Quick-Start Guide</h2>
+    <p>Everything you need to go from zero to licensed — plus my top 10 gear picks for new operators. Free, always.</p>
+    <div class="email-form">
+      <input class="email-input" type="email" placeholder="your@email.com">
+      <button class="email-btn">Send It →</button>
+    </div>
+    <div class="email-note">// no spam · unsubscribe anytime · engineer-curated content only</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+      <a href="#">Sitemap</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+
+</body>
+</html>

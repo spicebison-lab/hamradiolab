@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Do I Do Next? | Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCANLINE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .logo-svg { flex-shrink: 0; }
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-links a.active { color: var(--orange); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* ─── PAGE HERO ─── */
+  .page-hero {
+    position: relative; overflow: hidden;
+    padding: 3.5rem 2rem 3rem;
+    background: var(--charcoal);
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .page-hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 50% 50%, rgba(240,90,0,0.08), transparent 70%);
+  }
+
+  .page-hero-inner {
+    position: relative; z-index: 1;
+    max-width: 680px; margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(240,90,0,0.1); border: 1px solid rgba(240,90,0,0.35);
+    color: var(--orange); padding: 5px 14px; border-radius: 2px;
+    font-family: var(--mono); font-size: 0.72rem; letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 1.2rem;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.5s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .page-hero h1 {
+    font-family: var(--head);
+    font-size: clamp(2.6rem, 6vw, 4.5rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--white); letter-spacing: -1px;
+    margin-bottom: 1rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .page-hero h1 em { color: var(--orange); font-style: normal; }
+
+  .page-hero-sub {
+    font-size: 1rem; color: var(--dim);
+    line-height: 1.7; margin: 0 auto;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* ─── TOOL SECTION ─── */
+  .tool-sec {
+    padding: 3rem 2rem 5rem;
+    background: var(--charcoal);
+  }
+
+  .container { max-width: 720px; margin: 0 auto; }
+
+  /* ─── PROGRESS ─── */
+  .progress-wrap {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--muted); margin-bottom: 6px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .progress-track {
+    height: 3px; background: var(--border2);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--green));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+
+  /* ─── STEP CARD ─── */
+  .step-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem 2rem 2rem;
+    position: relative;
+    animation: fadeUp 0.45s ease both;
+  }
+
+  .step-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--orange), transparent 60%);
+  }
+
+  .step-number {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--orange); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+
+  .step-question {
+    font-family: var(--head);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    font-weight: 900; color: var(--white);
+    line-height: 1.1; margin-bottom: 1.5rem;
+    text-transform: uppercase; letter-spacing: -0.3px;
+  }
+
+  /* ─── OPTION BUTTONS ─── */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-btn {
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    padding: 14px 18px;
+    cursor: pointer; text-align: left;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    display: flex; align-items: center; gap: 14px;
+    color: var(--body);
+    font-family: var(--body-font);
+    font-size: 0.92rem;
+    position: relative; overflow: hidden;
+  }
+
+  .option-btn:hover {
+    border-color: var(--orange);
+    background: #282828;
+    transform: translateX(3px);
+    color: var(--white);
+  }
+
+  .option-icon { font-size: 1.4rem; flex-shrink: 0; width: 28px; text-align: center; }
+
+  .option-text strong {
+    display: block; font-weight: 600; color: var(--white);
+    font-size: 0.92rem; margin-bottom: 1px;
+  }
+
+  .option-text small {
+    color: var(--muted); font-size: 0.78rem;
+  }
+
+  /* ─── RESULTS ─── */
+  .results { animation: fadeUp 0.5s ease both; }
+
+  .results-header {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px 4px 0 0;
+    padding: 1.8rem 2rem;
+    border-bottom: none;
+    position: relative;
+  }
+
+  .results-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--green), var(--orange), transparent 70%);
+  }
+
+  .results-tag {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--green); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+
+  .results-title {
+    font-family: var(--head);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 900; color: var(--white);
+    text-transform: uppercase; letter-spacing: -0.3px;
+    line-height: 1.05;
+  }
+
+  .results-sub {
+    margin-top: 6px; color: var(--muted);
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  /* ─── ACTION LIST ─── */
+  .action-list {
+    list-style: none;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden;
+  }
+
+  .action-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 1.2rem 1.6rem;
+    border-bottom: 1px solid var(--border);
+    animation: fadeLeft 0.4s ease both;
+    transition: background 0.2s;
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-item:hover { background: var(--panel2); }
+
+  .action-num {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--orange); min-width: 22px; padding-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .action-body strong {
+    display: block; font-size: 0.92rem;
+    font-weight: 600; color: var(--white); margin-bottom: 3px;
+  }
+
+  .action-body p {
+    font-size: 0.82rem; color: var(--muted);
+    line-height: 1.55; font-weight: 400;
+  }
+
+  .action-body a {
+    color: var(--orange); text-decoration: none;
+    border-bottom: 1px solid rgba(240,90,0,0.3);
+    transition: border-color 0.2s;
+  }
+  .action-body a:hover { border-color: var(--orange); }
+
+  .action-tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 0.62rem;
+    padding: 2px 7px; border-radius: 2px;
+    margin-top: 6px; letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tag-easy    { background: rgba(57,217,138,0.08); color: var(--green); border: 1px solid rgba(57,217,138,0.2); }
+  .tag-gear    { background: rgba(74,158,255,0.08); color: var(--blue);  border: 1px solid rgba(74,158,255,0.2); }
+  .tag-social  { background: rgba(240,90,0,0.1);    color: var(--orange); border: 1px solid rgba(240,90,0,0.25); }
+  .tag-learn   { background: rgba(180,100,255,0.08); color: #c084fc;      border: 1px solid rgba(180,100,255,0.2); }
+
+  /* ─── RESTART ─── */
+  .restart-wrap { margin-top: 1.5rem; text-align: center; }
+
+  .restart-btn {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+    font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 2px; padding: 9px 22px;
+    cursor: pointer; text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s;
+    border-radius: 3px;
+  }
+  .restart-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 900;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .footer-logo span { color: var(--orange); }
+
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  /* ─── UTILS ─── */
+  .hidden { display: none; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .step-card { padding: 1.4rem; }
+    .results-header { padding: 1.4rem; }
+    .action-item { padding: 1rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      Interactive Tool — No Login Required
+    </div>
+    <h1>What Do I Do <em>Next?</em></h1>
+    <p class="page-hero-sub">Answer 3 quick questions and get a personalized action plan — built for operators who just got licensed and aren't sure where to start.</p>
+  </div>
+</div>
+
+<!-- TOOL -->
+<section class="tool-sec">
+  <div class="container">
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progressLabel">QUESTION 1 OF 3</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- Step 1: License Level -->
+    <div class="step-card" id="step1">
+      <div class="step-number">// STEP 01 — LICENSE</div>
+      <div class="step-question">What's Your License Level?</div>
+      <div class="options">
+        <button class="option-btn" onclick="answer('license', 'tech')">
+          <span class="option-icon">📡</span>
+          <div class="option-text">
+            <strong>Technician</strong>
+            <small>Just got licensed — or haven't used it much yet</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('license', 'general')">
+          <span class="option-icon">🌐</span>
+          <div class="option-text">
+            <strong>General</strong>
+            <small>I've upgraded and have HF privileges</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('license', 'extra')">
+          <span class="option-icon">⭐</span>
+          <div class="option-text">
+            <strong>Amateur Extra</strong>
+            <small>Full privileges — still want more direction</small>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Antenna Situation -->
+    <div class="step-card hidden" id="step2">
+      <div class="step-number">// STEP 02 — YOUR SETUP</div>
+      <div class="step-question">What's Your Antenna Situation?</div>
+      <div class="options">
+        <button class="option-btn" onclick="answer('situation', 'house')">
+          <span class="option-icon">🏠</span>
+          <div class="option-text">
+            <strong>House with a yard</strong>
+            <small>I can put up a real antenna outside</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('situation', 'hoa')">
+          <span class="option-icon">🏘️</span>
+          <div class="option-text">
+            <strong>HOA / Deed restrictions</strong>
+            <small>I have a yard but antennas are restricted</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('situation', 'apartment')">
+          <span class="option-icon">🏢</span>
+          <div class="option-text">
+            <strong>Apartment / condo</strong>
+            <small>Limited to indoor or balcony antennas</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('situation', 'mobile')">
+          <span class="option-icon">🚗</span>
+          <div class="option-text">
+            <strong>Mainly mobile / portable</strong>
+            <small>I operate from my car or out in the field</small>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Interest -->
+    <div class="step-card hidden" id="step3">
+      <div class="step-number">// STEP 03 — YOUR GOAL</div>
+      <div class="step-question">What Sounds Most Interesting?</div>
+      <div class="options">
+        <button class="option-btn" onclick="answer('interest', 'local')">
+          <span class="option-icon">🗣️</span>
+          <div class="option-text">
+            <strong>Talking to local people</strong>
+            <small>Repeaters, nets, club involvement</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('interest', 'dx')">
+          <span class="option-icon">🌍</span>
+          <div class="option-text">
+            <strong>Long-distance contacts (DX)</strong>
+            <small>Reaching other states or countries</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('interest', 'digital')">
+          <span class="option-icon">💻</span>
+          <div class="option-text">
+            <strong>Digital modes</strong>
+            <small>FT8, APRS, Winlink — computer meets radio</small>
+          </div>
+        </button>
+        <button class="option-btn" onclick="answer('interest', 'emcomm')">
+          <span class="option-icon">🚨</span>
+          <div class="option-text">
+            <strong>Emergency communications</strong>
+            <small>ARES, RACES, serving my community</small>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results hidden" id="results">
+      <div class="results-header">
+        <div class="results-tag">▶ Your Plan — Ready to Transmit</div>
+        <div class="results-title" id="resultsTitle">Your Next Steps</div>
+        <div class="results-sub" id="resultsSub"></div>
+      </div>
+      <ul class="action-list" id="actionList"></ul>
+      <div class="restart-wrap">
+        <button class="restart-btn" onclick="restart()">↺ &nbsp;Start Over</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="technician-license-study-guide.html">Get Licensed</a>
+      <a href="best-handheld-ham-radios.html">Gear Reviews</a>
+      <a href="antenna-calculator.html">Antenna Calculator</a>
+      <a href="aprs-coverage-estimator.html">APRS Estimator</a>
+      <a href="coax-loss-calculator.html">Coax Loss Calc</a>
+      <a href="what-is-aprs.html">What is APRS?</a>
+      <a href="#">Affiliate Disclosure</a>
+      <a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com · KF0WEW</div>
+  </div>
+</footer>
+
+<script>
+  const answers = {};
+
+  function answer(key, value) {
+    answers[key] = value;
+    if (key === 'license')   showStep('step2', 1);
+    else if (key === 'situation') showStep('step3', 2);
+    else if (key === 'interest')  showResults();
+  }
+
+  function showStep(id, num) {
+    document.querySelectorAll('.step-card').forEach(el => el.classList.add('hidden'));
+    const el = document.getElementById(id);
+    el.classList.remove('hidden');
+    el.style.animation = 'none';
+    requestAnimationFrame(() => { el.style.animation = ''; });
+    updateProgress(num, 3);
+  }
+
+  function updateProgress(current, total) {
+    const pct = Math.round((current / total) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = `QUESTION ${current + 1} OF ${total}`;
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  function showResults() {
+    document.querySelectorAll('.step-card').forEach(el => el.classList.add('hidden'));
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'PLAN READY';
+    document.getElementById('progressPct').textContent = '100%';
+
+    const plan = buildPlan();
+    document.getElementById('resultsTitle').textContent = plan.title;
+    document.getElementById('resultsSub').textContent = plan.sub;
+
+    const list = document.getElementById('actionList');
+    list.innerHTML = '';
+    plan.actions.forEach((action, i) => {
+      const li = document.createElement('li');
+      li.className = 'action-item';
+      li.style.animationDelay = (i * 0.07) + 's';
+      li.innerHTML = `
+        <div class="action-num">0${i + 1}</div>
+        <div class="action-body">
+          <strong>${action.title}</strong>
+          <p>${action.desc}</p>
+          <span class="action-tag ${action.tag.cls}">${action.tag.label}</span>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+
+    document.getElementById('results').classList.remove('hidden');
+    window.scrollTo({ top: document.getElementById('results').offsetTop - 80, behavior: 'smooth' });
+  }
+
+  function buildPlan() {
+    const { license, situation, interest } = answers;
+
+    const interestActions = {
+      local: [
+        { title: "Find Your Local Repeaters", desc: "Go to <a href='https://www.repeaterbook.com' target='_blank'>RepeaterBook.com</a>, enter your ZIP code, and save the top 2–3 active repeaters into your radio. This is your front door to local activity.", tag: { cls: 'tag-easy', label: 'Do This Today' } },
+        { title: "Listen Before You Transmit", desc: "Monitor a repeater for a few days. You'll learn the local etiquette, who the regulars are, and the right time to key up. There's no rush to transmit.", tag: { cls: 'tag-easy', label: 'Quick Win' } },
+        { title: "Check Into a Weekly Net", desc: "Most repeaters host a weekly net — a structured check-in where you just say your callsign. It's the easiest first transmission you can make. Find nets at <a href='https://www.arrl.org/find-an-amateur-radio-net' target='_blank'>ARRL.org</a>.", tag: { cls: 'tag-social', label: 'Community' } },
+        { title: "Ask Your Club About Their Repeater", desc: "Your monthly club almost certainly has a linked repeater. Ask someone which frequency they monitor — that's an instant warm introduction to people who already know you exist.", tag: { cls: 'tag-social', label: 'Use What You Have' } },
+        { title: "Make Your First Direct Call", desc: "After a net, try calling the net control station directly. Something simple: 'This is [CALLSIGN], just wanted to say thanks for running the net.' First contact done.", tag: { cls: 'tag-social', label: 'Milestone' } },
+      ],
+      dx: [
+        { title: "Understand Propagation Basics", desc: "Long-distance contacts depend on the ionosphere. Learn to read <a href='https://www.hamqsl.com/solar.html' target='_blank'>solar propagation data</a> — specifically the Solar Flux Index (SFI). Higher = better HF conditions.", tag: { cls: 'tag-learn', label: 'Foundation' } },
+        { title: "Upgrade to General If You Haven't", desc: "Technicians have very limited HF access. The General exam opens 80m, 40m, 20m, and 15m — the core DX bands. It's the single highest-leverage upgrade you can make.", tag: { cls: 'tag-learn', label: 'Next Step' } },
+        { title: "Create a QRZ.com Profile", desc: "Go to <a href='https://www.qrz.com' target='_blank'>QRZ.com</a> and fill out your profile. Every DX operator will look you up when they log your call. A complete profile gets more callbacks.", tag: { cls: 'tag-easy', label: 'Do This Today' } },
+        { title: "Watch DX Clusters for Live Spots", desc: "A DX cluster shows live spots of rare or distant stations being worked right now. Check <a href='https://www.dxsummit.fi' target='_blank'>DXSummit.fi</a> — when you see one spotted, tune to that frequency and listen.", tag: { cls: 'tag-gear', label: 'Tool' } },
+        { title: "Try FT8 for Easy DX", desc: "FT8 is a digital weak-signal mode — perfect for smaller antennas. Many Technicians make DX contacts on FT8 before upgrading. Download <a href='https://physics.princeton.edu/pulsar/k1jt/wsjtx.html' target='_blank'>WSJT-X</a> and give it a try.", tag: { cls: 'tag-gear', label: 'Popular Tool' } },
+      ],
+      digital: [
+        { title: "Start With FT8 — It's Built for Beginners", desc: "FT8 handles the exchange automatically. Download <a href='https://physics.princeton.edu/pulsar/k1jt/wsjtx.html' target='_blank'>WSJT-X</a> (free), connect your radio's audio to your computer, and you can be making contacts within an afternoon.", tag: { cls: 'tag-easy', label: 'Best First Step' } },
+        { title: "Set Up APRS Tracking", desc: "APRS lets you broadcast your GPS position over the air. Many handhelds support it natively. Track yourself and others live at <a href='https://aprs.fi' target='_blank'>aprs.fi</a>.", tag: { cls: 'tag-gear', label: 'Cool Project' } },
+        { title: "Explore Winlink Email Over Radio", desc: "Winlink lets you send and receive email over radio — no internet required. This is hugely valuable for emergency comms too. Start at <a href='https://winlink.org' target='_blank'>Winlink.org</a>.", tag: { cls: 'tag-learn', label: 'Practical' } },
+        { title: "Join the Digital Modes Community", desc: "The <a href='https://www.reddit.com/r/amateurradio/' target='_blank'>r/amateurradio</a> subreddit has active digital mode threads. Ask what modes people in your area are running — that's where to start.", tag: { cls: 'tag-social', label: 'Community' } },
+        { title: "Figure Out Your Interface Cable", desc: "The key to digital modes is connecting your radio's audio to your computer correctly (audio in, audio out, PTT). Search your radio model + 'digital modes interface' — many modern rigs have built-in USB.", tag: { cls: 'tag-gear', label: 'Setup' } },
+      ],
+      emcomm: [
+        { title: "Find Your Local ARES Group", desc: "ARES (Amateur Radio Emergency Service) is the ARRL's volunteer emergency network. Find your local group at <a href='https://www.arrl.org/ares' target='_blank'>ARRL.org/ares</a> and send a quick intro email.", tag: { cls: 'tag-social', label: 'Do This First' } },
+        { title: "Take IS-100 and IS-700 Online (Free)", desc: "These FEMA ICS courses are required by most EmComm groups and take about 2 hours total. Complete them at <a href='https://training.fema.gov' target='_blank'>training.fema.gov</a> — you'll have certificates before your next club meeting.", tag: { cls: 'tag-easy', label: 'Quick Win' } },
+        { title: "Learn Net Procedures", desc: "EmComm runs on structured nets. Practice formal net check-in language now — 'This is [CALLSIGN], check-in, no traffic.' Your local ARES net is the best place to drill this.", tag: { cls: 'tag-learn', label: 'Foundation' } },
+        { title: "Build a Basic Go-Bag", desc: "A minimal EmComm go-bag: charged handheld, spare batteries, wire for an emergency antenna, and a paper copy of local frequencies. Build a simple one now so you're ready.", tag: { cls: 'tag-gear', label: 'Prep' } },
+        { title: "Ask Your Club About RACES", desc: "RACES (Radio Amateur Civil Emergency Service) works directly with your county emergency manager. Your club likely has a RACES coordinator — introduce yourself at the next meeting.", tag: { cls: 'tag-social', label: 'Local Contact' } },
+      ]
+    };
+
+    const antennaTips = {
+      house:     { title: "Put Up a Simple Dipole or J-Pole", desc: "A wire dipole cut to frequency is cheap, effective, and can be strung between trees. For VHF/UHF, a j-pole for $20–30 will dramatically outperform any rubber duck antenna on your handheld.", tag: { cls: 'tag-gear', label: 'Upgrade' } },
+      hoa:       { title: "Know Your HOA Antenna Options", desc: "Stealth antennas, attic-mounted antennas, and flagpole verticals are all legal and surprisingly effective. The FCC's PRB-1 ruling requires HOAs to grant a 'reasonable accommodation' — worth knowing before you assume you're stuck.", tag: { cls: 'tag-gear', label: 'HOA Legal Tip' } },
+      apartment: { title: "Try an Indoor or Balcony Antenna", desc: "Magnetic loop antennas work well indoors and are HOA/apartment-friendly. For VHF/UHF, a small yagi on a balcony can reach repeaters 30–50 miles away. Don't let your housing situation stop you.", tag: { cls: 'tag-gear', label: 'Apartment Friendly' } },
+      mobile:    { title: "Optimize Your Mobile Antenna Mount", desc: "The best mobile antenna is properly grounded to your vehicle. An NMO mount through the roof is ideal. Avoid relying on magnetic mounts long-term — they limit your signal and can scratch paint.", tag: { cls: 'tag-gear', label: 'Mobile Tip' } },
+    };
+
+    const actions = [...interestActions[interest]];
+    actions.splice(2, 0, antennaTips[situation]);
+    const finalActions = actions.slice(0, 6);
+
+    const titles = {
+      local:   "Your Local Ham Radio Path",
+      dx:      "Your DX & Long-Distance Path",
+      digital: "Your Digital Modes Path",
+      emcomm:  "Your EmComm Path",
+    };
+
+    const licenseLabel = { tech: 'Technician', general: 'General', extra: 'Extra' }[license];
+    const situationLabel = { house: 'Home station', hoa: 'HOA situation', apartment: 'Apartment setup', mobile: 'Mobile operation' }[situation];
+    const interestLabel = { local: 'Local & repeaters', dx: 'DX contacts', digital: 'Digital modes', emcomm: 'Emergency comms' }[interest];
+
+    return {
+      title: titles[interest],
+      sub: `${licenseLabel} · ${situationLabel} · ${interestLabel}`,
+      actions: finalActions,
+    };
+  }
+
+  function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    document.getElementById('results').classList.add('hidden');
+    document.querySelectorAll('.step-card').forEach(el => el.classList.add('hidden'));
+    document.getElementById('step1').classList.remove('hidden');
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('progressLabel').textContent = 'QUESTION 1 OF 3';
+    document.getElementById('progressPct').textContent = '0%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

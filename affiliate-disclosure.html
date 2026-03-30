@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Affiliate Disclosure – Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* PAGE HEADER */
+  .page-header {
+    position: relative; overflow: hidden;
+    padding: 3.5rem 2rem 3rem;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .page-header::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.08), transparent 70%);
+  }
+
+  .page-header-inner {
+    position: relative; z-index: 1;
+    max-width: 800px; margin: 0 auto;
+  }
+
+  .page-label {
+    font-family: var(--mono);
+    font-size: 0.7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--orange);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.8rem;
+  }
+
+  .page-label::before {
+    content: '//';
+    opacity: 0.5;
+  }
+
+  .page-header h1 {
+    font-family: var(--head);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1;
+    color: var(--white); letter-spacing: -0.5px;
+    margin-bottom: 0.7rem;
+  }
+
+  .page-header h1 em { color: var(--orange); font-style: normal; }
+
+  .page-header p {
+    color: var(--dim); font-size: 0.95rem;
+    max-width: 520px; line-height: 1.65;
+  }
+
+  .updated-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--muted); margin-top: 1rem;
+    background: var(--panel); border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 2px;
+  }
+
+  /* CONTENT */
+  .content-wrap {
+    max-width: 800px; margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* SUMMARY BOX */
+  .summary-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 4px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .summary-box .summary-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.6rem;
+  }
+
+  .summary-box p {
+    color: var(--body); font-size: 0.95rem; line-height: 1.7;
+  }
+
+  /* SECTION */
+  .doc-section {
+    margin-bottom: 2.8rem;
+    padding-bottom: 2.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .doc-section h2 {
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--white); margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .doc-section h2 .sec-num {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--orange); background: var(--orange-glow);
+    border: 1px solid rgba(240,90,0,0.3);
+    padding: 2px 7px; border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .doc-section p {
+    color: var(--body); font-size: 0.95rem;
+    line-height: 1.75; margin-bottom: 1rem;
+  }
+
+  .doc-section p:last-child { margin-bottom: 0; }
+
+  .doc-section ul {
+    list-style: none; margin: 0.8rem 0 1rem;
+  }
+
+  .doc-section ul li {
+    color: var(--body); font-size: 0.93rem;
+    line-height: 1.65; padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-section ul li:last-child { border-bottom: none; }
+
+  .doc-section ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--orange); font-size: 0.8rem;
+  }
+
+  /* PROGRAM CARDS */
+  .program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px; margin: 1.2rem 0;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+
+  .program-card {
+    background: var(--panel2); padding: 1.2rem;
+  }
+
+  .program-name {
+    font-family: var(--head); font-size: 1rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.3rem;
+  }
+
+  .program-type {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--orange); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+
+  .program-desc {
+    font-size: 0.8rem; color: var(--muted); line-height: 1.5;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: rgba(240,90,0,0.06);
+    border: 1px solid rgba(240,90,0,0.2);
+    border-radius: 4px; padding: 1.2rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+
+  .callout p {
+    color: var(--body); font-size: 0.9rem;
+    margin: 0; line-height: 1.65;
+  }
+
+  .callout strong { color: var(--orange); }
+
+  /* CONTACT */
+  .contact-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.4rem 1.6rem;
+    margin-top: 1rem;
+  }
+
+  .contact-block p {
+    color: var(--muted); font-size: 0.88rem; margin: 0;
+  }
+
+  .contact-block a {
+    color: var(--orange); text-decoration: none;
+    font-family: var(--mono); font-size: 0.85rem;
+  }
+  .contact-block a:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 900;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .footer-logo span { color: var(--orange); }
+
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">Legal &amp; Transparency</div>
+    <h1>Affiliate <em>Disclosure</em></h1>
+    <p>Ham Radio Lab is reader-supported. This page explains exactly how affiliate links work on this site and what that means for you.</p>
+    <div class="updated-tag">
+      <span>// Last updated:</span>
+      <span>March 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="summary-box">
+    <div class="summary-label">// TL;DR — Plain English Summary</div>
+    <p>Some links on this site are affiliate links. If you click one and buy something, I may earn a small commission — at no extra cost to you. I only link to gear I'd actually recommend. My opinions are always my own and are never influenced by whether a commission is involved.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">01</span> What Is an Affiliate Link?</h2>
+    <p>An affiliate link is a regular product link with a tracking code attached. When you click it and make a purchase, the retailer pays me a small referral commission. The price you pay is identical — affiliates are paid by the retailer, not by you.</p>
+    <p>This is a standard, FTC-recognized way for content creators to earn income without charging readers directly. Ham Radio Lab uses affiliate links to help cover hosting, equipment testing, and the time spent writing guides.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">02</span> Which Programs Does This Site Use?</h2>
+    <p>Ham Radio Lab participates in the following affiliate programs:</p>
+    <div class="program-grid">
+      <div class="program-card">
+        <div class="program-name">Amazon Associates</div>
+        <div class="program-type">// retail</div>
+        <div class="program-desc">Amazon.com product links for radios, antennas, accessories, and tools referenced in reviews and guides.</div>
+      </div>
+      <div class="program-card">
+        <div class="program-name">Ham Radio Outlet</div>
+        <div class="program-type">// specialty retailer</div>
+        <div class="program-desc">Direct retailer links to HRO for ham-specific gear when relevant to a review or recommendation.</div>
+      </div>
+      <div class="program-card">
+        <div class="program-name">Other Retailers</div>
+        <div class="program-type">// as applicable</div>
+        <div class="program-desc">Additional programs may be added over time. This page will be updated whenever a new program is joined.</div>
+      </div>
+    </div>
+    <p>Links to sites I am not affiliated with — such as FCC.gov, RepeaterBook.com, or ARRL.org — are included purely for your reference and generate no income for this site.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">03</span> How It Affects My Reviews</h2>
+    <p>Bluntly: it doesn't — or it shouldn't, and I work hard to make sure it doesn't. Here's how I keep it honest:</p>
+    <ul>
+      <li>I only link to products I would genuinely recommend to a new ham or a friend</li>
+      <li>Negative aspects of gear are called out in reviews regardless of affiliate status</li>
+      <li>I never accept payment, free products, or sponsorships in exchange for positive coverage</li>
+      <li>Whether or not an affiliate program exists for a product has no bearing on whether I recommend it</li>
+      <li>If I think a cheaper or better product exists than the one with an affiliate link, I'll say so</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Example:</strong> The Baofeng UV-5R earns almost nothing in commission due to its low price. I still recommend it as a first radio because it's genuinely useful for that purpose — not because of any financial incentive.</p>
+    </div>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">04</span> FTC Compliance</h2>
+    <p>This disclosure is made in accordance with the U.S. Federal Trade Commission's guidelines on endorsements and testimonials (16 CFR Part 255). The FTC requires that material connections between a content creator and a brand or retailer be clearly disclosed.</p>
+    <p>Affiliate links on this site are identified where practical. This page serves as a site-wide disclosure that applies to all content on HamRadioLab.com.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">05</span> Amazon Associates Specific Notice</h2>
+    <p>Ham Radio Lab is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com.</p>
+    <p>Amazon and the Amazon logo are trademarks of Amazon.com, Inc. or its affiliates.</p>
+  </div>
+
+  <div class="doc-section">
+    <h2><span class="sec-num">06</span> Questions?</h2>
+    <p>If you have any questions about this disclosure or how affiliate links work on this site, feel free to reach out.</p>
+    <div class="contact-block">
+      <p>You can contact me at: <a href="mailto:contact@hamradiolab.com">contact@hamradiolab.com</a><br>
+      or via the contact page on this site. I'm happy to clarify anything here.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="/technician-license-study-guide">Get Licensed</a>
+      <a href="/best-handheld-ham-radios">Gear Reviews</a>
+      <a href="/antenna-calculator">Antenna Calculator</a>
+      <a href="/what-is-aprs">What is APRS?</a>
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com · KF0WEW</div>
+  </div>
+</footer>
+
+</body>
+</html>

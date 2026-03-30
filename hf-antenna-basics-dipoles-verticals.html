@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HF Antenna Basics: Dipoles, Verticals, and Beyond - Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif; --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+  #nav-placeholder { position: sticky; top: 0; z-index: 500; }
+  .article-header { position: relative; overflow: hidden; padding: 4rem 2rem 3rem; background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .article-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+  .article-header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.07), transparent 70%); }
+  .article-header-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .article-tag { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
+  .article-tag::before { content: ''; width: 20px; height: 1px; background: var(--orange); }
+  .article-title { font-family: var(--head); font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1; color: var(--white); letter-spacing: -0.5px; margin-bottom: 1.2rem; }
+  .article-title em { color: var(--orange); font-style: normal; }
+  .article-deck { font-size: 1.05rem; color: var(--dim); line-height: 1.7; max-width: 640px; margin-bottom: 1.8rem; }
+  .article-meta-bar { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1rem 1.2rem; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+  .article-layout { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1fr 280px; gap: 3rem; align-items: start; }
+  .article-body h2 { font-family: var(--head); font-size: 1.7rem; font-weight: 900; color: var(--white); line-height: 1.1; margin: 2.5rem 0 0.8rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .article-body h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+  .article-body h3 { font-family: var(--head); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 1.8rem 0 0.5rem; }
+  .article-body p { color: var(--body); font-size: 0.97rem; line-height: 1.75; margin-bottom: 1.1rem; }
+  .article-body a { color: var(--orange); text-decoration: none; border-bottom: 1px solid rgba(240,90,0,0.3); transition: border-color 0.2s; }
+  .article-body a:hover { border-color: var(--orange); }
+  .article-body strong { color: var(--white); font-weight: 600; }
+  .callout { border-left: 3px solid var(--orange); background: var(--panel); padding: 1rem 1.2rem; border-radius: 0 4px 4px 0; margin: 1.5rem 0; }
+  .callout-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; }
+  .callout p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0; }
+  .stat-highlight { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 1.8rem 0; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .stat-box { background: var(--panel); padding: 1.2rem 1rem; text-align: center; }
+  .stat-box .num { font-family: var(--mono); font-size: 1.6rem; color: var(--orange); display: block; line-height: 1; }
+  .stat-box .lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-top: 4px; }
+  .sidebar { position: sticky; top: 80px; }
+  .sidebar-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sidebar-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.7rem 1rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .sidebar-card-body { padding: 1rem; }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 0.5rem; }
+  .toc-list a { color: var(--muted); text-decoration: none; font-size: 0.82rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 6px; transition: color 0.2s; }
+  .toc-list a::before { content: '//'; font-family: var(--mono); font-size: 0.65rem; color: var(--border2); flex-shrink: 0; margin-top: 2px; }
+  .toc-list a:hover { color: var(--orange); }
+  .sidebar-author { display: flex; gap: 12px; align-items: flex-start; }
+  .sidebar-avatar { font-size: 1.5rem; background: var(--panel2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px; border: 1px solid var(--border); }
+  .sidebar-author-name { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--white); }
+  .sidebar-author-bio { font-size: 0.75rem; color: var(--muted); line-height: 1.4; margin: 4px 0; }
+  .callsign-badge { display: inline-block; font-family: var(--mono); font-size: 0.65rem; color: var(--orange); background: var(--orange-glow); padding: 2px 6px; border-radius: 2px; border: 1px solid rgba(240,90,0,0.3); }
+  footer { background: var(--panel); border-top: 1px solid var(--border2); padding: 3rem 2rem; text-align: center; margin-top: 5rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); text-decoration: none; }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .footer-links a { color: var(--dim); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; }
+  @media (max-width: 900px) { .article-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html").then(r => r.text()).then(d => document.getElementById("nav-placeholder").innerHTML = d);
+</script>
+
+<header class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="/index.html">Home</a> <span class="breadcrumb-sep">/</span> <span>Articles</span>
+    </div>
+    <div class="article-tag">Lab Report</div>
+    <h1 class="article-title">HF Antenna Basics: Dipoles, Verticals, and Beyond</h1>
+    <div class="article-meta-bar">
+      <div class="meta-item"><span class="meta-dot"></span> 10 MIN READ</div>
+      <div class="meta-item"><span class="meta-dot"></span> UPDATED MAR 2026</div>
+    </div>
+  </div>
+</header>
+
+<div class="article-layout">
+  <article class="article-body">
+    <p>The antenna is the most important part of your ham radio station. It's the interface between your radio and the ionosphere, and its performance will determine how well you can hear and be heard. For HF (High Frequency) operation, there are many different types of antennas to choose from, each with its own advantages and disadvantages. This guide will introduce you to the basics of HF antennas.</p>
+
+  <h2>What is an HF Antenna?</h2>
+  <p>An HF antenna is designed to operate on the HF bands (3-30 MHz). These bands are used for long-distance (DX) communication, as radio waves can be reflected by the ionosphere back to Earth. HF antennas come in many different shapes and sizes, from simple wire dipoles to complex beam antennas.</p>
+
+  <h2>Common HF Antenna Types</h2>
+  <p>Here are some of the most common and effective HF antenna types:</p>
+  <ul>
+    <li>**Dipole Antenna:** A simple and effective antenna consisting of two equal-length wires. It's easy to build and deploy and is a great choice for beginners.</li>
+    <li>**Vertical Antenna:** A quarter-wave vertical antenna with a good ground radial system. It's a great choice for DX communication and has a small horizontal footprint.</li>
+    <li>**Beam Antenna (Yagi):** A directional antenna that focuses your signal in a specific direction. It offers high gain and is a great choice for serious DXers.</li>
+    <li>**End-Fed Half-Wave (EFHW) Antenna:** A popular wire antenna that's easy to deploy and can be used on multiple bands. It only requires one support point.</li>
+    <li>**Magnetic Loop Antenna:** A compact and efficient antenna that's perfect for small spaces and has low noise characteristics.</li>
+  </ul>
+
+  <h2>Choosing the Right HF Antenna</h2>
+  <p>When choosing an HF antenna, consider these factors:</p>
+  <ul>
+    <li>**Space:** How much space do you have for an antenna?</li>
+    <li>**Bands:** Which HF bands do you want to operate on?</li>
+    <li>**Performance:** What kind of performance are you looking for?</li>
+    <li>**Budget:** How much are you willing to spend on an antenna?</li>
+    <li>**Ease of Installation:** How easy is the antenna to install and maintain?</li>
+  </ul>
+
+  <h2>Why You Should Be Excited</h2>
+  <p>HF antennas are a fantastic way to improve your radio skills, learn about antenna theory and propagation, and build useful tools for your shack. Whether you're a seasoned operator or a newcomer, the world of HF antennas offers endless opportunities for exploration and discovery. So, grab some wire and start building!</p>
+  </article>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">In This Article</div>
+      <div class="sidebar-card-body">
+        <ul class="toc-list">
+          <li><a href="#">What is an HF Antenna?</a></li><li><a href="#">Common HF Antenna Types</a></li><li><a href="#">Choosing the Right HF Antenna</a></li><li><a href="#">Why You Should Be Excited</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">About the Author</div>
+      <div class="sidebar-card-body">
+        <div class="sidebar-author">
+          <div class="sidebar-avatar">👨‍🔬</div>
+          <div>
+            <div class="sidebar-author-name">Ham Radio Lab</div>
+            <div class="sidebar-author-bio">Chemical engineer. Process controls & SCADA. Recently licensed operator based in Colorado Springs.</div>
+            <div class="callsign-badge">KF0WEW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/index.html" class="footer-logo">Ham Radio<span>Lab</span>.com</a>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="/affiliate-disclosure.html">Affiliate Disclosure</a>
+      <a href="/privacy-policy.html">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+</body>
+</html>

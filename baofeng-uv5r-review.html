@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="CQOLBnTTIn3LsiW_gXBNtatt4Er_wrr58Tn5beri_Vk" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E1W7F87HNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1W7F87HNN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baofeng UV-5R Review (2026): Good for the Price, But Know Its Limits – Ham Radio Lab</title>
+<meta name="description" content="An honest Baofeng UV-5R review from a newly licensed ham radio operator. Good for the price with real limitations — here's what you need to know before buying.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif; --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+  nav { position: sticky; top: 0; z-index: 500; background: rgba(14,14,14,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--head); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: var(--white); }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a { color: var(--dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; border-radius: 3px; transition: color 0.2s, background 0.2s; }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-cta { background: var(--orange); color: #fff; padding: 7px 16px; border-radius: 3px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+  .article-header { position: relative; overflow: hidden; padding: 4rem 2rem 3rem; background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .article-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+  .article-header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.07), transparent 70%); }
+  .article-header-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border2); }
+  .article-tag { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
+  .article-tag::before { content: ''; width: 20px; height: 1px; background: var(--orange); }
+  .article-title { font-family: var(--head); font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1; color: var(--white); letter-spacing: -0.5px; margin-bottom: 1.2rem; }
+  .article-title em { color: var(--orange); font-style: normal; }
+  .article-deck { font-size: 1.05rem; color: var(--dim); line-height: 1.7; max-width: 640px; margin-bottom: 1.8rem; }
+  .article-meta-bar { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1rem 1.2rem; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+  .article-layout { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1fr 280px; gap: 3rem; align-items: start; }
+  .article-body h2 { font-family: var(--head); font-size: 1.7rem; font-weight: 900; color: var(--white); line-height: 1.1; margin: 2.5rem 0 0.8rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .article-body h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+  .article-body h3 { font-family: var(--head); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 1.8rem 0 0.5rem; }
+  .article-body p { color: var(--body); font-size: 0.97rem; line-height: 1.75; margin-bottom: 1.1rem; }
+  .article-body a { color: var(--orange); text-decoration: none; border-bottom: 1px solid rgba(240,90,0,0.3); transition: border-color 0.2s; }
+  .article-body a:hover { border-color: var(--orange); }
+  .article-body strong { color: var(--white); font-weight: 600; }
+  .callout { border-left: 3px solid var(--orange); background: var(--panel); padding: 1rem 1.2rem; border-radius: 0 4px 4px 0; margin: 1.5rem 0; }
+  .callout-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; }
+  .callout p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0; }
+  .callout.green { border-left-color: var(--green); }
+  .callout.green .callout-label { color: var(--green); }
+
+  /* Score card */
+  .score-card { background: var(--panel); border: 1px solid var(--border); border-top: 3px solid var(--orange); border-radius: 4px; padding: 1.5rem; margin: 1.5rem 0; }
+  .score-card-title { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 1rem; }
+  .score-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.7rem; }
+  .score-label { font-size: 0.82rem; color: var(--dim); width: 130px; flex-shrink: 0; }
+  .score-bar-bg { flex: 1; height: 6px; background: var(--border2); border-radius: 3px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 3px; background: var(--orange); }
+  .score-bar.good { background: var(--green); }
+  .score-bar.mid { background: var(--orange); }
+  .score-bar.low { background: var(--muted); }
+  .score-val { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; }
+
+  /* Verdict box */
+  .verdict { background: var(--panel2); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem 1.4rem; margin: 1.5rem 0; display: flex; gap: 1rem; align-items: flex-start; }
+  .verdict-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .verdict-title { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); margin-bottom: 0.3rem; }
+  .verdict-text { font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+  .pros, .cons { background: var(--panel2); border-radius: 3px; padding: 0.8rem; }
+  .pros-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 0.5rem; }
+  .cons-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+  .pros ul, .cons ul { list-style: none; }
+  .pros ul li, .cons ul li { font-size: 0.82rem; color: var(--dim); line-height: 1.5; margin-bottom: 0.3rem; padding-left: 12px; position: relative; }
+  .pros ul li::before { content: '+'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .cons ul li::before { content: '–'; position: absolute; left: 0; color: var(--muted); font-weight: 700; }
+
+  .article-cta { background: var(--panel); border: 1px solid var(--border); border-top: 2px solid var(--orange); border-radius: 4px; padding: 1.8rem; margin: 2.5rem 0; text-align: center; }
+  .article-cta h3 { font-family: var(--head); font-size: 1.5rem; font-weight: 900; color: var(--white); margin-bottom: 0.4rem; }
+  .article-cta p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .cta-form { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+  .cta-input { flex: 1; min-width: 200px; background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 10px 14px; color: var(--white); font-size: 0.88rem; font-family: var(--body-font); }
+  .cta-input:focus { outline: none; border-color: var(--orange); }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-btn { background: var(--orange); color: #fff; border: none; padding: 10px 20px; border-radius: 3px; font-weight: 700; font-size: 0.88rem; cursor: pointer; font-family: var(--body-font); transition: background 0.2s; }
+  .cta-btn:hover { background: var(--orange-dim); }
+  .sidebar { position: sticky; top: 80px; }
+  .sidebar-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sidebar-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.7rem 1rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .sidebar-card-body { padding: 1rem; }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 0.5rem; }
+  .toc-list a { color: var(--muted); text-decoration: none; font-size: 0.82rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 6px; transition: color 0.2s; }
+  .toc-list a::before { content: '//'; font-family: var(--mono); font-size: 0.65rem; color: var(--border2); flex-shrink: 0; margin-top: 2px; }
+  .toc-list a:hover { color: var(--orange); }
+  .sidebar-author { display: flex; gap: 0.8rem; align-items: center; }
+  .sidebar-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-dim)); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .sidebar-author-name { font-family: var(--head); font-size: 0.95rem; font-weight: 700; color: var(--white); }
+  .sidebar-author-bio { font-size: 0.75rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .callsign-badge { font-family: var(--mono); font-size: 0.65rem; background: var(--panel2); border: 1px solid var(--orange); color: var(--orange); padding: 1px 6px; border-radius: 2px; display: inline-block; margin-top: 4px; }
+  footer { background: #0E0E0E; border-top: 1px solid var(--border); padding: 2rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+  @media (max-width: 768px) { .nav-links { display: none; } .article-layout { grid-template-columns: 1fr; } .sidebar { position: static; } .pros-cons { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="#">Gear Reviews</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>Baofeng UV-5R Review</span>
+    </div>
+    <div class="article-tag">Gear Review</div>
+    <h1 class="article-title">Baofeng UV-5R Review:<br><em>Good for the Price,</em> But Know Its Limits</h1>
+    <p class="article-deck">The Baofeng UV-5R is the most popular starter ham radio in the world. At $25 it's hard to argue with — but it has real limitations that matter more as you get serious about the hobby. This is a research-based assessment drawing on operator consensus — I'll update it with firsthand experience once I've put one on the air.</p>
+    <div class="article-meta-bar">
+      <span class="meta-item"><span class="meta-dot"></span> KF0WEW</span>
+      <span class="meta-item"><span class="meta-dot"></span> 8 min read</span>
+      <span class="meta-item"><span class="meta-dot"></span> Beginner</span>
+      <span class="meta-item"><span class="meta-dot"></span> Updated 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="article-layout">
+  <article class="article-body">
+
+    <h2>The Short Version</h2>
+    <p>The Baofeng UV-5R is a functional dual-band handheld radio that does everything a new Technician needs to do — hit local repeaters, receive weather radio, make contacts on 2m and 70cm — for about $25. The receiver is mediocre, the build quality is basic, and the manual programming is a nightmare. But at that price, none of that matters much for a first radio.</p>
+    <p>Buy it, learn on it, and upgrade when you've outgrown it. That's the honest recommendation.</p>
+
+    <div class="score-card">
+      <div class="score-card-title">// Research-Based Scores (Community Consensus)</div>
+      <div class="score-row">
+        <div class="score-label">Value for Money</div>
+        <div class="score-bar-bg"><div class="score-bar good" style="width:95%"></div></div>
+        <div class="score-val">9.5</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Receiver Quality</div>
+        <div class="score-bar-bg"><div class="score-bar low" style="width:50%"></div></div>
+        <div class="score-val">5.0</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Build Quality</div>
+        <div class="score-bar-bg"><div class="score-bar mid" style="width:55%"></div></div>
+        <div class="score-val">5.5</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Ease of Use</div>
+        <div class="score-bar-bg"><div class="score-bar mid" style="width:45%"></div></div>
+        <div class="score-val">4.5</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Audio Quality</div>
+        <div class="score-bar-bg"><div class="score-bar mid" style="width:55%"></div></div>
+        <div class="score-val">5.5</div>
+      </div>
+      <div class="score-row" style="margin-bottom:0">
+        <div class="score-label">Overall</div>
+        <div class="score-bar-bg"><div class="score-bar mid" style="width:72%"></div></div>
+        <div class="score-val" style="color:var(--orange)">7.2</div>
+      </div>
+    </div>
+
+    <h2>What You Get for $25</h2>
+    <p>Coverage of 2m (136–174 MHz) and 70cm (400–520 MHz) — the two bands that matter most for a Technician licensee. 5 watts on high power, 1 watt on low. A removable 1800 mAh battery that charges via a desktop cradle. A basic LCD display showing frequency and a few status indicators. A built-in FM broadcast receiver. And a flashlight, for some reason.</p>
+    <p>The radio ships with a stock rubber duck antenna that is genuinely poor. The first upgrade almost every UV-5R owner makes is swapping it for a <strong>Nagoya NA-771</strong> (~$10) — a longer dual-band whip that makes a noticeable difference in both receive sensitivity and transmitted range. Budget for this when you order the radio.</p>
+    <p>Programming manually through the front panel keypad is one of the most frustrating experiences in consumer electronics. The menu system is unintuitive and the manual reads like it was translated from Chinese by someone who doesn't use radios. The solution is simple: download <strong>CHIRP</strong> (free software), buy a $10 programming cable, and program your repeaters from your computer in 20 minutes instead of fighting the keypad for two hours.</p>
+
+    <div class="callout">
+      <div class="callout-label">// The Complete Starter Kit</div>
+      <p>Baofeng UV-5R (~$25) + Nagoya NA-771 antenna (~$10) + CHIRP programming cable (~$10) = $45 total. That's your complete first radio setup. Everything else is optional.</p>
+    </div>
+
+    <h2>The Receiver — Where It Falls Short</h2>
+    <p>This is the most technically significant limitation of the UV-5R and it's worth understanding what it actually means in practice. The receiver in the UV-5R has poor selectivity — it doesn't do a great job of rejecting signals that are close in frequency to what you're trying to receive. Near a strong signal source (a busy repeater site, a dense urban RF environment), you'll notice desensitization, intermodulation products, and generally more noise than a better radio would exhibit.</p>
+    <p>For most new Technicians in most situations, this doesn't matter. You're listening to one local repeater at a time, not trying to pull weak signals out of a crowded band. But if you start doing EmComm work, operating from a busy repeater site, or trying to receive weaker stations, the receiver limitations become noticeable very quickly.</p>
+    <p>This is the main engineering reason to eventually upgrade to something like the Yaesu FT-65R — the receiver hardware is simply better, and operators who've made that switch consistently report the difference is noticeable in real-world conditions.</p>
+
+    <h2>FCC Compliance — The Conversation You'll See Online</h2>
+    <p>You'll encounter strong opinions about Baofeng radios and FCC compliance in online ham radio communities. Here's the factual situation: older Baofeng UV-5R variants had documented issues with spurious emissions that exceeded FCC Part 97 limits. Baofeng has updated the design multiple times and current production versions are generally within spec for amateur radio use under Part 97.</p>
+    <p>The important thing to understand is that as a licensed amateur radio operator, you're operating under FCC Part 97 — the amateur service rules — not Part 15 (unlicensed) or Part 90 (commercial). Using a Baofeng UV-5R on licensed amateur frequencies with a valid license is legal. Using it on commercial or public safety frequencies would not be, regardless of the radio's compliance status.</p>
+    <p>Don't let the online debates about this discourage you from buying one as a first radio. Licensed amateur operation on the appropriate bands is exactly what the radio is designed for.</p>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <div class="pros-label">// What Works</div>
+        <ul>
+          <li>Extraordinary value at $25</li>
+          <li>Covers both main Tech bands</li>
+          <li>Works with CHIRP software</li>
+          <li>Large community of users</li>
+          <li>Tons of tutorials available</li>
+          <li>Affordable enough to experiment</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <div class="cons-label">// What Doesn't</div>
+        <ul>
+          <li>Poor receiver selectivity</li>
+          <li>Manual programming is painful</li>
+          <li>Stock antenna needs replacing</li>
+          <li>Basic build quality</li>
+          <li>Mediocre audio on TX and RX</li>
+          <li>Not ideal for EmComm use</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Who Should Buy It</h2>
+
+    <div class="verdict">
+      <div class="verdict-icon">✅</div>
+      <div>
+        <div class="verdict-title">Buy It If...</div>
+        <div class="verdict-text">You just passed your Technician exam and want to get on the air as cheaply as possible. You want to experiment with programming, repeaters, and basic operation without worrying about damaging an expensive radio. You're not sure yet how serious you'll get about the hobby. You want a backup radio that costs less than a nice dinner.</div>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="verdict-icon">⚠️</div>
+      <div>
+        <div class="verdict-title">Consider the Yaesu FT-65R Instead If...</div>
+        <div class="verdict-text">You're already committed to EmComm, ARES, or regular club participation. You want a radio that will last for years without feeling the need to upgrade. You're operating in a dense RF environment where receiver quality actually matters. You can spend $80 without it being a stretch.</div>
+      </div>
+    </div>
+
+    <h2>The Bottom Line</h2>
+    <p>Based on extensive research and the overwhelming consensus of the operator community, the Baofeng UV-5R is exactly what it is: a $25 radio that does $25-radio things. It will get you on the air, teach you how amateur radio works, and survive the learning curve of being a new operator. The limitations are real and they'll matter more as you advance — but they don't matter much for where you're starting.</p>
+    <p>The community consensus is clear: get it, use CHIRP to program it, replace the antenna, make your first contacts. Then in six months to a year, when you know what you actually want from a handheld radio, upgrade with actual operating experience behind your decision.</p>
+    <p>That's a better approach than spending $80 or $500 on a radio before you know enough to use it properly. I'm following this exact path myself — and I'll update this review with firsthand impressions once the radio is in my hands.</p>
+
+    <div class="callout green">
+      <div class="callout-label">// Where to Buy</div>
+      <p>Amazon is the easiest option — search "Baofeng UV-5R" and look for the current version. Avoid counterfeit listings by buying from sellers with substantial review counts. Budget stores like BuyTwoway and BaofengTech also sell genuine units directly. Total with the Nagoya antenna and programming cable: about $45.</p>
+    </div>
+
+    <div class="article-cta">
+      <h3>Get the Free Ham Radio Quick-Start Guide</h3>
+      <p>Everything you need to go from zero to licensed — plus my top gear picks for new operators.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="your@email.com">
+        <button class="cta-btn">Send It →</button>
+      </div>
+    </div>
+
+  </article>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">In This Article</div>
+      <div class="sidebar-card-body">
+        <ul class="toc-list">
+          <li><a href="#">The Short Version</a></li>
+          <li><a href="#">What You Get for $25</a></li>
+          <li><a href="#">The Receiver Limitations</a></li>
+          <li><a href="#">FCC Compliance</a></li>
+          <li><a href="#">Who Should Buy It</a></li>
+          <li><a href="#">The Bottom Line</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">Reviewed Radio</div>
+      <div class="sidebar-card-body">
+        <div style="padding:0.8rem; border:1px solid var(--border); border-radius:3px; margin-bottom:0.7rem;">
+          <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:0.3rem;">Best Budget</div>
+          <div style="font-family:var(--head); font-size:0.95rem; font-weight:700; color:var(--white);">Baofeng UV-5R</div>
+          <div style="font-family:var(--mono); font-size:0.85rem; color:var(--orange);">~$25</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px; line-height:1.4;">Add Nagoya NA-771 antenna + CHIRP cable. Total: ~$45.</div>
+        </div>
+        <div style="padding:0.8rem; border:1px solid var(--border); border-radius:3px;">
+          <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:1px; text-transform:uppercase; color:var(--orange); margin-bottom:0.3rem;">Next Step Up</div>
+          <div style="font-family:var(--head); font-size:0.95rem; font-weight:700; color:var(--white);">Yaesu FT-65R</div>
+          <div style="font-family:var(--mono); font-size:0.85rem; color:var(--orange);">~$80</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px; line-height:1.4;">Better receiver and build. The natural upgrade path.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">About the Author</div>
+      <div class="sidebar-card-body">
+        <div class="sidebar-author">
+          <div class="sidebar-avatar">👨‍🔬</div>
+          <div>
+            <div class="sidebar-author-name">Ham Radio Lab</div>
+            <div class="sidebar-author-bio">Chemical engineer. Process controls & SCADA. Recently licensed operator based in Colorado Springs.</div>
+            <div class="callsign-badge">KF0WEW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a><a href="#">Sitemap</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+</body>
+</html>

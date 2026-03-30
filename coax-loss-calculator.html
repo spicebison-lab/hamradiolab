@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coax Loss Calculator – Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+:root {
+  --orange: #F05A00;
+  --orange-dim: #C24500;
+  --orange-glow: rgba(240,90,0,0.18);
+  --charcoal: #141414;
+  --panel: #1C1C1C;
+  --panel2: #222;
+  --border: #2A2A2A;
+  --border2: #333;
+  --muted: #666;
+  --dim: #999;
+  --body: #C8C0B0;
+  --white: #F5EFE0;
+  --green: #39D98A;
+  --green-dim: rgba(57,217,138,0.1);
+  --blue: #4A9EFF;
+  --blue-dim: rgba(74,158,255,0.1);
+  --red: #FF5A5A;
+  --red-dim: rgba(255,90,90,0.1);
+  --mono: 'Share Tech Mono', monospace;
+  --head: 'Barlow Condensed', sans-serif;
+  --body-font: 'Barlow', sans-serif;
+}
+ 
+html { scroll-behavior: smooth; }
+ 
+body {
+  font-family: var(--body-font);
+  background: var(--charcoal);
+  color: var(--body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+ 
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+}
+ 
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 500;
+  background: rgba(14,14,14,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border2);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+ 
+nav::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+}
+ 
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  font-family: var(--head);
+  font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+  color: var(--white);
+}
+ 
+.logo span { color: var(--orange); }
+ 
+.nav-links {
+  display: flex; gap: 0.2rem; list-style: none;
+}
+ 
+.nav-links a {
+  color: var(--dim); text-decoration: none;
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 6px 12px; border-radius: 3px;
+  transition: color 0.2s, background 0.2s;
+}
+ 
+.nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+ 
+.nav-cta {
+  background: var(--orange); color: #fff;
+  padding: 7px 16px; border-radius: 3px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+ 
+/* PAGE HEADER */
+.page-header {
+  position: relative; overflow: hidden;
+  padding: 3.5rem 2rem 3rem;
+  background: var(--charcoal);
+}
+ 
+.page-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+ 
+.page-header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 30% 50%, rgba(240,90,0,0.1), transparent 70%);
+}
+ 
+.page-header-inner {
+  position: relative; z-index: 1;
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem;
+}
+ 
+.breadcrumb {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--muted); margin-bottom: 0.7rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.breadcrumb a { color: var(--orange); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+ 
+.page-title-block h1 {
+  font-family: var(--head);
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 900; color: var(--white);
+  line-height: 0.95; letter-spacing: -0.5px;
+  margin-bottom: 0.6rem;
+}
+ 
+.page-title-block h1 em { color: var(--orange); font-style: normal; }
+ 
+.page-title-block p {
+  color: var(--dim); font-size: 0.95rem; max-width: 480px;
+}
+ 
+.accuracy-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(57,217,138,0.08); border: 1px solid rgba(57,217,138,0.25);
+  color: var(--green); padding: 8px 14px; border-radius: 3px;
+  font-family: var(--mono); font-size: 0.68rem; letter-spacing: 1.5px;
+  text-transform: uppercase; white-space: nowrap; align-self: flex-start;
+  margin-top: 0.5rem;
+}
+ 
+.badge-dot-green {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease infinite;
+}
+ 
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+ 
+/* MAIN LAYOUT */
+.calc-section {
+  padding: 2.5rem 2rem 4rem;
+  background: var(--charcoal);
+}
+ 
+.calc-container {
+  max-width: 1100px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+ 
+/* PANEL BASE */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden;
+}
+ 
+.panel-header {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+ 
+.panel-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--orange);
+}
+ 
+.panel-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange); flex-shrink: 0;
+}
+ 
+.panel-body { padding: 1.4rem; }
+ 
+/* INPUTS */
+.form-group { margin-bottom: 1.3rem; }
+.form-group:last-child { margin-bottom: 0; }
+ 
+label {
+  display: block;
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--dim); text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 0.4rem;
+}
+ 
+.label-hint {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); font-weight: 400;
+  text-transform: none; letter-spacing: 0;
+  margin-left: 6px;
+}
+ 
+select, input[type="number"] {
+  width: 100%;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  padding: 10px 12px;
+  color: var(--white);
+  font-family: var(--body-font);
+  font-size: 0.9rem;
+  appearance: none;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+ 
+select:focus, input[type="number"]:focus {
+  outline: none;
+  border-color: var(--orange);
+  background: #282828;
+}
+ 
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+ 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { opacity: 0.4; }
+ 
+.input-row {
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 0;
+}
+ 
+.input-row input {
+  border-right: none;
+  border-radius: 3px 0 0 3px;
+}
+ 
+.unit-select {
+  background: var(--border);
+  border: 1px solid var(--border2);
+  border-left: 1px solid var(--border);
+  border-radius: 0 3px 3px 0;
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-color: var(--border);
+  padding-right: 28px;
+}
+ 
+.unit-select:focus { outline: none; border-color: var(--orange); color: var(--white); }
+ 
+.coax-details {
+  margin-top: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  display: none;
+}
+ 
+.coax-details.visible { display: block; }
+ 
+.coax-detail-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+ 
+.coax-detail-item { text-align: center; }
+.coax-detail-val {
+  font-family: var(--mono); font-size: 0.82rem;
+  color: var(--orange); display: block;
+}
+.coax-detail-lbl {
+  font-size: 0.62rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+ 
+.calc-btn {
+  width: 100%;
+  background: var(--orange); color: #fff;
+  border: none; border-radius: 3px;
+  padding: 13px;
+  font-family: var(--head); font-weight: 700;
+  font-size: 1.1rem; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 1.4rem;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+ 
+.calc-btn:hover { background: var(--orange-dim); transform: translateY(-1px); }
+.calc-btn:active { transform: translateY(0); }
+ 
+.reset-btn {
+  width: 100%;
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border2); border-radius: 3px;
+  padding: 9px;
+  font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 1px; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  margin-top: 0.6rem;
+}
+ 
+.reset-btn:hover { border-color: var(--dim); color: var(--dim); }
+ 
+/* RESULTS PANEL */
+.results-panel { position: sticky; top: 76px; }
+ 
+.result-state-empty {
+  padding: 3rem 1.4rem;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+ 
+.empty-icon {
+  width: 56px; height: 56px;
+  border: 1.5px solid var(--border2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+ 
+.result-state-empty p {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); line-height: 1.7;
+  max-width: 220px;
+}
+ 
+.result-state-active { display: none; }
+ 
+/* Loss display */
+.loss-hero {
+  padding: 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+ 
+.loss-metric {
+  background: var(--panel);
+  padding: 1.2rem;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+ 
+.loss-metric::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+ 
+.loss-metric.db::before { background: var(--orange); }
+.loss-metric.pwr::before { background: var(--blue); }
+ 
+.loss-val {
+  font-family: var(--mono);
+  font-size: 2.4rem; font-weight: 700;
+  display: block; line-height: 1;
+}
+ 
+.loss-val.db { color: var(--orange); }
+.loss-val.pwr { color: var(--blue); }
+ 
+.loss-unit {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 1.5px; display: block;
+  margin-top: 3px;
+}
+ 
+.loss-label {
+  font-size: 0.72rem; color: var(--dim);
+  margin-top: 0.4rem; display: block;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+ 
+/* Power flow bar */
+.power-bar-section {
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.power-bar-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 0.7rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+ 
+.power-bar-track {
+  height: 10px; background: var(--border2);
+  border-radius: 2px; overflow: hidden; position: relative;
+}
+ 
+.power-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--green), var(--blue));
+  border-radius: 2px; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+ 
+.power-bar-loss {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  background: rgba(255,90,90,0.25);
+  border-radius: 0 2px 2px 0;
+}
+ 
+.bar-legend {
+  display: flex; gap: 1rem; margin-top: 0.5rem;
+  font-family: var(--mono); font-size: 0.62rem; color: var(--muted);
+}
+.bar-legend span { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 1px; }
+ 
+/* SWR additional loss */
+.swr-breakdown {
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+}
+ 
+.breakdown-title {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 0.9rem;
+}
+ 
+.breakdown-rows { display: flex; flex-direction: column; gap: 0.5rem; }
+ 
+.breakdown-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  background: var(--panel2); border-radius: 3px;
+  font-size: 0.82rem;
+}
+ 
+.breakdown-key { color: var(--dim); }
+.breakdown-val { font-family: var(--mono); font-size: 0.82rem; }
+.breakdown-val.orange { color: var(--orange); }
+.breakdown-val.blue { color: var(--blue); }
+.breakdown-val.red { color: var(--red); }
+.breakdown-val.green { color: var(--green); }
+ 
+/* Signal quality meter */
+.quality-section {
+  padding: 1.2rem 1.4rem;
+}
+ 
+.quality-title {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 0.9rem;
+}
+ 
+.quality-meter {
+  display: flex; gap: 3px;
+}
+ 
+.quality-bar {
+  flex: 1; height: 32px; border-radius: 2px;
+  background: var(--border2); position: relative;
+  overflow: hidden; transition: background 0.4s;
+}
+ 
+.quality-bar.lit-green { background: var(--green); }
+.quality-bar.lit-orange { background: var(--orange); }
+.quality-bar.lit-red { background: var(--red); }
+ 
+.quality-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+  margin-top: 0.4rem; text-align: center;
+}
+ 
+.quality-text {
+  font-family: var(--head); font-size: 1.1rem;
+  font-weight: 700; margin-top: 0.6rem;
+  letter-spacing: 0.5px;
+}
+ 
+/* COAX REFERENCE TABLE */
+.ref-section {
+  margin-top: 1.5rem;
+  max-width: 1100px; margin-left: auto; margin-right: auto;
+}
+ 
+.ref-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden;
+}
+ 
+.ref-header {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+ 
+.ref-header-left { display: flex; align-items: center; gap: 10px; }
+ 
+.ref-toggle {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--orange); background: var(--orange-glow);
+  border: 1px solid rgba(240,90,0,0.2);
+  padding: 4px 12px; border-radius: 2px; cursor: pointer;
+  transition: background 0.2s;
+}
+.ref-toggle:hover { background: rgba(240,90,0,0.25); }
+ 
+.ref-table-wrap { overflow-x: auto; display: none; }
+.ref-table-wrap.open { display: block; }
+ 
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.8rem;
+}
+ 
+thead th {
+  font-family: var(--mono); font-size: 0.62rem;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 1px;
+  text-align: left; padding: 0.6rem 1rem;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+ 
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--panel2); }
+ 
+td {
+  padding: 0.6rem 1rem; color: var(--dim);
+  font-family: var(--mono); font-size: 0.78rem;
+  white-space: nowrap;
+}
+ 
+td:first-child { color: var(--orange); font-weight: 700; }
+td:nth-child(2) { color: var(--body); font-family: var(--body-font); }
+ 
+.td-good { color: var(--green) !important; }
+.td-mid { color: var(--orange) !important; }
+.td-bad { color: var(--red) !important; }
+ 
+/* FORMULA NOTE */
+.formula-note {
+  margin-top: 1.5rem;
+  max-width: 1100px; margin-left: auto; margin-right: auto;
+  padding: 1rem 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  flex-wrap: wrap;
+}
+ 
+.formula-icon {
+  font-family: var(--mono); font-size: 1.2rem; color: var(--orange);
+  flex-shrink: 0; line-height: 1.4;
+}
+ 
+.formula-text { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+.formula-text strong { color: var(--dim); font-weight: 600; }
+.formula-eq {
+  font-family: var(--mono); font-size: 0.78rem;
+  color: var(--body);
+  background: var(--panel2); padding: 2px 8px; border-radius: 2px;
+  display: inline-block; margin: 2px 0;
+}
+ 
+/* RESPONSIVE */
+@media (max-width: 820px) {
+  .calc-container { grid-template-columns: 1fr; }
+  .results-panel { position: static; }
+  .nav-links { display: none; }
+  .page-header-inner { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+ 
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+ 
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-title-block">
+      <div class="breadcrumb">
+        <a href="#">Tools</a>
+        <span>›</span>
+        <span>Coax Loss Calculator</span>
+      </div>
+      <h1>Coax <em>Loss</em><br>Calculator</h1>
+      <p>Calculate dB signal loss and power loss through coaxial cable — accounting for cable type, run length, frequency, and SWR mismatch.</p>
+    </div>
+    <div class="accuracy-badge">
+      <span class="badge-dot-green"></span>
+      ITU-T Standards · Matched Attenuation Data
+    </div>
+  </div>
+</div>
+ 
+<!-- CALCULATOR -->
+<section class="calc-section">
+  <div class="calc-container">
+ 
+    <!-- INPUTS -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-dot"></span>
+        <span class="panel-label">// input parameters</span>
+      </div>
+      <div class="panel-body">
+ 
+        <div class="form-group">
+          <label>Coax Type <span class="label-hint">// select cable</span></label>
+          <select id="coaxType" onchange="updateCoaxDetails()">
+            <optgroup label="RG Series (Generic)">
+              <option value="RG-174">RG-174 — Micro 50Ω</option>
+              <option value="RG-316">RG-316 — Teflon Micro 50Ω</option>
+              <option value="RG-58">RG-58 — Thin 50Ω</option>
+              <option value="RG-8X">RG-8X — Mini 8 / Super 8</option>
+              <option value="RG-8">RG-8 — Standard 50Ω</option>
+              <option value="RG-213">RG-213 — High Power 50Ω</option>
+              <option value="RG-6">RG-6 — 75Ω CATV</option>
+              <option value="RG-11">RG-11 — 75Ω Low Loss</option>
+              <option value="RG-59">RG-59 — 75Ω Standard</option>
+              <option value="RG-62A">RG-62A — 93Ω</option>
+            </optgroup>
+            <optgroup label="Belden">
+              <option value="B8215">Belden 8215 — RG-6A 75Ω</option>
+              <option value="B8237">Belden 8237 — RG-8A 50Ω</option>
+              <option value="B9913">Belden 9913 — RG-8 Low Loss 50Ω</option>
+              <option value="B9258">Belden 9258 — RG-8X 50Ω</option>
+              <option value="B8213">Belden 8213 — RG-11 75Ω</option>
+              <option value="B8261">Belden 8261 — RG-11A 75Ω</option>
+              <option value="B8240">Belden 8240 — RG-58 50Ω</option>
+              <option value="B9201">Belden 9201 — RG-58 50Ω</option>
+              <option value="B8219">Belden 8219 — RG-58A 50Ω</option>
+              <option value="B8259">Belden 8259 — RG-58C 50Ω</option>
+              <option value="B8212">Belden 8212 — RG-59 75Ω</option>
+              <option value="B8263">Belden 8263 — RG-59B 75Ω</option>
+              <option value="B9269">Belden 9269 — RG-62A 93Ω</option>
+              <option value="B8216">Belden 8216 — RG-174 50Ω</option>
+              <option value="B8267">Belden 8267 — RG-213 50Ω</option>
+              <option value="B9086">Belden 9086 — 75Ω Foam</option>
+            </optgroup>
+            <optgroup label="Times Microwave LMR">
+              <option value="LMR-100A">LMR-100A — RG-174 size</option>
+              <option value="LMR-200" selected>LMR-200 — RG-58 size</option>
+              <option value="LMR-240">LMR-240 — RG-8X size</option>
+              <option value="LMR-400">LMR-400 — RG-8 size</option>
+              <option value="LMR-600">LMR-600 — 0.59″</option>
+              <option value="LMR-900">LMR-900 — 0.87″</option>
+              <option value="LMR-1200">LMR-1200 — Minimum Loss</option>
+            </optgroup>
+            <optgroup label="CommScope / Andrew Heliax">
+              <option value="LDF4-50A">Heliax LDF4-50A — ½″</option>
+              <option value="LDF5-50A">Heliax LDF5-50A — ⅞″</option>
+              <option value="LDF6-50">Heliax LDF6-50 — 1¼″</option>
+            </optgroup>
+            <optgroup label="Wireman CQ Coax">
+              <option value="CQ102">Wireman CQ102 — RG-8</option>
+              <option value="CQ106">Wireman CQ106 — RG-8</option>
+              <option value="CQ125">Wireman CQ125 — RG-58</option>
+              <option value="CQ127">Wireman CQ127 — RG-58C</option>
+              <option value="CQ110">Wireman CQ110 — RG-213</option>
+            </optgroup>
+            <optgroup label="Davis RF">
+              <option value="BURY-FLEX">Davis RF Bury-Flex — 50Ω Direct Burial</option>
+            </optgroup>
+            <optgroup label="Wireman Window Line (ladder line)">
+              <option value="WLL551">Wireman 551 — #18 solid 450Ω (dry)</option>
+              <option value="WLL552">Wireman 552 — #16 stranded 450Ω (dry)</option>
+              <option value="WLL553">Wireman 553 — #18 stranded 450Ω (dry)</option>
+              <option value="WLL554">Wireman 554 — #14 stranded 450Ω (dry)</option>
+              <option value="WLL551W">Wireman 551 — #18 solid (wet/ice)</option>
+              <option value="WLL552W">Wireman 552 — #16 stranded (wet/ice)</option>
+              <option value="WLL553W">Wireman 553 — #18 stranded (wet/ice)</option>
+              <option value="WLL554W">Wireman 554 — #14 stranded (wet/ice)</option>
+            </optgroup>
+            <optgroup label="Open Wire / Ladder Line">
+              <option value="TWIN300">Generic 300Ω Tubular Twin-Lead</option>
+              <option value="LADDER450">Generic 450Ω Window Line</option>
+              <option value="OPEN600">Generic 600Ω Open Wire</option>
+            </optgroup>
+            <optgroup label="Ideal (Reference)">
+              <option value="IDEAL50">Ideal Lossless 50Ω</option>
+              <option value="IDEAL75">Ideal Lossless 75Ω</option>
+            </optgroup>
+          </select>
+ 
+          <div class="coax-details visible" id="coaxDetails">
+            <div class="coax-detail-grid">
+              <div class="coax-detail-item">
+                <span class="coax-detail-val" id="detailImpedance">50Ω</span>
+                <span class="coax-detail-lbl">Impedance</span>
+              </div>
+              <div class="coax-detail-item">
+                <span class="coax-detail-val" id="detailVF">0.83</span>
+                <span class="coax-detail-lbl">Vel. Factor</span>
+              </div>
+              <div class="coax-detail-item">
+                <span class="coax-detail-val" id="detailCap">26 pF/ft</span>
+                <span class="coax-detail-lbl">Capacitance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label>Cable Length <span class="label-hint">// physical run</span></label>
+          <div class="input-row">
+            <input type="number" id="cableLength" value="50" min="1" max="10000" step="1">
+            <select class="unit-select" id="lengthUnit">
+              <option value="ft">ft</option>
+              <option value="m">m</option>
+            </select>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label>Frequency <span class="label-hint">// operating freq</span></label>
+          <div class="input-row">
+            <input type="number" id="frequency" value="146" min="0.1" max="10000" step="0.1">
+            <select class="unit-select" id="freqUnit">
+              <option value="MHz" selected>MHz</option>
+              <option value="GHz">GHz</option>
+            </select>
+          </div>
+        </div>
+ 
+        <div class="form-group">
+          <label>SWR <span class="label-hint">// standing wave ratio</span></label>
+          <input type="number" id="swr" value="1.5" min="1" max="10" step="0.1">
+        </div>
+ 
+        <div class="form-group">
+          <label>Transmit Power <span class="label-hint">// optional — for watt output</span></label>
+          <div class="input-row">
+            <input type="number" id="txPower" value="100" min="0.001" max="50000" step="1" placeholder="e.g. 100">
+            <select class="unit-select" id="txPowerUnit">
+              <option value="W">W</option>
+              <option value="mW">mW</option>
+              <option value="kW">kW</option>
+            </select>
+          </div>
+        </div>
+ 
+        <button class="calc-btn" onclick="calculate()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Calculate Loss
+        </button>
+        <button class="reset-btn" onclick="resetForm()">// reset inputs</button>
+ 
+      </div>
+    </div>
+ 
+    <!-- RESULTS -->
+    <div class="panel results-panel" id="resultsPanel">
+      <div class="panel-header">
+        <span class="panel-dot"></span>
+        <span class="panel-label">// results</span>
+      </div>
+ 
+      <!-- Empty state -->
+      <div class="result-state-empty" id="emptyState">
+        <div class="empty-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M3 12 Q6 5 12 12 Q18 19 21 12" stroke="#444" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="2" fill="#444"/>
+            <line x1="12" y1="3" x2="12" y2="7" stroke="#444" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p>Enter your parameters and click Calculate to see dB loss, power loss, and signal quality analysis.</p>
+      </div>
+ 
+      <!-- Active results -->
+      <div class="result-state-active" id="activeState">
+ 
+        <div class="loss-hero">
+          <div class="loss-metric db">
+            <span class="loss-val db" id="rDbLoss">—</span>
+            <span class="loss-unit">dB total loss</span>
+            <span class="loss-label">Signal Attenuation</span>
+          </div>
+          <div class="loss-metric pwr">
+            <span class="loss-val pwr" id="rPwrLoss">—</span>
+            <span class="loss-unit">% power lost</span>
+            <span class="loss-label">Power Dissipated</span>
+          </div>
+        </div>
+ 
+        <!-- Wattage hero — only shown when tx power is entered -->
+        <div id="wattHero" style="display:none; border-bottom: 1px solid var(--border);">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border);">
+            <div style="background:var(--panel); padding:1rem; text-align:center; position:relative; overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--green);"></div>
+              <span style="font-family:var(--mono);font-size:1.5rem;color:var(--green);display:block;line-height:1;" id="rWattsOut">—</span>
+              <span style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:block;margin-top:3px;">W at antenna</span>
+              <span style="font-size:0.72rem;color:var(--dim);display:block;margin-top:0.4rem;text-transform:uppercase;letter-spacing:0.5px;">Power Delivered</span>
+            </div>
+            <div style="background:var(--panel); padding:1rem; text-align:center; position:relative; overflow:hidden;">
+              <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);"></div>
+              <span style="font-family:var(--mono);font-size:1.5rem;color:var(--red);display:block;line-height:1;" id="rWattsLost">—</span>
+              <span style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;display:block;margin-top:3px;">W lost as heat</span>
+              <span style="font-size:0.72rem;color:var(--dim);display:block;margin-top:0.4rem;text-transform:uppercase;letter-spacing:0.5px;">Cable Heat Load</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="power-bar-section">
+          <div class="power-bar-label">
+            <span>// power delivery</span>
+            <span id="rPwrDelivered" style="color: var(--green); font-family: var(--mono); font-size: 0.68rem;">—% reaches antenna</span>
+          </div>
+          <div class="power-bar-track">
+            <div class="power-bar-fill" id="powerBarFill" style="width: 80%;"></div>
+          </div>
+          <div class="bar-legend">
+            <span><span class="legend-dot" style="background: linear-gradient(90deg, var(--green), var(--blue));"></span> Delivered</span>
+            <span><span class="legend-dot" style="background: rgba(255,90,90,0.35);"></span> Lost in cable</span>
+          </div>
+        </div>
+ 
+        <div class="swr-breakdown">
+          <div class="breakdown-title">// loss breakdown</div>
+          <div class="breakdown-rows">
+            <div class="breakdown-row">
+              <span class="breakdown-key">Cable matched loss</span>
+              <span class="breakdown-val orange" id="rMatchedLoss">—</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="breakdown-key">SWR additional loss</span>
+              <span class="breakdown-val red" id="rSWRLoss">—</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="breakdown-key">Total dB loss</span>
+              <span class="breakdown-val orange" id="rTotalDbRow">—</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="breakdown-key">Power at load</span>
+              <span class="breakdown-val green" id="rPwrAtLoad">—</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="breakdown-key">dB/100ft @ freq</span>
+              <span class="breakdown-val blue" id="rDbPer100">—</span>
+            </div>
+            <div id="wattRows" style="display:none;">
+              <div class="breakdown-row" style="border-top:1px solid var(--border2);margin-top:2px;padding-top:2px;">
+                <span class="breakdown-key">TX power input</span>
+                <span class="breakdown-val blue" id="rTxWatts">—</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-key">Watts at antenna</span>
+                <span class="breakdown-val green" id="rWattsOutRow">—</span>
+              </div>
+              <div class="breakdown-row">
+                <span class="breakdown-key">Watts lost in cable</span>
+                <span class="breakdown-val red" id="rWattsLostRow">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="quality-section">
+          <div class="quality-title">// signal quality verdict</div>
+          <div class="quality-meter" id="qualityMeter">
+            <div class="quality-bar" id="qb1"></div>
+            <div class="quality-bar" id="qb2"></div>
+            <div class="quality-bar" id="qb3"></div>
+            <div class="quality-bar" id="qb4"></div>
+            <div class="quality-bar" id="qb5"></div>
+            <div class="quality-bar" id="qb6"></div>
+            <div class="quality-bar" id="qb7"></div>
+            <div class="quality-bar" id="qb8"></div>
+            <div class="quality-bar" id="qb9"></div>
+            <div class="quality-bar" id="qb10"></div>
+          </div>
+          <div class="quality-text" id="qualityText" style="color: var(--green);">Excellent</div>
+        </div>
+ 
+      </div>
+    </div>
+ 
+  </div><!-- end calc-container -->
+ 
+  <!-- Reference Table -->
+  <div class="ref-section" style="margin-top: 1.5rem;">
+    <div class="ref-panel">
+      <div class="ref-header">
+        <div class="ref-header-left">
+          <span class="panel-dot"></span>
+          <span class="panel-label">// coax attenuation reference — dB per 100 ft</span>
+        </div>
+        <button class="ref-toggle" onclick="toggleTable()">Show Table ↓</button>
+      </div>
+      <div class="ref-table-wrap" id="refTable">
+        <table>
+          <thead>
+            <tr>
+              <th>Cable</th>
+              <th>Description</th>
+              <th>Z</th>
+              <th>1 MHz</th>
+              <th>10 MHz</th>
+              <th>50 MHz</th>
+              <th>144 MHz</th>
+              <th>432 MHz</th>
+              <th>1296 MHz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Generic RG Series</td></tr>
+            <tr><td>RG-174</td><td>Micro 50Ω</td><td>50</td><td class="td-bad">1.0</td><td class="td-bad">3.2</td><td class="td-bad">7.2</td><td class="td-bad">12.4</td><td class="td-bad">22.0</td><td>—</td></tr>
+            <tr><td>RG-316</td><td>Teflon Micro 50Ω</td><td>50</td><td class="td-bad">0.9</td><td class="td-bad">2.8</td><td class="td-bad">6.3</td><td class="td-bad">10.9</td><td class="td-bad">19.4</td><td>—</td></tr>
+            <tr><td>RG-58</td><td>Thin 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.6</td><td class="td-bad">3.7</td><td class="td-bad">6.4</td><td class="td-bad">11.4</td><td class="td-bad">22.3</td></tr>
+            <tr><td>RG-59</td><td>Standard 75Ω</td><td>75</td><td class="td-mid">0.4</td><td class="td-bad">1.3</td><td class="td-bad">2.9</td><td class="td-bad">5.1</td><td class="td-bad">9.3</td><td class="td-bad">18.4</td></tr>
+            <tr><td>RG-62A</td><td>93Ω APC-Bus</td><td>93</td><td class="td-mid">0.4</td><td class="td-bad">1.2</td><td class="td-bad">2.8</td><td class="td-bad">4.9</td><td class="td-bad">8.9</td><td class="td-bad">17.5</td></tr>
+            <tr><td>RG-8X</td><td>Mini 8 / Super 8 50Ω</td><td>50</td><td class="td-mid">0.4</td><td class="td-mid">1.2</td><td class="td-mid">2.7</td><td class="td-mid">4.7</td><td class="td-bad">8.5</td><td class="td-bad">17.0</td></tr>
+            <tr><td>RG-8</td><td>Standard 50Ω</td><td>50</td><td class="td-good">0.3</td><td class="td-mid">0.8</td><td class="td-mid">1.9</td><td class="td-mid">3.4</td><td class="td-mid">6.3</td><td class="td-bad">12.5</td></tr>
+            <tr><td>RG-6</td><td>CATV 75Ω</td><td>75</td><td class="td-good">0.2</td><td class="td-mid">0.8</td><td class="td-mid">1.8</td><td class="td-mid">3.1</td><td class="td-mid">5.8</td><td class="td-bad">11.3</td></tr>
+            <tr><td>RG-11</td><td>Low Loss 75Ω</td><td>75</td><td class="td-good">0.2</td><td class="td-mid">0.6</td><td class="td-good">1.3</td><td class="td-mid">2.4</td><td class="td-mid">4.5</td><td class="td-bad">9.1</td></tr>
+            <tr><td>RG-213</td><td>High Power 50Ω</td><td>50</td><td class="td-good">0.2</td><td class="td-mid">0.8</td><td class="td-mid">1.7</td><td class="td-mid">3.1</td><td class="td-mid">5.7</td><td class="td-bad">11.2</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Belden</td></tr>
+            <tr><td>8216</td><td>RG-174 50Ω</td><td>50</td><td class="td-bad">1.0</td><td class="td-bad">3.2</td><td class="td-bad">7.3</td><td class="td-bad">12.5</td><td class="td-bad">22.3</td><td>—</td></tr>
+            <tr><td>8240</td><td>RG-58 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.7</td><td class="td-bad">3.8</td><td class="td-bad">6.5</td><td class="td-bad">11.6</td><td class="td-bad">22.7</td></tr>
+            <tr><td>9201</td><td>RG-58 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.6</td><td class="td-bad">3.7</td><td class="td-bad">6.3</td><td class="td-bad">11.3</td><td class="td-bad">22.1</td></tr>
+            <tr><td>8219</td><td>RG-58A 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.7</td><td class="td-bad">3.8</td><td class="td-bad">6.5</td><td class="td-bad">11.5</td><td class="td-bad">22.5</td></tr>
+            <tr><td>8259</td><td>RG-58C 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.7</td><td class="td-bad">3.9</td><td class="td-bad">6.7</td><td class="td-bad">11.8</td><td class="td-bad">23.1</td></tr>
+            <tr><td>8212</td><td>RG-59 75Ω</td><td>75</td><td class="td-mid">0.4</td><td class="td-bad">1.2</td><td class="td-bad">2.8</td><td class="td-bad">4.9</td><td class="td-bad">8.9</td><td class="td-bad">17.6</td></tr>
+            <tr><td>8263</td><td>RG-59B 75Ω</td><td>75</td><td class="td-mid">0.4</td><td class="td-bad">1.2</td><td class="td-bad">2.8</td><td class="td-bad">4.9</td><td class="td-bad">8.9</td><td class="td-bad">17.6</td></tr>
+            <tr><td>9269</td><td>RG-62A 93Ω</td><td>93</td><td class="td-mid">0.3</td><td class="td-mid">1.1</td><td class="td-mid">2.6</td><td class="td-mid">4.5</td><td class="td-bad">8.3</td><td class="td-bad">16.5</td></tr>
+            <tr><td>9258</td><td>RG-8X 50Ω</td><td>50</td><td class="td-mid">0.4</td><td class="td-mid">1.2</td><td class="td-mid">2.8</td><td class="td-mid">4.8</td><td class="td-bad">8.7</td><td class="td-bad">17.3</td></tr>
+            <tr><td>8237</td><td>RG-8A 50Ω</td><td>50</td><td class="td-good">0.3</td><td class="td-mid">0.9</td><td class="td-mid">2.0</td><td class="td-mid">3.5</td><td class="td-mid">6.4</td><td class="td-bad">12.8</td></tr>
+            <tr><td>8213</td><td>RG-11 75Ω</td><td>75</td><td class="td-good">0.2</td><td class="td-mid">0.6</td><td class="td-good">1.4</td><td class="td-mid">2.5</td><td class="td-mid">4.6</td><td class="td-bad">9.3</td></tr>
+            <tr><td>8261</td><td>RG-11A 75Ω</td><td>75</td><td class="td-good">0.2</td><td class="td-mid">0.6</td><td class="td-good">1.4</td><td class="td-mid">2.4</td><td class="td-mid">4.5</td><td class="td-bad">9.1</td></tr>
+            <tr><td>8267</td><td>RG-213 50Ω</td><td>50</td><td class="td-good">0.2</td><td class="td-mid">0.7</td><td class="td-good">1.6</td><td class="td-mid">2.9</td><td class="td-mid">5.5</td><td class="td-bad">11.0</td></tr>
+            <tr><td>9913</td><td>RG-8 Low Loss 50Ω</td><td>50</td><td class="td-good">0.2</td><td class="td-good">0.5</td><td class="td-good">1.1</td><td class="td-good">2.0</td><td class="td-mid">3.8</td><td class="td-mid">7.8</td></tr>
+            <tr><td>8215</td><td>RG-6A 75Ω</td><td>75</td><td class="td-mid">0.4</td><td class="td-bad">1.2</td><td class="td-bad">2.8</td><td class="td-bad">4.9</td><td class="td-bad">8.9</td><td class="td-bad">17.8</td></tr>
+            <tr><td>9086</td><td>75Ω Foam</td><td>75</td><td class="td-good">0.1</td><td class="td-mid">0.5</td><td class="td-good">1.0</td><td class="td-good">1.9</td><td class="td-mid">3.6</td><td class="td-mid">7.3</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Times Microwave LMR</td></tr>
+            <tr><td>LMR-100A</td><td>RG-174 size 50Ω</td><td>50</td><td class="td-bad">1.0</td><td class="td-bad">3.1</td><td class="td-bad">7.0</td><td class="td-bad">12.1</td><td class="td-bad">21.5</td><td>—</td></tr>
+            <tr><td>LMR-200</td><td>RG-58 size 50Ω</td><td>50</td><td class="td-good">0.3</td><td class="td-mid">0.8</td><td class="td-good">1.8</td><td class="td-mid">3.1</td><td class="td-mid">5.7</td><td class="td-bad">11.1</td></tr>
+            <tr><td>LMR-240</td><td>RG-8X size 50Ω</td><td>50</td><td class="td-good">0.2</td><td class="td-mid">0.7</td><td class="td-good">1.5</td><td class="td-mid">2.6</td><td class="td-mid">4.7</td><td class="td-bad">9.4</td></tr>
+            <tr><td>LMR-400</td><td>RG-8 size 50Ω</td><td>50</td><td class="td-good">0.1</td><td class="td-good">0.4</td><td class="td-good">0.8</td><td class="td-good">1.5</td><td class="td-mid">2.7</td><td class="td-mid">5.4</td></tr>
+            <tr><td>LMR-600</td><td>0.59″ 50Ω</td><td>50</td><td class="td-good">0.1</td><td class="td-good">0.2</td><td class="td-good">0.5</td><td class="td-good">0.9</td><td class="td-good">1.6</td><td class="td-mid">3.3</td></tr>
+            <tr><td>LMR-900</td><td>0.87″ 50Ω</td><td>50</td><td class="td-good">0.05</td><td class="td-good">0.2</td><td class="td-good">0.3</td><td class="td-good">0.6</td><td class="td-good">1.1</td><td class="td-good">2.1</td></tr>
+            <tr><td>LMR-1200</td><td>Min Loss 50Ω</td><td>50</td><td class="td-good">0.04</td><td class="td-good">0.1</td><td class="td-good">0.3</td><td class="td-good">0.4</td><td class="td-good">0.8</td><td class="td-good">1.6</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// CommScope Andrew Heliax</td></tr>
+            <tr><td>LDF4-50A</td><td>Heliax ½″ 50Ω</td><td>50</td><td class="td-good">0.04</td><td class="td-good">0.12</td><td class="td-good">0.27</td><td class="td-good">0.47</td><td class="td-good">0.83</td><td class="td-good">1.47</td></tr>
+            <tr><td>LDF5-50A</td><td>Heliax ⅞″ 50Ω</td><td>50</td><td class="td-good">0.02</td><td class="td-good">0.07</td><td class="td-good">0.16</td><td class="td-good">0.27</td><td class="td-good">0.48</td><td class="td-good">0.86</td></tr>
+            <tr><td>LDF6-50</td><td>Heliax 1¼″ 50Ω</td><td>50</td><td class="td-good">0.02</td><td class="td-good">0.05</td><td class="td-good">0.12</td><td class="td-good">0.20</td><td class="td-good">0.36</td><td class="td-good">0.63</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Wireman CQ Coax</td></tr>
+            <tr><td>CQ102</td><td>RG-8 type 50Ω</td><td>50</td><td class="td-good">0.3</td><td class="td-mid">0.8</td><td class="td-good">1.9</td><td class="td-mid">3.4</td><td class="td-mid">6.3</td><td class="td-bad">12.5</td></tr>
+            <tr><td>CQ106</td><td>RG-8 type 50Ω</td><td>50</td><td class="td-good">0.3</td><td class="td-mid">0.8</td><td class="td-good">1.8</td><td class="td-mid">3.3</td><td class="td-mid">6.1</td><td class="td-bad">12.1</td></tr>
+            <tr><td>CQ125</td><td>RG-58 type 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.6</td><td class="td-bad">3.7</td><td class="td-bad">6.4</td><td class="td-bad">11.4</td><td class="td-bad">22.3</td></tr>
+            <tr><td>CQ127</td><td>RG-58C type 50Ω</td><td>50</td><td class="td-mid">0.5</td><td class="td-bad">1.7</td><td class="td-bad">3.9</td><td class="td-bad">6.7</td><td class="td-bad">11.8</td><td class="td-bad">23.1</td></tr>
+            <tr><td>CQ110</td><td>RG-213 type 50Ω</td><td>50</td><td class="td-good">0.2</td><td class="td-mid">0.8</td><td class="td-good">1.7</td><td class="td-mid">3.1</td><td class="td-mid">5.7</td><td class="td-bad">11.2</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Davis RF</td></tr>
+            <tr><td>Bury-Flex</td><td>Direct Burial 50Ω</td><td>50</td><td class="td-good">0.1</td><td class="td-good">0.4</td><td class="td-good">0.9</td><td class="td-good">1.6</td><td class="td-mid">3.0</td><td class="td-mid">6.0</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Wireman Window Line (ladder line — dB/100ft)</td></tr>
+            <tr><td>WLL 551</td><td>#18 solid (dry)</td><td>450</td><td class="td-good">0.01</td><td class="td-good">0.04</td><td class="td-good">0.09</td><td class="td-good">0.17</td><td class="td-good">0.32</td><td class="td-good">0.65</td></tr>
+            <tr><td>WLL 552</td><td>#16 stranded (dry)</td><td>450</td><td class="td-good">0.01</td><td class="td-good">0.03</td><td class="td-good">0.08</td><td class="td-good">0.15</td><td class="td-good">0.28</td><td class="td-good">0.57</td></tr>
+            <tr><td>WLL 553</td><td>#18 stranded (dry)</td><td>450</td><td class="td-good">0.01</td><td class="td-good">0.03</td><td class="td-good">0.08</td><td class="td-good">0.16</td><td class="td-good">0.30</td><td class="td-good">0.61</td></tr>
+            <tr><td>WLL 554</td><td>#14 stranded (dry)</td><td>450</td><td class="td-good">0.01</td><td class="td-good">0.03</td><td class="td-good">0.06</td><td class="td-good">0.12</td><td class="td-good">0.24</td><td class="td-good">0.48</td></tr>
+            <tr><td>WLL 551*</td><td>#18 solid (wet/ice)</td><td>450</td><td class="td-good">0.06</td><td class="td-good">0.18</td><td class="td-good">0.41</td><td class="td-mid">0.74</td><td class="td-mid">1.4</td><td class="td-mid">2.8</td></tr>
+            <tr><td>WLL 552*</td><td>#16 stranded (wet/ice)</td><td>450</td><td class="td-good">0.05</td><td class="td-good">0.16</td><td class="td-good">0.36</td><td class="td-good">0.65</td><td class="td-good">1.2</td><td class="td-mid">2.5</td></tr>
+            <tr><td>WLL 553*</td><td>#18 stranded (wet/ice)</td><td>450</td><td class="td-good">0.06</td><td class="td-good">0.17</td><td class="td-good">0.39</td><td class="td-good">0.70</td><td class="td-good">1.3</td><td class="td-mid">2.7</td></tr>
+            <tr><td>WLL 554*</td><td>#14 stranded (wet/ice)</td><td>450</td><td class="td-good">0.04</td><td class="td-good">0.14</td><td class="td-good">0.31</td><td class="td-good">0.56</td><td class="td-good">1.0</td><td class="td-good">2.1</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Open Wire / Ladder Line</td></tr>
+            <tr><td>300Ω Twin</td><td>Tubular Twin-Lead</td><td>300</td><td class="td-good">0.03</td><td class="td-good">0.09</td><td class="td-good">0.21</td><td class="td-good">0.38</td><td class="td-good">0.70</td><td class="td-good">1.39</td></tr>
+            <tr><td>450Ω Window</td><td>Generic Window Line</td><td>450</td><td class="td-good">0.01</td><td class="td-good">0.04</td><td class="td-good">0.09</td><td class="td-good">0.16</td><td class="td-good">0.31</td><td class="td-good">0.62</td></tr>
+            <tr><td>600Ω Open</td><td>Generic Open Wire</td><td>600</td><td class="td-good">0.01</td><td class="td-good">0.02</td><td class="td-good">0.05</td><td class="td-good">0.10</td><td class="td-good">0.19</td><td class="td-good">0.37</td></tr>
+            <tr><td colspan="9" style="background:var(--panel2);color:var(--orange);font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;padding:0.4rem 1rem;">// Ideal Reference</td></tr>
+            <tr><td>Ideal 50Ω</td><td>Lossless (reference)</td><td>50</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td></tr>
+            <tr><td>Ideal 75Ω</td><td>Lossless (reference)</td><td>75</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td><td class="td-good">0.000</td></tr>
+          </tbody>
+        </table>
+        <div style="padding: 0.6rem 1rem; background: var(--panel2); border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.62rem; color: var(--muted);">
+          <span style="color: var(--green);">▬</span> Excellent (&lt;2 dB/100ft)&nbsp;&nbsp;
+          <span style="color: var(--orange);">▬</span> Moderate (2–7 dB/100ft)&nbsp;&nbsp;
+          <span style="color: var(--red);">▬</span> High Loss (&gt;7 dB/100ft)&nbsp;&nbsp;&nbsp;
+          * Wet/ice values are worst-case published figures for lines with ice or snow accumulation
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Formula note -->
+    <div class="formula-note">
+      <span class="formula-icon">∿</span>
+      <div class="formula-text">
+        <strong>How it's calculated:</strong> Matched loss is computed from published attenuation coefficients interpolated for your frequency using the cable's α·√f + β·f model. SWR additional loss adds the mismatch penalty:
+        <br><span class="formula-eq">SWR loss (dB) = matched_dB + 10·log₁₀( (1 + Γ²·10^(-matched_dB/5)) / (1 - Γ²) )</span>
+        <br>where Γ = (SWR−1)/(SWR+1). Power loss % = 1 − 10^(−dB/10). Results assume standard temperature (20°C / 68°F).
+      </div>
+    </div>
+ 
+  </div>
+</section>
+ 
+<!-- FOOTER -->
+<footer style="background: #0E0E0E; border-top: 1px solid var(--border); padding: 2rem;">
+  <div style="max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white);">Ham Radio<span style="color: var(--orange);">Lab</span>.com</div>
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+      <a href="#" style="color: var(--muted); text-decoration: none; font-size: 0.78rem;">About</a>
+      <a href="#" style="color: var(--muted); text-decoration: none; font-size: 0.78rem;">Tools</a>
+      <a href="#" style="color: var(--muted); text-decoration: none; font-size: 0.78rem;">Contact</a>
+      <a href="#" style="color: var(--muted); text-decoration: none; font-size: 0.78rem;">Affiliate Disclosure</a>
+    </div>
+    <div style="font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A;">© 2025 HamRadioLab.com</div>
+  </div>
+</footer>
+ 
+<script>
+// ─── COAX DATABASE ───
+// Each entry: [impedance, velocityFactor, capPF_ft, a_coeff, b_coeff, refNote]
+// Attenuation model: dB/100ft = a*sqrt(f_MHz) + b*f_MHz
+// Coefficients derived from manufacturer datasheets
+const COAX_DB = {
+  // ── Generic RG series ──────────────────────────────────────────────────────
+  "RG-174":    { z:50,  vf:0.66, cap:30.8, a:0.100,  b:0.000950, label:"Generic RG-174 50Ω" },
+  "RG-316":    { z:50,  vf:0.69, cap:29.4, a:0.088,  b:0.000800, label:"Generic RG-316 Teflon 50Ω" },
+  "RG-58":     { z:50,  vf:0.66, cap:28.5, a:0.052,  b:0.000430, label:"Generic RG-58 50Ω" },
+  "RG-8X":     { z:50,  vf:0.82, cap:25.4, a:0.037,  b:0.000320, label:"Generic RG-8X Mini8 50Ω" },
+  "RG-8":      { z:50,  vf:0.78, cap:29.5, a:0.026,  b:0.000220, label:"Generic RG-8 50Ω" },
+  "RG-213":    { z:50,  vf:0.66, cap:30.8, a:0.024,  b:0.000200, label:"Generic RG-213 50Ω" },
+  "RG-6":      { z:75,  vf:0.82, cap:16.2, a:0.023,  b:0.000180, label:"Generic RG-6 CATV 75Ω" },
+  "RG-11":     { z:75,  vf:0.84, cap:15.4, a:0.017,  b:0.000120, label:"Generic RG-11 75Ω" },
+  "RG-59":     { z:75,  vf:0.66, cap:20.5, a:0.035,  b:0.000280, label:"Generic RG-59 75Ω" },
+  "RG-62A":    { z:93,  vf:0.84, cap:13.5, a:0.033,  b:0.000260, label:"Generic RG-62A 93Ω" },
+  // ── Belden ────────────────────────────────────────────────────────────────
+  // Coefficients derived from Belden published attenuation tables
+  "B8215":     { z:75,  vf:0.66, cap:20.5, a:0.036,  b:0.000290, label:"Belden 8215 RG-6A 75Ω" },
+  "B8237":     { z:50,  vf:0.66, cap:29.5, a:0.028,  b:0.000230, label:"Belden 8237 RG-8A 50Ω" },
+  "B9913":     { z:50,  vf:0.84, cap:24.8, a:0.016,  b:0.000099, label:"Belden 9913 RG-8 Low Loss 50Ω" },
+  "B9258":     { z:50,  vf:0.82, cap:25.4, a:0.036,  b:0.000310, label:"Belden 9258 RG-8X 50Ω" },
+  "B8213":     { z:75,  vf:0.66, cap:15.5, a:0.019,  b:0.000130, label:"Belden 8213 RG-11 75Ω" },
+  "B8261":     { z:75,  vf:0.66, cap:15.5, a:0.018,  b:0.000125, label:"Belden 8261 RG-11A 75Ω" },
+  "B8240":     { z:50,  vf:0.66, cap:28.5, a:0.054,  b:0.000450, label:"Belden 8240 RG-58 50Ω" },
+  "B9201":     { z:50,  vf:0.66, cap:28.5, a:0.051,  b:0.000420, label:"Belden 9201 RG-58 50Ω" },
+  "B8219":     { z:50,  vf:0.66, cap:28.5, a:0.053,  b:0.000440, label:"Belden 8219 RG-58A 50Ω" },
+  "B8259":     { z:50,  vf:0.66, cap:28.5, a:0.055,  b:0.000460, label:"Belden 8259 RG-58C 50Ω" },
+  "B8212":     { z:75,  vf:0.66, cap:20.5, a:0.034,  b:0.000270, label:"Belden 8212 RG-59 75Ω" },
+  "B8263":     { z:75,  vf:0.66, cap:20.5, a:0.034,  b:0.000270, label:"Belden 8263 RG-59B 75Ω" },
+  "B9269":     { z:93,  vf:0.84, cap:13.5, a:0.030,  b:0.000240, label:"Belden 9269 RG-62A 93Ω" },
+  "B8216":     { z:50,  vf:0.66, cap:30.8, a:0.102,  b:0.000970, label:"Belden 8216 RG-174 50Ω" },
+  "B8267":     { z:50,  vf:0.66, cap:30.8, a:0.023,  b:0.000195, label:"Belden 8267 RG-213 50Ω" },
+  "B9086":     { z:75,  vf:0.85, cap:16.0, a:0.013,  b:0.000082, label:"Belden 9086 75Ω Foam" },
+  // ── Times Microwave LMR ───────────────────────────────────────────────────
+  "LMR-100A":  { z:50,  vf:0.80, cap:24.0, a:0.097,  b:0.000920, label:"LMR-100A (RG-174 size) 50Ω" },
+  "LMR-200":   { z:50,  vf:0.83, cap:26.0, a:0.025,  b:0.000190, label:"LMR-200 (RG-58 size) 50Ω" },
+  "LMR-240":   { z:50,  vf:0.84, cap:24.8, a:0.020,  b:0.000140, label:"LMR-240 (RG-8X size) 50Ω" },
+  "LMR-400":   { z:50,  vf:0.85, cap:23.9, a:0.012,  b:0.000079, label:"LMR-400 (RG-8 size) 50Ω" },
+  "LMR-600":   { z:50,  vf:0.87, cap:23.4, a:0.0072, b:0.000044, label:"LMR-600 (0.59\") 50Ω" },
+  "LMR-900":   { z:50,  vf:0.87, cap:23.4, a:0.0047, b:0.000026, label:"LMR-900 (0.87\") 50Ω" },
+  "LMR-1200":  { z:50,  vf:0.88, cap:23.1, a:0.0033, b:0.000017, label:"LMR-1200 Min Loss 50Ω" },
+  // ── CommScope / Andrew Heliax ─────────────────────────────────────────────
+  // LDF series: air-dielectric hardline, very low loss
+  "LDF4-50A":  { z:50,  vf:0.88, cap:20.6, a:0.00360, b:0.0000200, label:"Heliax LDF4-50A ½\" 50Ω" },
+  "LDF5-50A":  { z:50,  vf:0.89, cap:20.4, a:0.00210, b:0.0000115, label:"Heliax LDF5-50A ⅞\" 50Ω" },
+  "LDF6-50":   { z:50,  vf:0.89, cap:20.4, a:0.00155, b:0.0000082, label:"Heliax LDF6-50 1¼\" 50Ω" },
+  // ── Wireman CQ Coax ────────────────────────────────────────────────────────
+  // CQ102/CQ106 are quality RG-8 equivalents; CQ125/CQ127 RG-58 types; CQ110 RG-213
+  "CQ102":     { z:50,  vf:0.78, cap:29.5, a:0.026,  b:0.000220, label:"Wireman CQ102 RG-8 50Ω" },
+  "CQ106":     { z:50,  vf:0.80, cap:28.0, a:0.025,  b:0.000210, label:"Wireman CQ106 RG-8 50Ω" },
+  "CQ125":     { z:50,  vf:0.66, cap:28.5, a:0.052,  b:0.000430, label:"Wireman CQ125 RG-58 50Ω" },
+  "CQ127":     { z:50,  vf:0.66, cap:28.5, a:0.055,  b:0.000460, label:"Wireman CQ127 RG-58C 50Ω" },
+  "CQ110":     { z:50,  vf:0.66, cap:30.8, a:0.024,  b:0.000200, label:"Wireman CQ110 RG-213 50Ω" },
+  // ── Davis RF ──────────────────────────────────────────────────────────────
+  // Bury-Flex: PE-jacketed direct burial, similar spec to LMR-400 but slightly higher loss
+  "BURY-FLEX": { z:50,  vf:0.82, cap:25.0, a:0.0135, b:0.000088, label:"Davis RF Bury-Flex 50Ω" },
+  // ── Wireman Window Line (ladder line) ──────────────────────────────────────
+  // Ladder line loss model: much lower than coax but varies with proximity effects and weather.
+  // Model: dB/100ft at freq MHz using measured Wireman published data (dry conditions).
+  // Impedance shown; SWR mismatch loss still applies at the feedpoint.
+  "WLL551":    { z:450, vf:0.91, cap:1.5,  a:0.00110, b:0.0000055, label:"Wireman 551 #18 solid (dry)" },
+  "WLL552":    { z:450, vf:0.91, cap:1.5,  a:0.00095, b:0.0000048, label:"Wireman 552 #16 stranded (dry)" },
+  "WLL553":    { z:450, vf:0.91, cap:1.5,  a:0.00105, b:0.0000052, label:"Wireman 553 #18 stranded (dry)" },
+  "WLL554":    { z:450, vf:0.91, cap:1.5,  a:0.00080, b:0.0000040, label:"Wireman 554 #14 stranded (dry)" },
+  // Wet/ice: worst-case published values — roughly 4–6× dry loss
+  "WLL551W":   { z:450, vf:0.91, cap:1.5,  a:0.00550, b:0.0000280, label:"Wireman 551 #18 solid (wet/ice)" },
+  "WLL552W":   { z:450, vf:0.91, cap:1.5,  a:0.00480, b:0.0000240, label:"Wireman 552 #16 stranded (wet/ice)" },
+  "WLL553W":   { z:450, vf:0.91, cap:1.5,  a:0.00520, b:0.0000260, label:"Wireman 553 #18 stranded (wet/ice)" },
+  "WLL554W":   { z:450, vf:0.91, cap:1.5,  a:0.00410, b:0.0000205, label:"Wireman 554 #14 stranded (wet/ice)" },
+  // ── Open Wire / Ladder Line ───────────────────────────────────────────────
+  "TWIN300":   { z:300, vf:0.80, cap:4.5,  a:0.00280, b:0.0000140, label:"Generic 300Ω Tubular Twin-Lead" },
+  "LADDER450": { z:450, vf:0.91, cap:1.5,  a:0.00100, b:0.0000050, label:"Generic 450Ω Window Line" },
+  "OPEN600":   { z:600, vf:0.975,cap:0.9,  a:0.00060, b:0.0000030, label:"Generic 600Ω Open Wire" },
+  // ── Ideal reference ───────────────────────────────────────────────────────
+  "IDEAL50":   { z:50,  vf:1.00, cap:0,    a:0,       b:0,         label:"Ideal Lossless 50Ω" },
+  "IDEAL75":   { z:75,  vf:1.00, cap:0,    a:0,       b:0,         label:"Ideal Lossless 75Ω" },
+};
+ 
+function getAttenuation100ft(coaxKey, freqMHz) {
+  const c = COAX_DB[coaxKey];
+  if (!c) return 0;
+  return c.a * Math.sqrt(freqMHz) + c.b * freqMHz;
+}
+ 
+function updateCoaxDetails() {
+  const key = document.getElementById('coaxType').value;
+  const c = COAX_DB[key];
+  if (!c) return;
+  document.getElementById('detailImpedance').textContent = c.z + 'Ω';
+  document.getElementById('detailVF').textContent = c.vf.toFixed(2);
+  document.getElementById('detailCap').textContent = c.cap > 0 ? c.cap.toFixed(1) + ' pF/ft' : 'N/A';
+  document.getElementById('coaxDetails').classList.add('visible');
+}
+ 
+function calculate() {
+  const coaxKey = document.getElementById('coaxType').value;
+  let length = parseFloat(document.getElementById('cableLength').value);
+  const lengthUnit = document.getElementById('lengthUnit').value;
+  let freqMHz = parseFloat(document.getElementById('frequency').value);
+  const freqUnit = document.getElementById('freqUnit').value;
+  const swr = parseFloat(document.getElementById('swr').value);
+ 
+  // Validate
+  if (isNaN(length) || length <= 0) { alert('Please enter a valid cable length.'); return; }
+  if (isNaN(freqMHz) || freqMHz <= 0) { alert('Please enter a valid frequency.'); return; }
+  if (isNaN(swr) || swr < 1) { alert('SWR must be 1.0 or greater.'); return; }
+ 
+  // Convert units
+  if (lengthUnit === 'm') length = length * 3.28084;      // to feet
+  if (freqUnit === 'GHz') freqMHz = freqMHz * 1000;       // to MHz
+ 
+  // ─── Matched loss ───
+  const atten100ft = getAttenuation100ft(coaxKey, freqMHz);
+  const matchedDb = (atten100ft / 100) * length;
+ 
+  // ─── SWR additional loss ───
+  // Reflection coefficient magnitude
+  const gamma = (swr - 1) / (swr + 1);
+  // Two-way reflection: gamma^2 * 10^(-matchedDb/5) represents round-trip voltage loss
+  const K = Math.pow(gamma, 2) * Math.pow(10, -matchedDb / 5);
+  let swrLossDb = 0;
+  if (K < 1) {
+    swrLossDb = 10 * Math.log10((1 + K) / (1 - K));
+  }
+  const totalDb = matchedDb + swrLossDb;
+ 
+  // ─── Power calculations ───
+  const powerLossFraction = 1 - Math.pow(10, -totalDb / 10);
+  const powerLossPct = powerLossFraction * 100;
+  const powerDeliveredPct = 100 - powerLossPct;
+ 
+  // ─── Transmit power (optional) ───
+  let txWatts = parseFloat(document.getElementById('txPower').value);
+  const txUnit = document.getElementById('txPowerUnit').value;
+  const hasTxPower = !isNaN(txWatts) && txWatts > 0;
+  if (hasTxPower) {
+    if (txUnit === 'mW') txWatts = txWatts / 1000;
+    if (txUnit === 'kW') txWatts = txWatts * 1000;
+  }
+ 
+  // ─── Display ───
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('activeState').style.display = 'block';
+ 
+  document.getElementById('rDbLoss').textContent = totalDb.toFixed(2) + ' dB';
+  document.getElementById('rPwrLoss').textContent = powerLossPct.toFixed(1) + '%';
+  document.getElementById('rPwrDelivered').textContent = powerDeliveredPct.toFixed(1) + '% reaches antenna';
+  document.getElementById('rMatchedLoss').textContent = matchedDb.toFixed(3) + ' dB';
+  document.getElementById('rSWRLoss').textContent = '+' + swrLossDb.toFixed(3) + ' dB';
+  document.getElementById('rTotalDbRow').textContent = totalDb.toFixed(3) + ' dB';
+  document.getElementById('rPwrAtLoad').textContent = powerDeliveredPct.toFixed(2) + '%';
+  document.getElementById('rDbPer100').textContent = atten100ft.toFixed(3) + ' dB/100ft';
+ 
+  // ─── Wattage outputs ───
+  function fmtW(w) {
+    if (w >= 1000) return (w / 1000).toFixed(2) + ' kW';
+    if (w >= 1)    return w.toFixed(2) + ' W';
+    return (w * 1000).toFixed(1) + ' mW';
+  }
+  if (hasTxPower) {
+    const wattsOut  = txWatts * Math.pow(10, -totalDb / 10);
+    const wattsLost = txWatts - wattsOut;
+    document.getElementById('wattHero').style.display = 'block';
+    document.getElementById('wattRows').style.display = 'block';
+    document.getElementById('rWattsOut').textContent  = fmtW(wattsOut);
+    document.getElementById('rWattsLost').textContent = fmtW(wattsLost);
+    document.getElementById('rTxWatts').textContent   = fmtW(txWatts);
+    document.getElementById('rWattsOutRow').textContent  = fmtW(wattsOut);
+    document.getElementById('rWattsLostRow').textContent = fmtW(wattsLost);
+  } else {
+    document.getElementById('wattHero').style.display = 'none';
+    document.getElementById('wattRows').style.display = 'none';
+  }
+ 
+  // Power bar
+  document.getElementById('powerBarFill').style.width = Math.max(1, Math.min(99, powerDeliveredPct)).toFixed(1) + '%';
+ 
+  // Quality meter (10 bars)
+  const bars = ['qb1','qb2','qb3','qb4','qb5','qb6','qb7','qb8','qb9','qb10'];
+  bars.forEach(id => {
+    document.getElementById(id).className = 'quality-bar';
+  });
+ 
+  let litBars, color, verdict, verdictColor;
+  if (totalDb <= 1) {
+    litBars = 10; color = 'lit-green'; verdict = 'Excellent — negligible loss'; verdictColor = '#39D98A';
+  } else if (totalDb <= 2) {
+    litBars = 9; color = 'lit-green'; verdict = 'Excellent — minimal loss'; verdictColor = '#39D98A';
+  } else if (totalDb <= 3) {
+    litBars = 8; color = 'lit-green'; verdict = 'Very good'; verdictColor = '#39D98A';
+  } else if (totalDb <= 4) {
+    litBars = 7; color = 'lit-green'; verdict = 'Good'; verdictColor = '#39D98A';
+  } else if (totalDb <= 5) {
+    litBars = 6; color = 'lit-orange'; verdict = 'Acceptable — consider shorter run'; verdictColor = '#F05A00';
+  } else if (totalDb <= 7) {
+    litBars = 5; color = 'lit-orange'; verdict = 'Moderate loss — upgrade cable'; verdictColor = '#F05A00';
+  } else if (totalDb <= 9) {
+    litBars = 4; color = 'lit-orange'; verdict = 'High loss — upgrade recommended'; verdictColor = '#F05A00';
+  } else if (totalDb <= 12) {
+    litBars = 3; color = 'lit-red'; verdict = 'Severe loss — shorten or replace'; verdictColor = '#FF5A5A';
+  } else if (totalDb <= 18) {
+    litBars = 2; color = 'lit-red'; verdict = 'Critical — replace immediately'; verdictColor = '#FF5A5A';
+  } else {
+    litBars = 1; color = 'lit-red'; verdict = 'Unusable — complete signal loss'; verdictColor = '#FF5A5A';
+  }
+ 
+  for (let i = 0; i < litBars; i++) {
+    document.getElementById(bars[i]).classList.add(color);
+  }
+ 
+  document.getElementById('qualityText').textContent = verdict;
+  document.getElementById('qualityText').style.color = verdictColor;
+}
+ 
+function resetForm() {
+  document.getElementById('coaxType').value = 'LMR-200';
+  document.getElementById('cableLength').value = 50;
+  document.getElementById('lengthUnit').value = 'ft';
+  document.getElementById('frequency').value = 146;
+  document.getElementById('freqUnit').value = 'MHz';
+  document.getElementById('swr').value = 1.5;
+  document.getElementById('txPower').value = 100;
+  document.getElementById('txPowerUnit').value = 'W';
+  document.getElementById('emptyState').style.display = '';
+  document.getElementById('activeState').style.display = 'none';
+  document.getElementById('wattHero').style.display = 'none';
+  document.getElementById('wattRows').style.display = 'none';
+  updateCoaxDetails();
+}
+ 
+function toggleTable() {
+  const t = document.getElementById('refTable');
+  const btn = document.querySelector('.ref-toggle');
+  if (t.classList.contains('open')) {
+    t.classList.remove('open');
+    btn.textContent = 'Show Table ↓';
+  } else {
+    t.classList.add('open');
+    btn.textContent = 'Hide Table ↑';
+  }
+}
+ 
+// Init details on load
+updateCoaxDetails();
+</script>
+ 
+</body>
+</html>
+ 

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy – Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* PAGE HEADER */
+  .page-header {
+    position: relative; overflow: hidden;
+    padding: 3.5rem 2rem 3rem;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .page-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .page-header::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.08), transparent 70%);
+  }
+
+  .page-header-inner {
+    position: relative; z-index: 1;
+    max-width: 800px; margin: 0 auto;
+  }
+
+  .page-label {
+    font-family: var(--mono);
+    font-size: 0.7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--orange);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.8rem;
+  }
+
+  .page-label::before { content: '//'; opacity: 0.5; }
+
+  .page-header h1 {
+    font-family: var(--head);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1;
+    color: var(--white); letter-spacing: -0.5px;
+    margin-bottom: 0.7rem;
+  }
+
+  .page-header h1 em { color: var(--orange); font-style: normal; }
+
+  .page-header p {
+    color: var(--dim); font-size: 0.95rem;
+    max-width: 520px; line-height: 1.65;
+  }
+
+  .updated-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--muted); margin-top: 1rem;
+    background: var(--panel); border: 1px solid var(--border);
+    padding: 3px 10px; border-radius: 2px;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.4rem 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .toc-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.8rem;
+  }
+
+  .toc ol {
+    list-style: none; display: flex; flex-direction: column; gap: 0.3rem;
+  }
+
+  .toc ol li a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .toc ol li a:hover { color: var(--orange); }
+
+  .toc ol li a::before {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--muted); content: attr(data-num);
+    flex-shrink: 0;
+  }
+
+  /* CONTENT */
+  .content-wrap {
+    max-width: 800px; margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  .summary-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 4px;
+    padding: 1.5rem 1.6rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .summary-box .summary-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.6rem;
+  }
+
+  .summary-box p {
+    color: var(--body); font-size: 0.95rem; line-height: 1.7;
+  }
+
+  .doc-section {
+    margin-bottom: 2.8rem;
+    padding-bottom: 2.8rem;
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+
+  .doc-section:last-child {
+    border-bottom: none; margin-bottom: 0;
+  }
+
+  .doc-section h2 {
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--white); margin-bottom: 0.9rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .doc-section h2 .sec-num {
+    font-family: var(--mono); font-size: 0.7rem;
+    color: var(--orange); background: var(--orange-glow);
+    border: 1px solid rgba(240,90,0,0.3);
+    padding: 2px 7px; border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .doc-section p {
+    color: var(--body); font-size: 0.95rem;
+    line-height: 1.75; margin-bottom: 1rem;
+  }
+
+  .doc-section p:last-child { margin-bottom: 0; }
+
+  .doc-section ul {
+    list-style: none; margin: 0.8rem 0 1rem;
+  }
+
+  .doc-section ul li {
+    color: var(--body); font-size: 0.93rem;
+    line-height: 1.65; padding: 0.4rem 0 0.4rem 1.4rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .doc-section ul li:last-child { border-bottom: none; }
+
+  .doc-section ul li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--orange); font-size: 0.8rem;
+  }
+
+  .doc-section h3 {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 700;
+    color: var(--white); margin: 1.4rem 0 0.5rem;
+  }
+
+  .callout {
+    background: rgba(240,90,0,0.06);
+    border: 1px solid rgba(240,90,0,0.2);
+    border-radius: 4px; padding: 1.2rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+
+  .callout p {
+    color: var(--body); font-size: 0.9rem;
+    margin: 0; line-height: 1.65;
+  }
+
+  .callout strong { color: var(--orange); }
+
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    margin: 1rem 0; font-size: 0.87rem;
+  }
+
+  .data-table th {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--orange); text-align: left;
+    padding: 0.6rem 0.8rem;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border2);
+  }
+
+  .data-table td {
+    padding: 0.7rem 0.8rem;
+    color: var(--body);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .contact-block {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.4rem 1.6rem;
+    margin-top: 1rem;
+  }
+
+  .contact-block p {
+    color: var(--muted); font-size: 0.88rem; margin: 0 0 0.3rem;
+  }
+
+  .contact-block p:last-child { margin: 0; }
+
+  .contact-block a {
+    color: var(--orange); text-decoration: none;
+    font-family: var(--mono); font-size: 0.85rem;
+  }
+  .contact-block a:hover { text-decoration: underline; }
+
+  /* FOOTER */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 900;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .footer-logo span { color: var(--orange); }
+
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .data-table { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">Legal &amp; Transparency</div>
+    <h1>Privacy <em>Policy</em></h1>
+    <p>This page explains what information Ham Radio Lab collects, how it's used, and what choices you have. No legalese walls — written to actually be read.</p>
+    <div class="updated-tag">
+      <span>// Last updated:</span>
+      <span>March 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="content-wrap">
+
+  <div class="summary-box">
+    <div class="summary-label">// TL;DR — Plain English Summary</div>
+    <p>This site collects basic analytics (page views, referrers) and your email address if you sign up for the newsletter. It does not sell your data. Third-party services like Google Analytics and Amazon may set their own cookies. You can opt out of those. If you have questions, just email me.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-label">// Contents</div>
+    <ol>
+      <li><a href="#s1" data-num="01 —">Information We Collect</a></li>
+      <li><a href="#s2" data-num="02 —">How We Use Your Information</a></li>
+      <li><a href="#s3" data-num="03 —">Cookies &amp; Tracking</a></li>
+      <li><a href="#s4" data-num="04 —">Third-Party Services</a></li>
+      <li><a href="#s5" data-num="05 —">Email &amp; Newsletter</a></li>
+      <li><a href="#s6" data-num="06 —">Your Rights &amp; Choices</a></li>
+      <li><a href="#s7" data-num="07 —">Data Retention</a></li>
+      <li><a href="#s8" data-num="08 —">Children's Privacy</a></li>
+      <li><a href="#s9" data-num="09 —">Changes to This Policy</a></li>
+      <li><a href="#s10" data-num="10 —">Contact</a></li>
+    </ol>
+  </div>
+
+  <div class="doc-section" id="s1">
+    <h2><span class="sec-num">01</span> Information We Collect</h2>
+    <p>Ham Radio Lab collects two types of information: information you provide directly, and information collected automatically when you visit the site.</p>
+
+    <h3>Information You Provide</h3>
+    <ul>
+      <li><strong>Email address</strong> — only if you voluntarily sign up for the newsletter or quick-start guide</li>
+      <li><strong>Contact form submissions</strong> — name and email if you reach out via a contact form</li>
+    </ul>
+
+    <h3>Information Collected Automatically</h3>
+    <ul>
+      <li>Pages visited and time spent on them</li>
+      <li>Referring website (how you found this site)</li>
+      <li>Browser type and operating system (aggregated, not individually tracked)</li>
+      <li>General geographic region (country/state level — not precise location)</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Note:</strong> This site does not collect your name, phone number, address, or any payment information. If you purchase gear through an affiliate link, that transaction happens entirely on the retailer's site under their privacy policy.</p>
+    </div>
+  </div>
+
+  <div class="doc-section" id="s2">
+    <h2><span class="sec-num">02</span> How We Use Your Information</h2>
+    <p>Information collected on this site is used only for the following purposes:</p>
+    <ul>
+      <li>To send the newsletter or free guides you signed up for</li>
+      <li>To understand which content is useful so more of it can be written</li>
+      <li>To respond to questions or messages you send</li>
+      <li>To improve site performance and fix broken pages</li>
+    </ul>
+    <p>Your information is never sold, rented, or shared with third parties for marketing purposes.</p>
+  </div>
+
+  <div class="doc-section" id="s3">
+    <h2><span class="sec-num">03</span> Cookies &amp; Tracking</h2>
+    <p>This site uses cookies and similar tracking technologies. Here's what's in use:</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Cookie Type</th>
+          <th>Purpose</th>
+          <th>Can Be Opted Out?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Analytics (Google Analytics)</td>
+          <td>Aggregated page view and traffic data</td>
+          <td>Yes — browser settings or GA opt-out</td>
+        </tr>
+        <tr>
+          <td>Affiliate tracking (Amazon, etc.)</td>
+          <td>Tracks clicks on affiliate links for commission attribution</td>
+          <td>Yes — browser settings</td>
+        </tr>
+        <tr>
+          <td>Email service</td>
+          <td>Tracks newsletter open rates and link clicks (if subscribed)</td>
+          <td>Yes — unsubscribe at any time</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>You can disable cookies in your browser settings at any time. Note that some site features may not work correctly with cookies disabled.</p>
+  </div>
+
+  <div class="doc-section" id="s4">
+    <h2><span class="sec-num">04</span> Third-Party Services</h2>
+    <p>This site uses third-party services that have their own privacy policies. Ham Radio Lab does not control how these services collect or use data:</p>
+    <ul>
+      <li><strong>Google Analytics</strong> — website traffic analysis. <a href="https://policies.google.com/privacy" style="color: var(--orange);" target="_blank" rel="noopener">Google Privacy Policy ↗</a></li>
+      <li><strong>Amazon Associates</strong> — affiliate link tracking when you click product links. <a href="https://www.amazon.com/gp/help/customer/display.html?nodeId=468496" style="color: var(--orange);" target="_blank" rel="noopener">Amazon Privacy Policy ↗</a></li>
+      <li><strong>Ham Radio Outlet</strong> — affiliate link tracking when applicable. Subject to HRO's own privacy policy.</li>
+      <li><strong>Email service provider</strong> — used to send the newsletter. Your email is stored on their platform.</li>
+    </ul>
+    <p>When you click an affiliate link and visit a retailer's site, you are subject to that retailer's privacy policy, not this one.</p>
+  </div>
+
+  <div class="doc-section" id="s5">
+    <h2><span class="sec-num">05</span> Email &amp; Newsletter</h2>
+    <p>If you sign up for the Ham Radio Lab newsletter or free guide, your email address is stored with a third-party email service provider and used to send you the requested content and occasional updates.</p>
+    <ul>
+      <li>You can unsubscribe at any time using the link in any email</li>
+      <li>Your email is never shared with advertisers or other third parties</li>
+      <li>You will only receive content related to ham radio — no unrelated promotions</li>
+    </ul>
+  </div>
+
+  <div class="doc-section" id="s6">
+    <h2><span class="sec-num">06</span> Your Rights &amp; Choices</h2>
+    <p>Depending on where you live, you may have certain rights regarding your personal data. Regardless of location, this site honors the following:</p>
+    <ul>
+      <li><strong>Access</strong> — you can ask what data is held about you</li>
+      <li><strong>Deletion</strong> — you can request that your email or submitted data be deleted</li>
+      <li><strong>Opt-out</strong> — you can unsubscribe from emails or opt out of analytics cookies at any time</li>
+      <li><strong>Correction</strong> — you can request correction of any inaccurate information</li>
+    </ul>
+    <p>To exercise any of these rights, contact me directly using the information at the bottom of this page.</p>
+  </div>
+
+  <div class="doc-section" id="s7">
+    <h2><span class="sec-num">07</span> Data Retention</h2>
+    <p>Email addresses are retained for as long as you remain subscribed to the newsletter. Upon unsubscribing, your email is removed from the active list. Analytics data is retained in aggregated, anonymized form indefinitely.</p>
+    <p>Contact form submissions may be retained for up to 12 months for reference and follow-up purposes.</p>
+  </div>
+
+  <div class="doc-section" id="s8">
+    <h2><span class="sec-num">08</span> Children's Privacy</h2>
+    <p>Ham Radio Lab is not directed at children under the age of 13. This site does not knowingly collect personal information from children. If you believe a child has submitted personal data to this site, please contact me and it will be deleted promptly.</p>
+  </div>
+
+  <div class="doc-section" id="s9">
+    <h2><span class="sec-num">09</span> Changes to This Policy</h2>
+    <p>This privacy policy may be updated from time to time. The "Last updated" date at the top of this page reflects the most recent revision. Continued use of the site after a policy update constitutes acceptance of the revised terms.</p>
+    <p>Significant changes will be noted in the newsletter if you are subscribed.</p>
+  </div>
+
+  <div class="doc-section" id="s10">
+    <h2><span class="sec-num">10</span> Contact</h2>
+    <p>Questions, concerns, or requests related to this privacy policy can be directed to:</p>
+    <div class="contact-block">
+      <p><strong style="color: var(--white);">Ham Radio Lab</strong></p>
+      <p>Colorado Springs, Colorado</p>
+      <p>Email: <a href="mailto:contact@hamradiolab.com">contact@hamradiolab.com</a></p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">I'm a solo operator — I'll respond as quickly as I can, usually within a few days.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="/technician-license-study-guide">Get Licensed</a>
+      <a href="/best-handheld-ham-radios">Gear Reviews</a>
+      <a href="/antenna-calculator">Antenna Calculator</a>
+      <a href="/what-is-aprs">What is APRS?</a>
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com · KF0WEW</div>
+  </div>
+</footer>
+
+</body>
+</html>

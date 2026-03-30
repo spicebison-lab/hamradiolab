@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="DWQIj3Pwp8GYuKP05ie2pFrB-XISDtGwYZR9wNLZBXk" />
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E1W7F87HNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1W7F87HNN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How I Passed the Technician License Exam in 2 Months (30 Min/Day) – Ham Radio Lab</title>
+<meta name="description" content="A chemical engineer with SCADA experience shares the exact study method he used to pass the ham radio Technician exam — ARRL book, hamstudy.org, and 30 minutes a day.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* ─── ARTICLE HEADER ─── */
+  .article-header {
+    position: relative; overflow: hidden;
+    padding: 4rem 2rem 3rem;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .article-header::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.07), transparent 70%);
+  }
+
+  .article-header-inner {
+    position: relative; z-index: 1;
+    max-width: 780px; margin: 0 auto;
+  }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--muted); margin-bottom: 1.2rem;
+  }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb-sep { color: var(--border2); }
+
+  .article-tag {
+    font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .article-tag::before {
+    content: '';
+    width: 20px; height: 1px; background: var(--orange);
+  }
+
+  .article-title {
+    font-family: var(--head);
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900; line-height: 1;
+    color: var(--white); letter-spacing: -0.5px;
+    margin-bottom: 1.2rem;
+  }
+
+  .article-title em { color: var(--orange); font-style: normal; }
+
+  .article-deck {
+    font-size: 1.05rem; color: var(--dim);
+    line-height: 1.7; max-width: 640px;
+    margin-bottom: 1.8rem;
+  }
+
+  .article-meta-bar {
+    display: flex; align-items: center; gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.2rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono); font-size: 0.7rem; color: var(--muted);
+  }
+
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+
+  /* ─── ARTICLE BODY ─── */
+  .article-layout {
+    max-width: 1100px; margin: 0 auto;
+    padding: 3rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .article-body h2 {
+    font-family: var(--head);
+    font-size: 1.7rem; font-weight: 900;
+    color: var(--white); line-height: 1.1;
+    margin: 2.5rem 0 0.8rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .article-body h2:first-child {
+    margin-top: 0; padding-top: 0; border-top: none;
+  }
+
+  .article-body h3 {
+    font-family: var(--head);
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--white); margin: 1.8rem 0 0.5rem;
+  }
+
+  .article-body p {
+    color: var(--body); font-size: 0.97rem;
+    line-height: 1.75; margin-bottom: 1.1rem;
+  }
+
+  .article-body a {
+    color: var(--orange); text-decoration: none;
+    border-bottom: 1px solid rgba(240,90,0,0.3);
+    transition: border-color 0.2s;
+  }
+  .article-body a:hover { border-color: var(--orange); }
+
+  .article-body strong { color: var(--white); font-weight: 600; }
+
+  /* Callout boxes */
+  .callout {
+    border-left: 3px solid var(--orange);
+    background: var(--panel);
+    padding: 1rem 1.2rem;
+    border-radius: 0 4px 4px 0;
+    margin: 1.5rem 0;
+  }
+
+  .callout-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.4rem;
+  }
+
+  .callout p {
+    color: var(--dim); font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  .callout.green { border-left-color: var(--green); }
+  .callout.green .callout-label { color: var(--green); }
+
+  .callout.blue { border-left-color: var(--blue); }
+  .callout.blue .callout-label { color: var(--blue); }
+
+  /* Step blocks */
+  .step-list { margin: 1.5rem 0; }
+
+  .step {
+    display: flex; gap: 1rem;
+    margin-bottom: 1.2rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--orange); background: var(--panel);
+    border: 1px solid var(--orange);
+    width: 28px; height: 28px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .step-content h4 {
+    font-family: var(--head); font-size: 1rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.2rem;
+  }
+
+  .step-content p {
+    font-size: 0.88rem; color: var(--muted);
+    margin-bottom: 0; line-height: 1.5;
+  }
+
+  /* Stat highlight */
+  .stat-highlight {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; margin: 1.8rem 0;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+
+  .stat-box {
+    background: var(--panel); padding: 1.2rem 1rem;
+    text-align: center;
+  }
+
+  .stat-box .num {
+    font-family: var(--mono); font-size: 1.6rem;
+    color: var(--orange); display: block; line-height: 1;
+  }
+
+  .stat-box .lbl {
+    font-size: 0.72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 1px;
+    display: block; margin-top: 4px;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar { position: sticky; top: 80px; }
+
+  .sidebar-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-card-head {
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1rem;
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange);
+  }
+
+  .sidebar-card-body { padding: 1rem; }
+
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 0.5rem; }
+  .toc-list a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.82rem; line-height: 1.4;
+    display: flex; align-items: flex-start; gap: 6px;
+    transition: color 0.2s;
+  }
+  .toc-list a::before {
+    content: '//';
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--border2); flex-shrink: 0; margin-top: 2px;
+  }
+  .toc-list a:hover { color: var(--orange); }
+
+  .gear-rec {
+    text-decoration: none; display: block;
+    padding: 0.8rem;
+    border: 1px solid var(--border);
+    border-radius: 3px; margin-bottom: 0.7rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .gear-rec:hover { border-color: var(--orange); background: var(--panel2); }
+  .gear-rec-badge {
+    font-family: var(--mono); font-size: 0.6rem;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--green); margin-bottom: 0.3rem;
+  }
+  .gear-rec-name { font-family: var(--head); font-size: 0.95rem; font-weight: 700; color: var(--white); }
+  .gear-rec-price { font-family: var(--mono); font-size: 0.85rem; color: var(--orange); }
+  .gear-rec-note { font-size: 0.75rem; color: var(--muted); margin-top: 3px; line-height: 1.4; }
+
+  .sidebar-author {
+    display: flex; gap: 0.8rem; align-items: center;
+  }
+  .sidebar-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange), var(--orange-dim));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; flex-shrink: 0;
+  }
+  .sidebar-author-name {
+    font-family: var(--head); font-size: 0.95rem; font-weight: 700; color: var(--white);
+  }
+  .sidebar-author-bio { font-size: 0.75rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .callsign-badge {
+    font-family: var(--mono); font-size: 0.65rem;
+    background: var(--panel2); border: 1px solid var(--orange);
+    color: var(--orange); padding: 1px 6px; border-radius: 2px;
+    display: inline-block; margin-top: 4px;
+  }
+
+  /* ─── EMAIL CTA ─── */
+  .article-cta {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--orange);
+    border-radius: 4px;
+    padding: 1.8rem;
+    margin: 2.5rem 0;
+    text-align: center;
+  }
+
+  .article-cta h3 {
+    font-family: var(--head); font-size: 1.5rem; font-weight: 900;
+    color: var(--white); margin-bottom: 0.4rem;
+  }
+
+  .article-cta p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+
+  .cta-form { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+
+  .cta-input {
+    flex: 1; min-width: 200px;
+    background: var(--panel2); border: 1px solid var(--border2);
+    border-radius: 3px; padding: 10px 14px;
+    color: var(--white); font-size: 0.88rem;
+    font-family: var(--body-font);
+  }
+  .cta-input:focus { outline: none; border-color: var(--orange); }
+  .cta-input::placeholder { color: var(--muted); }
+
+  .cta-btn {
+    background: var(--orange); color: #fff; border: none;
+    padding: 10px 20px; border-radius: 3px;
+    font-weight: 700; font-size: 0.88rem; cursor: pointer;
+    font-family: var(--body-font);
+    transition: background 0.2s;
+  }
+  .cta-btn:hover { background: var(--orange-dim); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-logo { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .article-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .stat-highlight { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<!-- ARTICLE HEADER -->
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="#">Get Licensed</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>Technician Study Guide</span>
+    </div>
+    <div class="article-tag">Get Licensed</div>
+    <h1 class="article-title">How I Passed the Technician Exam<br>in <em>2 Months</em> on 30 Minutes a Day</h1>
+    <p class="article-deck">I came in with zero ham radio experience — just a background in process controls and SCADA. Here's the exact method I used to go from complete beginner to licensed operator, without cramming or memorizing answers I didn't understand.</p>
+    <div class="article-meta-bar">
+      <span class="meta-item"><span class="meta-dot"></span> KF0WEW</span>
+      <span class="meta-item"><span class="meta-dot"></span> 12 min read</span>
+      <span class="meta-item"><span class="meta-dot"></span> Beginner</span>
+      <span class="meta-item"><span class="meta-dot"></span> Last updated: 2026</span>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE LAYOUT -->
+<div class="article-layout">
+
+  <!-- MAIN CONTENT -->
+  <article class="article-body">
+
+    <h2>Why I Decided to Get Licensed</h2>
+    <p>I'm a chemical engineer. I work with process controls and SCADA systems — so I'm no stranger to electrical circuits, signal transmission, or communications infrastructure. But ham radio was completely off my radar until I started looking into emergency communications preparedness and remote monitoring applications where internet connectivity isn't guaranteed.</p>
+    <p>Once I started digging, I realized how deep the rabbit hole goes. Ham radio isn't just a backup communication tool — it's a legitimate technical hobby with real engineering substance behind it. I decided to get licensed the right way: by actually understanding the material, not just memorizing answers to pass a test.</p>
+
+    <div class="callout">
+      <div class="callout-label">// The Bottom Line Up Front</div>
+      <p>ARRL Technician book cover to cover + hamstudy.org daily practice + 30 minutes a day for 2 months = licensed operator. That's it. Everything below is the detail behind that formula.</p>
+    </div>
+
+    <h2>What the Technician Exam Actually Covers</h2>
+    <p>The FCC Technician license exam is 35 multiple-choice questions drawn from a publicly available question pool. You need 26 correct to pass (74%). The question pool is published — every possible question you could be asked is available to study in advance. There are no surprises if you prepare properly.</p>
+    <p>The material covers four broad areas: operating procedures and regulations, electrical principles and circuit fundamentals, radio wave propagation, and station equipment and safety. If you already have any electrical background at all, the circuit and safety sections will feel very familiar. The areas that felt most foreign to me coming in were the specific FCC regulations and the practical side of actually operating a radio — things like making a contact, understanding repeaters, and proper procedure on the air.</p>
+
+    <div class="stat-highlight">
+      <div class="stat-box">
+        <span class="num">35</span>
+        <span class="lbl">Exam Questions</span>
+      </div>
+      <div class="stat-box">
+        <span class="num">26</span>
+        <span class="lbl">Needed to Pass</span>
+      </div>
+      <div class="stat-box">
+        <span class="num">~400</span>
+        <span class="lbl">Question Pool Size</span>
+      </div>
+    </div>
+
+    <h2>My Exact Study Method</h2>
+    <p>I kept it simple. Two tools: the ARRL Technician book and hamstudy.org. That's all I used, and I'd use the same approach again.</p>
+
+    <h3>Step 1 — Read the ARRL Book Cover to Cover</h3>
+    <p>The <strong>ARRL Ham Radio License Manual</strong> is the standard study guide for the Technician exam and it's worth every dollar. I read it straight through without skipping sections. My goal wasn't to memorize anything at this stage — it was just to build a mental map of the material so that when I started drilling questions, I'd have context for the answers instead of just pattern-matching.</p>
+    <p>The electrical fundamentals section — Ohm's law, basic circuits, reading diagrams — was comfortable territory for me given my background. The sections on FCC regulations, band privileges, and proper operating procedure were where I had to slow down and actually read carefully. These aren't difficult concepts, but they're specific and the exam will test exact details.</p>
+    <p>The section I found most difficult to connect with from reading alone was the radio equipment itself — what a repeater actually sounds like, how you make a contact, what proper radio etiquette looks like in practice. Reading about it only gets you so far.</p>
+
+    <div class="callout blue">
+      <div class="callout-label">// Pro Tip: Supplement with YouTube</div>
+      <p>For the equipment and operating procedure sections, watching YouTube videos of actual ham radio contacts and repeater use made a huge difference. Reading "identify yourself with your callsign at the end of each transmission" is abstract. Watching someone actually do it on video makes it concrete and memorable. Search "ham radio repeater contact" and "making a ham radio contact" — there's plenty of quality content available.</p>
+    </div>
+
+    <h3>Step 2 — Drill hamstudy.org Daily</h3>
+    <p>Once I'd read through the book, I set up a free account on <strong>hamstudy.org</strong> and started working through the question pool systematically. The site tracks which questions you've seen, how you performed on each one, and gives you an overall aptitude percentage across the full pool.</p>
+    <p>My daily routine was simple: open hamstudy, work through questions for 30 minutes, stop. That's it. I didn't push for longer sessions. The consistency of doing it every day mattered more than any single long study session.</p>
+    <p>Hamstudy's algorithm prioritizes questions you've gotten wrong or haven't seen recently. This means your time is always being spent where it's actually needed. By the end of two months I had seen every question in the pool and was sitting above 90% aptitude consistently.</p>
+
+    <div class="callout green">
+      <div class="callout-label">// What 90% Aptitude Means</div>
+      <p>Hamstudy's aptitude score reflects your performance across the entire question pool weighted by how recently you got each question right. 90%+ means you're reliably getting the vast majority of questions correct — including the ones that initially tripped you up. At that level, the real exam feels like a practice test you've already taken.</p>
+    </div>
+
+    <h3>Step 3 — Take Practice Tests in the Final Weeks</h3>
+    <p>In the last two to three weeks before my exam date I started taking full 35-question practice tests every morning before work. Hamstudy offers these, and there are other sites like <strong>aa9pw.com</strong> that generate practice exams from the actual question pool.</p>
+    <p>The practice tests serve a different purpose than the daily drilling. They simulate the real exam format and pacing. By the time my exam date arrived, I had taken enough practice tests that the format itself felt completely routine. I wasn't nervous about the structure — I knew exactly what to expect.</p>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h4>Get the ARRL Ham Radio License Manual</h4>
+          <p>Read cover to cover before you start drilling questions. Build context first, not memorization.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h4>Create a free hamstudy.org account</h4>
+          <p>Work through the question pool daily. 30 minutes is enough. Aim for 90%+ aptitude before you book your exam.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h4>Supplement with YouTube for equipment sections</h4>
+          <p>Watch real ham radio contacts and repeater use. The operating procedure material makes a lot more sense once you've seen it in action.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h4>Take practice tests in the final 2–3 weeks</h4>
+          <p>Simulate the real exam format daily. By exam day the format should feel completely familiar.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <h4>Book your exam and show up confident</h4>
+          <p>If you're consistently above 90% on hamstudy, you're ready. Stop second-guessing yourself and schedule the exam.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>How the Online Proctored Exam Works</h2>
+    <p>A lot of new hams don't realize you can now take the Technician exam entirely online from home. You don't need to find a local VE session or drive anywhere. I took mine on a Saturday morning at 7am in my basement.</p>
+    <p>The exam is proctored over Zoom by a team of volunteer examiners — Volunteer Examiners, or VEs — who are licensed amateur operators. In my session there were five Extra class operators monitoring the exam. Before you start, you'll use your phone to do a 360-degree scan of the room showing that no one else is present and that your desk is clear of any materials. Your computer camera stays on for the duration of the exam.</p>
+    <p>The exam itself is delivered through a secure browser session. Once you finish, your results are immediate. I knew I passed within minutes of submitting my last answer.</p>
+    <p>The FCC processes new licenses quickly. I took my exam on a Saturday morning and had my callsign — <strong>KF0WEW</strong> — in my email by Tuesday morning. The whole thing from sitting down to having a real FCC license was less than 72 hours.</p>
+
+    <div class="callout">
+      <div class="callout-label">// How to Find an Online Exam Session</div>
+      <p>Go to arrl.org and search for online exam sessions, or check hamstudy.org — they have a session finder that includes online proctored options. Sessions are available most weekends and some weeknights. Most have a small fee (usually $15 or less) to cover VE administrative costs.</p>
+    </div>
+
+    <h2>What Surprised Me About the Real Exam</h2>
+    <p>Nothing on the exam surprised me. That's the honest answer — and it's a testament to how well hamstudy.org prepares you. Every question I saw on the real exam was one I had seen and practiced during my two months of study. The format, the wording, the multiple choice structure — it all matched exactly what I'd been doing on practice tests.</p>
+    <p>The presence of five Extra class operators watching on Zoom sounds more intimidating than it actually is. They're volunteers who want you to succeed. They're there to verify exam integrity, not to make you nervous. Nobody said a word during my exam — it was completely silent on their end.</p>
+
+    <h2>What I'd Tell Someone Starting From Zero</h2>
+    <p>You don't need a technical background to pass this exam. The circuit fundamentals covered on the Technician exam are genuinely introductory level — if you can handle basic algebra, you can handle everything in the electrical section. I had an advantage with my engineering background, but plenty of people with no technical background at all pass this exam every week.</p>
+    <p>What matters more than background knowledge is consistency. Thirty minutes a day for two months is 60 hours of study time. That's more than enough to thoroughly cover the material — you just have to actually show up every day and do it.</p>
+    <p>The one thing I'd add for people without any prior exposure to radio or electronics: don't skip the YouTube supplement step. Reading about how to operate a radio is genuinely harder to internalize than watching someone do it. Spend an hour watching real ham radio operation on YouTube before you dive into the question pool. It'll make the operating procedure questions click much faster.</p>
+
+    <div class="callout green">
+      <div class="callout-label">// My honest timeline estimate</div>
+      <p>30 minutes/day × 60 days = licensed operator. If you have any electrical background, you might be ready in 6 weeks. If you're starting from complete zero on electronics, give yourself the full 2 months and don't rush the exam booking.</p>
+    </div>
+
+    <h2>Resources I Actually Used</h2>
+    <p><strong>ARRL Ham Radio License Manual</strong> — the official study guide. Get the most current edition to make sure you have the current question pool. Available on Amazon or direct from arrl.org.</p>
+    <p><strong>hamstudy.org</strong> — free, excellent, and purpose-built for exactly this. Create a free account and use it daily. The aptitude tracking and spaced repetition algorithm are genuinely well done.</p>
+    <p><strong>YouTube</strong> — no specific channel, just search for ham radio contacts, repeater operation, and "making my first QSO." Watch enough that the operating procedures feel familiar before your exam.</p>
+    <p><strong>arrl.org exam search</strong> — to find an online proctored exam session when you're ready to book.</p>
+
+    <!-- EMAIL CTA -->
+    <div class="article-cta">
+      <h3>Get the Free Ham Radio Quick-Start Guide</h3>
+      <p>Everything you need to go from zero to licensed — plus top gear picks for new operators.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="your@email.com">
+        <button class="cta-btn">Send It →</button>
+      </div>
+    </div>
+
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <!-- TOC -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">In This Article</div>
+      <div class="sidebar-card-body">
+        <ul class="toc-list">
+          <li><a href="#">Why I Got Licensed</a></li>
+          <li><a href="#">What the Exam Covers</a></li>
+          <li><a href="#">My Exact Study Method</a></li>
+          <li><a href="#">How Online Proctoring Works</a></li>
+          <li><a href="#">What Surprised Me</a></li>
+          <li><a href="#">Starting From Zero</a></li>
+          <li><a href="#">Resources I Used</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GEAR -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">First Radio After Passing</div>
+      <div class="sidebar-card-body">
+        <a href="#" class="gear-rec">
+          <div class="gear-rec-badge">✓ Best Budget</div>
+          <div class="gear-rec-name">Baofeng UV-5R</div>
+          <div class="gear-rec-price">~$25</div>
+          <div class="gear-rec-note">The best first radio for a new Technician. Cheap enough to experiment with.</div>
+        </a>
+        <a href="#" class="gear-rec">
+          <div class="gear-rec-badge" style="color: var(--orange);">✓ Top Pick</div>
+          <div class="gear-rec-name">Yaesu FT-65R</div>
+          <div class="gear-rec-price">~$80</div>
+          <div class="gear-rec-note">Better build quality and receiver than Baofeng. Great daily driver.</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- AUTHOR -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">About the Author</div>
+      <div class="sidebar-card-body">
+        <div class="sidebar-author">
+          <div class="sidebar-avatar">👨‍🔬</div>
+          <div>
+            <div class="sidebar-author-name">Ham Radio Lab</div>
+            <div class="sidebar-author-bio">Chemical engineer. Process controls & SCADA. Recently licensed operator based in Colorado Springs.</div>
+            <div class="callsign-badge">KF0WEW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Affiliate Disclosure</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Sitemap</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+
+</body>
+</html>

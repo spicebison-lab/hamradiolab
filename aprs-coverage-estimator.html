@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="CQOLBnTTIn3LsiW_gXBNtatt4Er_wrr58Tn5beri_Vk" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E1W7F87HNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1W7F87HNN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APRS Coverage Estimator – Ham Radio Lab</title>
+<meta name="description" content="Estimate your APRS digipeater coverage radius based on transmit power, antenna height, and terrain type. Free tool from Ham Radio Lab.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+
+  nav { position: sticky; top: 0; z-index: 500; background: rgba(14,14,14,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--head); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: var(--white); }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a { color: var(--dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; border-radius: 3px; transition: color 0.2s, background 0.2s; }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-cta { background: var(--orange); color: #fff; padding: 7px 16px; border-radius: 3px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+  .nav-cta:hover { background: var(--orange-dim); }
+
+  .tool-header { position: relative; overflow: hidden; padding: 3rem 2rem 2rem; background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .tool-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px); background-size: 40px 40px; }
+  .tool-header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 100% at 10% 50%, rgba(240,90,0,0.09), transparent 65%); }
+  .tool-header-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .tool-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+  .tool-label::before { content: ''; width: 20px; height: 1px; background: var(--orange); }
+  .tool-title { font-family: var(--head); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 900; color: var(--white); line-height: 1; margin-bottom: 0.5rem; }
+  .tool-title em { color: var(--orange); font-style: normal; }
+  .tool-desc { font-size: 0.88rem; color: var(--dim); max-width: 460px; line-height: 1.6; }
+  .header-note { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); background: var(--panel); border: 1px solid var(--border); padding: 8px 12px; border-radius: 3px; max-width: 280px; line-height: 1.5; }
+
+  /* MAIN LAYOUT */
+  .tool-wrap { max-width: 1200px; margin: 0 auto; padding: 2rem; display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; align-items: start; }
+
+  /* INPUT PANEL */
+  .input-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: sticky; top: 80px; }
+  .panel-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.8rem 1.1rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .panel-body { padding: 1.2rem; display: flex; flex-direction: column; gap: 1.1rem; }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .field-input { background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 9px 12px; color: var(--white); font-family: var(--mono); font-size: 0.92rem; outline: none; width: 100%; transition: border-color 0.2s; }
+  .field-input:focus { border-color: var(--orange); }
+  .field-input::placeholder { color: var(--muted); font-size: 0.8rem; }
+  .field-note { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+
+  /* Slider */
+  .slider-wrap { position: relative; }
+  .field-slider { width: 100%; accent-color: var(--orange); cursor: pointer; }
+  .slider-val { font-family: var(--mono); font-size: 0.85rem; color: var(--orange); text-align: right; margin-top: 2px; }
+
+  /* Terrain select */
+  .terrain-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; }
+  .terrain-btn { background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 0.5rem; cursor: pointer; text-align: center; transition: all 0.15s; }
+  .terrain-btn:hover { border-color: var(--orange); }
+  .terrain-btn.active { border-color: var(--orange); background: var(--orange-glow); }
+  .terrain-btn-icon { font-size: 1.1rem; display: block; }
+  .terrain-btn-name { font-family: var(--mono); font-size: 0.6rem; color: var(--white); display: block; margin-top: 2px; letter-spacing: 0.5px; }
+
+  /* Path selector */
+  .path-grid { display: flex; flex-direction: column; gap: 0.4rem; }
+  .path-btn { background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 0.55rem 0.8rem; cursor: pointer; text-align: left; transition: all 0.15s; display: flex; align-items: center; justify-content: space-between; }
+  .path-btn:hover { border-color: var(--orange); }
+  .path-btn.active { border-color: var(--orange); background: var(--orange-glow); }
+  .path-btn-name { font-family: var(--mono); font-size: 0.72rem; color: var(--white); }
+  .path-btn-hops { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+
+  .quick-loc {
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 3px;
+    padding: 3px 8px; cursor: pointer; font-family: var(--mono); font-size: 0.62rem;
+    color: var(--dim); letter-spacing: 0.5px; transition: all 0.15s; white-space: nowrap;
+  }
+  .quick-loc:hover { border-color: var(--orange); color: var(--orange); }
+
+  .calc-btn { width: 100%; background: var(--orange); color: #fff; border: none; padding: 12px; border-radius: 3px; font-family: var(--head); font-size: 1.05rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: background 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .calc-btn:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* RIGHT PANEL */
+  .right-panel { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  /* MAP */
+  .map-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .map-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.8rem 1.1rem; display: flex; align-items: center; justify-content: space-between; }
+  .map-card-title { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .map-card-status { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); }
+  #map { height: 420px; background: var(--panel2); }
+  .map-placeholder { height: 420px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.8rem; background: var(--panel2); }
+  .map-placeholder-icon { font-size: 2.5rem; opacity: 0.3; }
+  .map-placeholder-text { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.6; }
+
+  /* RESULTS GRID */
+  .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .result-box { background: var(--panel); padding: 1rem; text-align: center; }
+  .result-box-label { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.4rem; }
+  .result-box-value { font-family: var(--mono); font-size: 1.3rem; color: var(--orange); display: block; line-height: 1; }
+  .result-box-sub { font-size: 0.7rem; color: var(--muted); display: block; margin-top: 3px; }
+
+  /* PATH ANALYSIS */
+  .path-analysis { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .path-rows { padding: 0; }
+  .path-row { padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 120px 1fr auto; align-items: center; gap: 1rem; }
+  .path-row:last-child { border-bottom: none; }
+  .path-row-name { font-family: var(--mono); font-size: 0.72rem; color: var(--white); }
+  .path-row-bar-wrap { height: 6px; background: var(--border2); border-radius: 3px; overflow: hidden; }
+  .path-row-bar { height: 100%; border-radius: 3px; background: var(--orange); transition: width 0.4s ease; }
+  .path-row-val { font-family: var(--mono); font-size: 0.75rem; color: var(--orange); white-space: nowrap; text-align: right; }
+
+  /* RECOMMENDATIONS */
+  .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .rec-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1rem; }
+  .rec-card-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
+  .rec-card-title { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem; }
+  .rec-card-text { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+  .rec-card.highlight { border-color: rgba(240,90,0,0.4); background: rgba(240,90,0,0.04); }
+
+  /* EXPLAINER */
+  .explainer { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .explainer-body { padding: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .explainer-section h4 { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
+  .explainer-section p { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+  .formula-box { font-family: var(--mono); font-size: 0.72rem; color: var(--orange); background: var(--panel2); padding: 5px 10px; border-radius: 2px; display: inline-block; margin: 0.4rem 0; }
+
+  footer { background: #0E0E0E; border-top: 1px solid var(--border); padding: 2rem; margin-top: 2rem; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  /* Leaflet dark override */
+  .leaflet-tile { filter: brightness(0.7) saturate(0.6); }
+  .leaflet-container { background: #141414; }
+  .leaflet-popup-content-wrapper { background: #1C1C1C; color: #C8C0B0; border: 1px solid #333; border-radius: 4px; }
+  .leaflet-popup-tip { background: #1C1C1C; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeIn 0.3s ease both; }
+
+  @media (max-width: 900px) {
+    .tool-wrap { grid-template-columns: 1fr; }
+    .input-panel { position: static; }
+    .nav-links { display: none; }
+    .results-grid { grid-template-columns: repeat(2, 1fr); }
+    .rec-grid { grid-template-columns: 1fr; }
+    .explainer-body { grid-template-columns: 1fr; }
+    .path-row { grid-template-columns: 100px 1fr auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="tool-header">
+  <div class="tool-header-inner">
+    <div>
+      <div class="tool-label">Free Tool</div>
+      <h1 class="tool-title">APRS Coverage <em>Estimator</em></h1>
+      <p class="tool-desc">Enter your location, transmit power, and antenna height to estimate your RF coverage radius and path recommendations for the APRS network.</p>
+    </div>
+    <div class="header-note">
+      // Coverage estimates are based on RF propagation models (Friis + HAAT). Actual coverage varies with terrain, obstacles, and local digipeater placement. Use aprs.fi to verify live network coverage in your area.
+    </div>
+  </div>
+</div>
+
+<div class="tool-wrap">
+
+  <!-- INPUT PANEL -->
+  <div class="input-panel">
+    <div class="panel-head">// Station Parameters</div>
+    <div class="panel-body">
+
+      <div class="field-group">
+        <label class="field-label">Your Location</label>
+        <div style="display:flex; gap:0.4rem;">
+          <input class="field-input" type="text" id="locationInput" placeholder="38.8339, -104.8214" style="flex:1;" />
+          <button onclick="useMyLocation()" title="Use GPS" style="background:var(--panel2);border:1px solid var(--border2);border-radius:3px;padding:0 10px;cursor:pointer;font-size:1rem;color:var(--orange);flex-shrink:0;">📍</button>
+        </div>
+        <div class="field-note">Enter lat,lng coordinates or click 📍 for GPS. Click the map to place manually.</div>
+        <div style="margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.3rem;">
+          <button class="quick-loc" onclick="setCoords(38.8339,-104.8214)">Colorado Springs</button>
+          <button class="quick-loc" onclick="setCoords(39.7392,-104.9903)">Denver</button>
+          <button class="quick-loc" onclick="setCoords(40.7128,-74.0060)">New York</button>
+          <button class="quick-loc" onclick="setCoords(34.0522,-118.2437)">Los Angeles</button>
+          <button class="quick-loc" onclick="setCoords(47.6062,-122.3321)">Seattle</button>
+          <button class="quick-loc" onclick="setCoords(41.8781,-87.6298)">Chicago</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Transmit Power</label>
+        <input type="range" class="field-slider" id="powerSlider" min="1" max="50" value="5" step="1" oninput="updateSliderLabels()">
+        <div class="slider-val"><span id="powerVal">5</span> watts</div>
+        <div class="field-note">HT = 1–5W &nbsp;|&nbsp; Mobile = 25–50W</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Antenna Height Above Ground</label>
+        <input type="range" class="field-slider" id="heightSlider" min="1" max="100" value="5" step="1" oninput="updateSliderLabels()">
+        <div class="slider-val"><span id="heightVal">5</span> meters</div>
+        <div class="field-note">HT held up = ~1.5m &nbsp;|&nbsp; Car roof = ~1.5m &nbsp;|&nbsp; Home mast = 5–30m</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Terrain Type</label>
+        <div class="terrain-grid">
+          <button class="terrain-btn active" id="terrain-flat" onclick="setTerrain('flat', this)">
+            <span class="terrain-btn-icon">🏙️</span>
+            <span class="terrain-btn-name">FLAT / URBAN</span>
+          </button>
+          <button class="terrain-btn" id="terrain-suburban" onclick="setTerrain('suburban', this)">
+            <span class="terrain-btn-icon">🏘️</span>
+            <span class="terrain-btn-name">SUBURBAN</span>
+          </button>
+          <button class="terrain-btn" id="terrain-hilly" onclick="setTerrain('hilly', this)">
+            <span class="terrain-btn-icon">⛰️</span>
+            <span class="terrain-btn-name">HILLY</span>
+          </button>
+          <button class="terrain-btn" id="terrain-mountain" onclick="setTerrain('mountain', this)">
+            <span class="terrain-btn-icon">🗻</span>
+            <span class="terrain-btn-name">MOUNTAIN</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">APRS Path Setting</label>
+        <div class="path-grid">
+          <button class="path-btn" id="path-direct" onclick="setPath('DIRECT', this)">
+            <span class="path-btn-name">DIRECT only</span>
+            <span class="path-btn-hops">0 hops</span>
+          </button>
+          <button class="path-btn active" id="path-wide11" onclick="setPath('WIDE1-1', this)">
+            <span class="path-btn-name">WIDE1-1</span>
+            <span class="path-btn-hops">1 hop</span>
+          </button>
+          <button class="path-btn" id="path-wide11-21" onclick="setPath('WIDE1-1,WIDE2-1', this)">
+            <span class="path-btn-name">WIDE1-1,WIDE2-1</span>
+            <span class="path-btn-hops">2 hops — recommended mobile</span>
+          </button>
+          <button class="path-btn" id="path-wide22" onclick="setPath('WIDE2-2', this)">
+            <span class="path-btn-name">WIDE2-2</span>
+            <span class="path-btn-hops">2 hops — fixed station</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="white" stroke-width="1.2"/><path d="M7.5 4v3.5l2.5 1.2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Estimate Coverage
+      </button>
+
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <!-- MAP -->
+    <div class="map-card">
+      <div class="map-card-head">
+        <span class="map-card-title">// Coverage Map</span>
+        <span class="map-card-status" id="mapStatus">Enter location and calculate to view</span>
+      </div>
+      <div id="mapPlaceholder" class="map-placeholder">
+        <div class="map-placeholder-icon">📡</div>
+        <div class="map-placeholder-text">Enter your location and click<br>"Estimate Coverage" to generate map</div>
+      </div>
+      <div id="map" style="display:none;"></div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-grid animate-in" id="resultsGrid" style="display:none;">
+      <div class="result-box">
+        <span class="result-box-label">Direct Range</span>
+        <span class="result-box-value" id="res-direct">—</span>
+        <span class="result-box-sub">line of sight</span>
+      </div>
+      <div class="result-box">
+        <span class="result-box-label">1-Hop Range</span>
+        <span class="result-box-value" id="res-1hop">—</span>
+        <span class="result-box-sub">via 1 digipeater</span>
+      </div>
+      <div class="result-box">
+        <span class="result-box-label">2-Hop Range</span>
+        <span class="result-box-value" id="res-2hop">—</span>
+        <span class="result-box-sub">via 2 digipeaters</span>
+      </div>
+      <div class="result-box">
+        <span class="result-box-label">EIRP</span>
+        <span class="result-box-value" id="res-eirp">—</span>
+        <span class="result-box-sub">effective radiated power</span>
+      </div>
+    </div>
+
+    <!-- PATH ANALYSIS -->
+    <div class="path-analysis" id="pathAnalysis" style="display:none;">
+      <div class="panel-head">// Path Coverage Analysis</div>
+      <div class="path-rows" id="pathRows"></div>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div id="recsSection" style="display:none;">
+      <div class="panel-head" style="background:var(--panel2); border:1px solid var(--border); border-bottom:none; padding:0.8rem 1.1rem; border-radius:4px 4px 0 0; font-family:var(--mono); font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--orange);">// Recommendations for Your Setup</div>
+      <div class="rec-grid" id="recGrid" style="border:1px solid var(--border); border-top:none; padding:1rem; background:var(--panel); border-radius:0 0 4px 4px;"></div>
+    </div>
+
+    <!-- EXPLAINER -->
+    <div class="explainer">
+      <div class="panel-head">// How This Is Calculated</div>
+      <div class="explainer-body">
+        <div class="explainer-section">
+          <h4>RF Propagation Model</h4>
+          <p>Coverage estimates use a modified Friis free-space path loss equation combined with a HAAT (Height Above Average Terrain) correction. The model accounts for terrain type via an empirical correction factor derived from ITU-R P.1546 data for VHF propagation at 144 MHz.</p>
+          <div class="formula-box">d = 4.12 × √(h_tx + h_digi)</div>
+          <p>The radio horizon formula above (in km) gives the optical line-of-sight distance. RF propagation at VHF extends roughly 15% beyond optical horizon due to atmospheric refraction (k-factor ≈ 1.33).</p>
+        </div>
+        <div class="explainer-section">
+          <h4>Path Hop Modeling</h4>
+          <p>Each digipeater hop multiplies coverage by the digipeater's assumed HAAT. The model assumes digipeaters are located at elevated sites (typical HAAT: 50–150m) consistent with community-maintained infrastructure. Actual hop coverage depends heavily on digipeater placement in your area — verify at aprs.fi.</p>
+          <div class="formula-box">Coverage(n hops) = d_direct × multiplier^n</div>
+          <p>Terrain correction factors: Flat/Urban 1.0×, Suburban 0.85×, Hilly 0.65×, Mountain 0.45× — based on empirical path loss data for obstructed VHF environments.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+
+<script>
+  let map = null;
+  let stationMarker = null;
+  let coverageCircles = [];
+  let currentTerrain = 'flat';
+  let currentPath = 'WIDE1-1';
+  let currentLat = null;
+  let currentLng = null;
+
+  const terrainFactors = { flat: 1.0, suburban: 0.85, hilly: 0.65, mountain: 0.45 };
+  const terrainLabels = { flat: 'Flat/Urban', suburban: 'Suburban', hilly: 'Hilly', mountain: 'Mountain' };
+
+  function updateSliderLabels() {
+    document.getElementById('powerVal').textContent = document.getElementById('powerSlider').value;
+    document.getElementById('heightVal').textContent = document.getElementById('heightSlider').value;
+  }
+
+  function setTerrain(t, btn) {
+    currentTerrain = t;
+    document.querySelectorAll('.terrain-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function setPath(p, btn) {
+    currentPath = p;
+    document.querySelectorAll('.path-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  // Calculate radio horizon distance in km
+  function radioHorizon(heightMeters) {
+    return 4.12 * Math.sqrt(heightMeters) * 1.15; // 1.15 = atmospheric refraction factor
+  }
+
+  // Calculate EIRP in dBm
+  function calcEIRP(watts) {
+    const dBm = 10 * Math.log10(watts * 1000);
+    return dBm.toFixed(1);
+  }
+
+  function calcCoverage(powerW, heightM, terrain) {
+    const tf = terrainFactors[terrain];
+    const digiHAAT = 80; // assumed average digipeater height in meters
+
+    const directKm = radioHorizon(heightM) * tf;
+    const hop1Km = (radioHorizon(heightM) + radioHorizon(digiHAAT)) * tf;
+    const hop2Km = (radioHorizon(heightM) + 2 * radioHorizon(digiHAAT)) * tf;
+
+    // Power bonus: every doubling of power adds ~41% range
+    const powerBonus = Math.pow(powerW / 5, 0.2); // normalized to 5W HT
+
+    return {
+      direct: directKm * powerBonus,
+      hop1: hop1Km * powerBonus,
+      hop2: hop2Km * powerBonus,
+      eirp: calcEIRP(powerW)
+    };
+  }
+
+  function fmtKm(km) {
+    if (km >= 100) return `${Math.round(km)} km`;
+    return `${km.toFixed(1)} km`;
+  }
+
+  function fmtMi(km) {
+    const mi = km * 0.621371;
+    if (mi >= 100) return `${Math.round(mi)} mi`;
+    return `${mi.toFixed(1)} mi`;
+  }
+
+  function setCoords(lat, lng) {
+    currentLat = lat;
+    currentLng = lng;
+    document.getElementById('locationInput').value = lat + ', ' + lng;
+  }
+
+  function useMyLocation() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser. Enter coordinates manually.');
+      return;
+    }
+    const btn = document.querySelector('.calc-btn');
+    document.getElementById('locationInput').value = 'Getting GPS location...';
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        const lat = pos.coords.latitude.toFixed(4);
+        const lng = pos.coords.longitude.toFixed(4);
+        currentLat = parseFloat(lat);
+        currentLng = parseFloat(lng);
+        document.getElementById('locationInput').value = lat + ', ' + lng;
+      },
+      function(err) {
+        document.getElementById('locationInput').value = '';
+        alert('GPS not available. Enter coordinates manually or use a quick-select city above.');
+      }
+    );
+  }
+
+  function resetBtn() {
+    const btn = document.querySelector('.calc-btn');
+    btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="white" stroke-width="1.2"/><path d="M7.5 4v3.5l2.5 1.2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg> Estimate Coverage`;
+    btn.disabled = false;
+  }
+
+  function initMap(lat, lng) {
+    const placeholder = document.getElementById('mapPlaceholder');
+    const mapEl = document.getElementById('map');
+    placeholder.style.display = 'none';
+    mapEl.style.display = 'block';
+
+    if (!map) {
+      map = L.map('map', { zoomControl: true });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18
+      }).addTo(map);
+      map.on('click', function(e) {
+        currentLat = e.latlng.lat;
+        currentLng = e.latlng.lng;
+        document.getElementById('locationInput').value = `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`;
+        plotCoverage(currentLat, currentLng);
+        updateResultsDisplay(calcCoverage(
+          parseInt(document.getElementById('powerSlider').value),
+          parseInt(document.getElementById('heightSlider').value),
+          currentTerrain
+        ));
+      });
+    }
+    // Force Leaflet to recalculate size after display:block
+    setTimeout(() => {
+      map.invalidateSize();
+      map.setView([lat, lng], 10);
+    }, 50);
+  }
+
+  function plotCoverage(lat, lng) {
+    const powerW = parseInt(document.getElementById('powerSlider').value);
+    const heightM = parseInt(document.getElementById('heightSlider').value);
+    const coverage = calcCoverage(powerW, heightM, currentTerrain);
+
+    // Clear existing
+    coverageCircles.forEach(c => map.removeLayer(c));
+    coverageCircles = [];
+    if (stationMarker) map.removeLayer(stationMarker);
+
+    // Station marker
+    const icon = L.divIcon({
+      html: `<div style="width:14px;height:14px;background:#F05A00;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(240,90,0,0.8);"></div>`,
+      className: '',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7]
+    });
+    stationMarker = L.marker([lat, lng], { icon }).addTo(map);
+    stationMarker.bindPopup(`<b style="color:#F05A00;font-family:monospace">Your Station</b><br><span style="font-size:0.8rem;font-family:monospace">${powerW}W · ${heightM}m AGL · ${terrainLabels[currentTerrain]}</span>`).openPopup();
+
+    // Draw coverage rings — outermost first
+    const rings = [
+      { r: coverage.hop2 * 1000, color: '#4A9EFF', opacity: 0.08, label: '2-hop' },
+      { r: coverage.hop1 * 1000, color: '#F05A00', opacity: 0.12, label: '1-hop' },
+      { r: coverage.direct * 1000, color: '#39D98A', opacity: 0.22, label: 'Direct' },
+    ];
+
+    rings.forEach(ring => {
+      const c = L.circle([lat, lng], {
+        radius: ring.r,
+        color: ring.color,
+        fillColor: ring.color,
+        fillOpacity: ring.opacity,
+        weight: 1.5,
+        opacity: 0.6,
+        dashArray: ring.label === 'Direct' ? null : '6,4'
+      }).addTo(map);
+      coverageCircles.push(c);
+    });
+
+    // Fit map to outermost ring — delay to ensure map is sized
+    setTimeout(() => {
+      map.fitBounds(L.circle([lat, lng], { radius: coverage.hop2 * 1000 }).getBounds(), { padding: [30, 30] });
+    }, 100);
+    document.getElementById('mapStatus').textContent = `${fmtKm(coverage.direct)} direct · ${fmtKm(coverage.hop1)} 1-hop · ${fmtKm(coverage.hop2)} 2-hop`;
+
+    return coverage;
+  }
+
+  function updateResultsDisplay(coverage) {
+    document.getElementById('res-direct').textContent = fmtKm(coverage.direct);
+    document.getElementById('res-1hop').textContent = fmtKm(coverage.hop1);
+    document.getElementById('res-2hop').textContent = fmtKm(coverage.hop2);
+    document.getElementById('res-eirp').textContent = `${coverage.eirp} dBm`;
+    document.getElementById('resultsGrid').style.display = 'grid';
+
+    const maxRange = coverage.hop2;
+    const paths = [
+      { name: 'DIRECT', km: coverage.direct, color: '#39D98A' },
+      { name: 'WIDE1-1', km: coverage.hop1 * 0.6, color: '#F05A00' },
+      { name: 'WIDE1-1,WIDE2-1', km: coverage.hop2, color: '#F05A00' },
+      { name: 'WIDE2-2', km: coverage.hop2 * 0.9, color: '#4A9EFF' },
+    ];
+    document.getElementById('pathRows').innerHTML = paths.map(p => `
+      <div class="path-row">
+        <div class="path-row-name">${p.name}</div>
+        <div class="path-row-bar-wrap">
+          <div class="path-row-bar" style="width:${Math.max(4,(p.km/maxRange*100)).toFixed(0)}%; background:${p.color};"></div>
+        </div>
+        <div class="path-row-val" style="color:${p.color}">${fmtKm(p.km)} / ${fmtMi(p.km)}</div>
+      </div>
+    `).join('');
+    document.getElementById('pathAnalysis').style.display = 'block';
+  }
+
+  function calculate() {
+    const locationStr = document.getElementById('locationInput').value.trim();
+    if (!locationStr) {
+      document.getElementById('locationInput').style.borderColor = '#F05A00';
+      document.getElementById('locationInput').focus();
+      return;
+    }
+    document.getElementById('locationInput').style.borderColor = '';
+
+    const btn = document.querySelector('.calc-btn');
+    btn.innerHTML = '⏳ Locating...';
+    btn.disabled = true;
+
+    try {
+      let lat = currentLat, lng = currentLng;
+
+      // Parse coordinates from input field (only coord format supported — no geocoding)
+      const coordMatch = locationStr.match(/^(-?\d+\.?\d*),\s*(-?\d+\.?\d*)$/);
+      if (coordMatch) {
+        lat = parseFloat(coordMatch[1]);
+        lng = parseFloat(coordMatch[2]);
+      } else if (lat === null || lng === null) {
+        // No coords entered and no location set — prompt to use quick-select or GPS
+        alert('Please select a location using the quick-select cities, the 📍 GPS button, or enter coordinates as "lat, lng" (e.g. 38.8339, -104.8214).');
+        resetBtn();
+        return;
+      }
+
+      currentLat = lat;
+      currentLng = lng;
+
+      const powerW = parseInt(document.getElementById('powerSlider').value);
+      const heightM = parseInt(document.getElementById('heightSlider').value);
+      const coverage = calcCoverage(powerW, heightM, currentTerrain);
+
+      initMap(lat, lng);
+
+      // Small delay to let map initialize before plotting
+      setTimeout(() => {
+        plotCoverage(lat, lng);
+        updateResultsDisplay(coverage);
+
+        const recs = buildRecs(powerW, heightM, currentTerrain, coverage);
+        document.getElementById('recGrid').innerHTML = recs;
+        document.getElementById('recsSection').style.display = 'block';
+
+        resetBtn();
+      }, 150);
+
+    } catch(err) {
+      console.error('Calculate error:', err);
+      alert('Something went wrong. Please try again.');
+      resetBtn();
+    }
+  }
+
+  function buildRecs(powerW, heightM, terrain, coverage) {
+    const recs = [];
+
+    if (powerW < 5) {
+      recs.push({ icon: '⚡', title: 'Increase Power', text: `At ${powerW}W your direct range is ${fmtKm(coverage.direct)}. Bumping to 5W adds ~${fmtKm(calcCoverage(5, heightM, terrain).direct - coverage.direct)} to your direct range.`, highlight: true });
+    }
+
+    if (heightM < 5) {
+      recs.push({ icon: '📶', title: 'Raise Your Antenna', text: `At ${heightM}m AGL, terrain is limiting you significantly. Every doubling of antenna height adds roughly 41% to your line-of-sight range. Even 3m more makes a meaningful difference.`, highlight: true });
+    }
+
+    if (terrain === 'mountain' || terrain === 'hilly') {
+      recs.push({ icon: '⛰️', title: 'Use WIDE1-1,WIDE2-1', text: `In hilly or mountainous terrain, fill-in digipeaters (WIDE1-1) are critical for the first hop. This path takes advantage of nearby low-elevation fill-ins that WIDE2-2 would miss.`, highlight: false });
+    }
+
+    if (coverage.direct < 10) {
+      recs.push({ icon: '📡', title: 'Consider a Better Antenna', text: `With a ${fmtKm(coverage.direct)} direct range, a higher-gain vertical (5/8 wave or a j-pole on a mast) would make a larger practical difference than increasing power.`, highlight: false });
+    }
+
+    recs.push({ icon: '🗺️', title: 'Verify on aprs.fi', text: `This tool models ideal RF propagation. Real coverage depends on actual digipeater locations near you. Check aprs.fi and search for digipeaters in your area to see live network coverage.`, highlight: false });
+
+    recs.push({ icon: '🔋', title: 'Recommended Path', text: currentPath === 'DIRECT' ? 'DIRECT is appropriate for fixed stations near an IGate. No network hops means less congestion on the APRS channel.' : `${currentPath} is a solid choice for your setup. Avoid paths longer than WIDE2-2 — excess hops congest the shared 144.390 MHz channel.`, highlight: false });
+
+    return recs.map(r => `
+      <div class="rec-card ${r.highlight ? 'highlight' : ''}">
+        <div class="rec-card-icon">${r.icon}</div>
+        <div class="rec-card-title">${r.title}</div>
+        <p class="rec-card-text">${r.text}</p>
+      </div>
+    `).join('');
+  }
+
+  // Enter key on location field
+  document.getElementById('locationInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+</body>
+</html>

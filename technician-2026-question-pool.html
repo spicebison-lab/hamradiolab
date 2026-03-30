@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technician License Exam: What Changed in the 2026–2030 Question Pool – Ham Radio Lab</title>
+<meta name="description" content="The 2026–2030 Technician question pool is live. Here's exactly what changed, what got removed, and what new topics you need to study — in plain English.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --green-glow: rgba(57,217,138,0.1);
+    --red: #FF5555;
+    --red-glow: rgba(255,85,85,0.1);
+    --blue: #4A9EFF;
+    --blue-glow: rgba(74,158,255,0.1);
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase; padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s; white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* ARTICLE HERO */
+  .article-hero {
+    position: relative; overflow: hidden;
+    padding: 3.5rem 2rem 3rem;
+    background: var(--charcoal);
+    border-bottom: 1px solid var(--border);
+  }
+  .article-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .article-hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 15% 50%, rgba(240,90,0,0.09), transparent 70%);
+  }
+  .article-hero-inner {
+    position: relative; z-index: 1;
+    max-width: 800px; margin: 0 auto;
+  }
+  .article-breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .article-breadcrumb a { color: var(--orange); text-decoration: none; }
+  .article-breadcrumb a:hover { text-decoration: underline; }
+  .article-breadcrumb span { color: var(--border2); }
+
+  .article-tag {
+    font-family: var(--mono); font-size: 0.68rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.8rem;
+    display: block;
+  }
+  .article-hero h1 {
+    font-family: var(--head);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900; line-height: 1.05;
+    color: var(--white); letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+  }
+  .article-hero h1 em { color: var(--orange); font-style: normal; }
+  .article-hero .deck {
+    font-size: 1.05rem; color: var(--dim);
+    max-width: 600px; line-height: 1.7;
+    margin-bottom: 1.4rem;
+  }
+  .article-meta {
+    display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap;
+  }
+  .meta-item {
+    font-family: var(--mono); font-size: 0.68rem;
+    color: var(--muted); display: flex; align-items: center; gap: 5px;
+  }
+  .meta-item strong { color: var(--dim); }
+
+  /* ALERT BOX */
+  .alert-box {
+    background: rgba(240,90,0,0.07);
+    border: 1px solid rgba(240,90,0,0.3);
+    border-left: 3px solid var(--orange);
+    border-radius: 4px; padding: 1.2rem 1.4rem;
+    margin-bottom: 2rem;
+  }
+  .alert-box .alert-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.4rem;
+  }
+  .alert-box p {
+    color: var(--body); font-size: 0.92rem; line-height: 1.65; margin: 0;
+  }
+  .alert-box p strong { color: var(--white); }
+
+  /* LAYOUT */
+  .article-layout {
+    max-width: 1100px; margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* ARTICLE BODY */
+  .article-body h2 {
+    font-family: var(--head);
+    font-size: 1.7rem; font-weight: 900;
+    color: var(--white); margin: 2.4rem 0 0.8rem;
+    display: flex; align-items: center; gap: 10px;
+    scroll-margin-top: 80px;
+  }
+  .article-body h2:first-child { margin-top: 0; }
+  .article-body h2 .anchor-num {
+    font-family: var(--mono); font-size: 0.65rem;
+    color: var(--orange); background: var(--orange-glow);
+    border: 1px solid rgba(240,90,0,0.3);
+    padding: 2px 7px; border-radius: 2px; flex-shrink: 0;
+  }
+
+  .article-body h3 {
+    font-family: var(--head);
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--white); margin: 1.6rem 0 0.5rem;
+  }
+
+  .article-body p {
+    color: var(--body); font-size: 0.97rem;
+    line-height: 1.78; margin-bottom: 1.1rem;
+  }
+
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .article-body a {
+    color: var(--orange); text-decoration: none;
+  }
+  .article-body a:hover { text-decoration: underline; }
+
+  .section-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* STAT BAR */
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px; margin: 1.5rem 0 2rem;
+    background: var(--border);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .stat-item {
+    background: var(--panel); padding: 1rem 0.8rem; text-align: center;
+  }
+  .stat-num {
+    font-family: var(--mono); font-size: 1.6rem;
+    display: block; line-height: 1; font-weight: 700;
+  }
+  .stat-num.green { color: var(--green); }
+  .stat-num.red { color: var(--red); }
+  .stat-num.orange { color: var(--orange); }
+  .stat-num.blue { color: var(--blue); }
+  .stat-desc { font-size: 0.72rem; color: var(--muted); margin-top: 4px; display: block; line-height: 1.3; }
+
+  /* CHANGE CARDS */
+  .change-grid {
+    display: flex; flex-direction: column; gap: 0.8rem;
+    margin: 1.2rem 0;
+  }
+  .change-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.1rem 1.3rem;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .change-card.new { border-left: 3px solid var(--green); }
+  .change-card.removed { border-left: 3px solid var(--red); }
+  .change-card.modified { border-left: 3px solid var(--blue); }
+
+  .change-badge {
+    font-family: var(--mono); font-size: 0.6rem;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 7px; border-radius: 2px;
+    flex-shrink: 0; margin-top: 2px;
+    white-space: nowrap;
+  }
+  .badge-new { background: var(--green-glow); color: var(--green); }
+  .badge-removed { background: var(--red-glow); color: var(--red); }
+  .badge-modified { background: var(--blue-glow); color: var(--blue); }
+
+  .change-content .change-title {
+    font-family: var(--head); font-size: 1rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.25rem;
+  }
+  .change-content p {
+    font-size: 0.85rem; color: var(--muted);
+    line-height: 1.55; margin: 0;
+  }
+
+  /* COMPARISON TABLE */
+  .compare-table {
+    width: 100%; border-collapse: collapse;
+    margin: 1.2rem 0; font-size: 0.87rem;
+  }
+  .compare-table th {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 1px; text-transform: uppercase;
+    text-align: left; padding: 0.7rem 0.9rem;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border2);
+    color: var(--muted);
+  }
+  .compare-table th:first-child { color: var(--red); }
+  .compare-table th:last-child { color: var(--green); }
+  .compare-table td {
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top; line-height: 1.55;
+    color: var(--body);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .compare-table td:first-child { color: var(--dim); }
+  .compare-table td:last-child { color: var(--white); }
+
+  /* TOPIC LIST */
+  .topic-list {
+    list-style: none; margin: 1rem 0;
+    display: flex; flex-direction: column;
+  }
+  .topic-list li {
+    padding: 0.65rem 0 0.65rem 1.4rem;
+    position: relative; border-bottom: 1px solid var(--border);
+    font-size: 0.93rem; color: var(--body); line-height: 1.55;
+  }
+  .topic-list li:last-child { border-bottom: none; }
+  .topic-list li::before {
+    content: '→';
+    position: absolute; left: 0;
+    color: var(--orange); font-size: 0.8rem;
+  }
+  .topic-list li strong { color: var(--white); }
+
+  /* INFO BOX */
+  .info-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.3rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .info-box .info-label {
+    font-family: var(--mono); font-size: 0.65rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 0.6rem;
+  }
+  .info-box p {
+    font-size: 0.9rem; color: var(--body); line-height: 1.65; margin: 0;
+  }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 1.2rem; }
+
+  .sidebar-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.3rem;
+  }
+
+  .sidebar-card .card-label {
+    font-family: var(--mono); font-size: 0.63rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--orange); margin-bottom: 0.8rem;
+    display: block;
+  }
+
+  .sidebar-card h3 {
+    font-family: var(--head); font-size: 1rem; font-weight: 700;
+    color: var(--white); margin-bottom: 0.5rem;
+  }
+
+  .sidebar-card p {
+    font-size: 0.82rem; color: var(--muted); line-height: 1.6;
+    margin-bottom: 0.8rem;
+  }
+
+  .sidebar-card p:last-child { margin-bottom: 0; }
+
+  .sidebar-toc ol {
+    list-style: none; display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .sidebar-toc ol li a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; line-height: 1.5;
+    display: flex; align-items: baseline; gap: 6px;
+    padding: 3px 0;
+    transition: color 0.2s;
+  }
+  .sidebar-toc ol li a:hover { color: var(--orange); }
+  .sidebar-toc ol li a .toc-num {
+    font-family: var(--mono); font-size: 0.6rem;
+    color: var(--muted); flex-shrink: 0;
+  }
+
+  .cta-btn {
+    display: block; text-align: center;
+    background: var(--orange); color: #fff;
+    padding: 11px 16px; border-radius: 3px;
+    font-weight: 700; font-size: 0.85rem;
+    text-decoration: none; letter-spacing: 0.5px;
+    transition: background 0.2s;
+    margin-top: 0.8rem;
+  }
+  .cta-btn:hover { background: var(--orange-dim); }
+
+  .outline-btn {
+    display: block; text-align: center;
+    background: transparent; color: var(--body);
+    padding: 10px 16px; border-radius: 3px;
+    font-weight: 600; font-size: 0.85rem;
+    text-decoration: none; letter-spacing: 0.5px;
+    border: 1px solid var(--border2);
+    transition: border-color 0.2s, color 0.2s;
+    margin-top: 0.5rem;
+  }
+  .outline-btn:hover { border-color: var(--orange); color: var(--orange); }
+
+  .pool-dates {
+    display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem;
+  }
+  .pool-date-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+  }
+  .pool-date-row:last-child { border-bottom: none; }
+  .pool-date-row .label { color: var(--muted); }
+  .pool-date-row .value {
+    font-family: var(--mono); font-size: 0.72rem; color: var(--white);
+  }
+  .pool-date-row .value.active { color: var(--green); }
+
+  /* FOOTER */
+  footer {
+    background: #0E0E0E;
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+  }
+  .footer-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo {
+    font-family: var(--head); font-size: 1.1rem; font-weight: 900;
+    color: var(--white); letter-spacing: 0.5px;
+  }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  @media (max-width: 860px) {
+    .article-layout { grid-template-columns: 1fr; }
+    .sidebar { order: -1; }
+    .stat-bar { grid-template-columns: repeat(2, 1fr); }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<!-- ARTICLE HERO -->
+<div class="article-hero">
+  <div class="article-hero-inner">
+    <div class="article-breadcrumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/technician-license-study-guide">Get Licensed</a>
+      <span>/</span>
+      <span>2026–2030 Question Pool Changes</span>
+    </div>
+    <span class="article-tag">// get licensed · exam prep</span>
+    <h1>Technician License Exam:<br><em>What Changed</em> in the 2026–2030 Question Pool</h1>
+    <p class="deck">The new Technician question pool goes live July 1, 2026. Here's exactly what's new, what got removed, and what you actually need to study — without wading through the full 409-question document yourself.</p>
+    <div class="article-meta">
+      <div class="meta-item">// <strong>KF0WEW</strong></div>
+      <div class="meta-item">// Updated: <strong>March 2026</strong></div>
+      <div class="meta-item">// <strong>8 min read</strong></div>
+      <div class="meta-item">// Level: <strong>Beginner</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLE LAYOUT -->
+<div class="article-layout">
+
+  <!-- MAIN CONTENT -->
+  <article class="article-body">
+
+    <div class="alert-box">
+      <div class="alert-label">// Timing Note</div>
+      <p><strong>Testing before July 1, 2026?</strong> You'll still be tested on the old 2022–2026 pool. The new pool only applies to exams on or after July 1, 2026. If your exam is coming up soon, this article is still worth a skim — but focus your study time on the current pool first.</p>
+    </div>
+
+    <h2 id="overview"><span class="anchor-num">01</span> The Big Picture: How Much Actually Changed?</h2>
+
+    <p>Every four years, the National Conference of Volunteer Examiner Coordinators (NCVEC) releases an updated Technician question pool. The 2026–2030 version was published on December 18, 2025, and becomes mandatory for all exam sessions starting July 1, 2026.</p>
+
+    <p>The short version: this is a modernization update, not a complete overhaul. The fundamentals of radio — electricity, wave propagation, operating procedures, safety — haven't changed. What the committee did was clean up outdated references, add topics that reflect how hams actually operate today, and fix some questions that were technically imprecise.</p>
+
+    <div class="stat-bar">
+      <div class="stat-item">
+        <span class="stat-num green">26</span>
+        <span class="stat-desc">New questions added</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num red">29</span>
+        <span class="stat-desc">Questions removed</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num blue">69</span>
+        <span class="stat-desc">Questions reworded</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num orange">409</span>
+        <span class="stat-desc">Total questions in new pool</span>
+      </div>
+    </div>
+
+    <p>The old pool had 412 questions. The new one has 409. So it shrank slightly, and the changes represent roughly 30% of the pool in some form — but most of that 30% is minor wording cleanup, not new concepts you've never seen before.</p>
+
+    <hr class="section-divider">
+
+    <h2 id="new-topics"><span class="anchor-num">02</span> What's New: Topics That Were Added</h2>
+
+    <p>These are the areas where genuinely new questions appear — concepts that weren't explicitly tested before. If you've been studying from a 2022-era book, pay extra attention here.</p>
+
+    <h3>Licensing Details and FCC Procedures</h3>
+    <p>The pool now includes more specific questions about the mechanics of getting and maintaining your license. New questions cover how you actually receive your license (via email notification from the FCC, not postal mail), and when you can renew — which is within 90 days before your license expires. These are practical things every new ham should know, so it makes sense to test them.</p>
+
+    <h3>Digital Modes: DMR, Winlink, and FT8</h3>
+    <p>This is the most significant new content area. Digital modes have exploded in popularity since the last pool update, and the questions now reflect that reality.</p>
+
+    <div class="change-grid">
+      <div class="change-card new">
+        <span class="change-badge badge-new">New</span>
+        <div class="change-content">
+          <div class="change-title">DMR: Code Plugs and Color Codes</div>
+          <p>DMR (Digital Mobile Radio) is now tested. Expect questions about what a code plug is (a configuration file that programs which talk groups and frequencies your radio can access) and what color codes do (they function similarly to CTCSS tones — they prevent your radio from opening on signals from a different network using the same frequency).</p>
+        </div>
+      </div>
+      <div class="change-card new">
+        <span class="change-badge badge-new">New</span>
+        <div class="change-content">
+          <div class="change-title">Winlink for Emergency Email</div>
+          <p>Winlink — a system that lets hams send and receive email over radio without internet — is now in the pool. This is especially relevant for emergency communications (EmComm), which is one of the most practical uses of a Technician license. Know what Winlink is, what it's used for, and that it can be used when normal communication infrastructure is down.</p>
+        </div>
+      </div>
+      <div class="change-card new">
+        <span class="change-badge badge-new">New</span>
+        <div class="change-content">
+          <div class="change-title">FT8 Privileges for Technicians</div>
+          <p>FT8 is a weak-signal digital mode that's taken over HF. New questions address what FT8 privileges Technicians actually have on HF bands — something that wasn't clearly spelled out in the old pool. Technicians have limited HF privileges (mainly 10 meters), and the pool now tests whether you know when and where you can use FT8.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Station Control and Remote Operation</h3>
+    <p>As more hams operate remotely — controlling a radio at home from their phone, or running a station across town — the pool added clearer definitions of control operators, remote control stations, and auxiliary stations. Know the difference between a control operator and a station licensee, and understand that someone must always be responsible for what a station transmits, even if they're not physically present.</p>
+
+    <h3>Propagation Beacons</h3>
+    <p>The old pool asked you to define what a beacon is. The new pool is more practical: it asks where to find HF beacons. The answer is the 10-meter band, specifically 28.200–28.300 MHz, where the International Beacon Project runs a coordinated network of beacons you can listen to in order to gauge band conditions.</p>
+
+    <h3>Practical Hands-On Knowledge</h3>
+    <p>Several new questions cover things you'd actually encounter at a workbench or in the field:</p>
+
+    <ul class="topic-list">
+      <li><strong>How an ohmmeter works</strong> — measuring resistance in a circuit</li>
+      <li><strong>What a VFO does</strong> — Variable Frequency Oscillator, lets you tune across a frequency range rather than jumping between fixed channels</li>
+      <li><strong>Foam vs. solid dielectric coax</strong> — foam has lower loss but is less durable; solid is tougher but lossier at high frequencies</li>
+      <li><strong>Weatherproofing coax connectors</strong> — self-amalgamating tape, how to seal outdoor connections to prevent water ingress</li>
+    </ul>
+
+    <hr class="section-divider">
+
+    <h2 id="wording"><span class="anchor-num">03</span> Wording Changes: Same Concepts, Different Phrasing</h2>
+
+    <p>Most of the 69 "modified" questions are minor language cleanup — adding a hyphen, spelling out an abbreviation, or rewording a confusing answer choice. You don't need to memorize old vs. new phrasing, but a few changes are worth knowing about because they change the technically correct answer on paper.</p>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Old Wording (2022 Pool)</th>
+          <th>New Wording (2026 Pool)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ionosphere "refracts or bends" radio waves</td>
+          <td>Ionosphere "reflects" radio waves</td>
+        </tr>
+        <tr>
+          <td>Auroral backscatter causes "varying signal strength"</td>
+          <td>Auroral backscatter has a "raspy sound"</td>
+        </tr>
+        <tr>
+          <td>FT8 setup uses "WSJT-X software"</td>
+          <td>FT8 setup uses "FT8 software" (generic)</td>
+        </tr>
+        <tr>
+          <td>Dummy load description (general)</td>
+          <td>Now explicitly specifies "50-ohm" dummy load</td>
+        </tr>
+        <tr>
+          <td>DTMF, CTCSS written as abbreviations only</td>
+          <td>Spelled out in full within question text</td>
+        </tr>
+        <tr>
+          <td>"2 meter band" (without hyphen)</td>
+          <td>"2-meter band" (with hyphen, consistent style)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <div class="info-label">// On the Ionosphere Change</div>
+      <p>The switch from "refracts or bends" to "reflects" is technically a simplification — radio waves are actually refracted (bent) back toward Earth by the ionosphere, not bounced off it like a mirror. But the pool committee chose the more intuitive term. If you see this question on your exam, the answer they're looking for is "reflects." Don't overthink it.</p>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2 id="removed"><span class="anchor-num">04</span> What Got Removed</h2>
+
+    <p>Twenty-nine questions were cut from the pool. Most removals fall into one of three categories: outdated regulatory details, redundant questions that were consolidated, and a few that were simply replaced with better versions.</p>
+
+    <div class="change-grid">
+      <div class="change-card removed">
+        <span class="change-badge badge-removed">Removed</span>
+        <div class="change-content">
+          <div class="change-title">219–220 MHz Segment Restrictions</div>
+          <p>The old pool had questions about specific restrictions on the 219–220 MHz band. These were removed — likely because this is an obscure edge case that most Technicians will never encounter in practice.</p>
+        </div>
+      </div>
+      <div class="change-card removed">
+        <span class="change-badge badge-removed">Removed</span>
+        <div class="change-content">
+          <div class="change-title">"What is a beacon?" Definition Question</div>
+          <p>The abstract definition of a beacon was dropped and replaced with the more practical question about where to find them on the 10-meter band. Better question, same topic area.</p>
+        </div>
+      </div>
+      <div class="change-card removed">
+        <span class="change-badge badge-removed">Removed</span>
+        <div class="change-content">
+          <div class="change-title">Redundant and Consolidated Questions</div>
+          <p>Several questions that tested the same concept from slightly different angles were merged or eliminated to reduce redundancy in the pool. This is normal pool maintenance.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <h2 id="advice"><span class="anchor-num">05</span> Study Advice: How to Approach the New Pool</h2>
+
+    <p>If you're starting fresh and testing after July 1, 2026, here's how I'd approach this:</p>
+
+    <p><strong>Don't study the changes in isolation.</strong> Learn the full pool. The changes listed here are useful context, but if you only study the "new stuff," you'll miss the 383 questions that carried over. The fundamentals — Ohm's law, how antennas work, operating procedures, safety — are still the bulk of what you'll be tested on.</p>
+
+    <p><strong>Spend extra time on digital modes.</strong> DMR and Winlink are genuinely new territory for a lot of new hams, and the concepts aren't as intuitive as, say, calculating antenna length. Give yourself time to actually understand how DMR networks work and what Winlink is used for — don't just memorize the answers.</p>
+
+    <p><strong>Use HamStudy.org for the 2026 pool.</strong> They've already loaded all 409 questions with explanations. Practice there, and pay attention to the explanations for questions you miss — that's how you convert rote practice into actual understanding.</p>
+
+    <p><strong>Grab a 2026-edition study guide.</strong> ARRL will have updated editions of the Ham Radio License Manual and Tech Q&A out by May 2026. If you're starting your studies now, either wait for the new edition or use the HamStudy.org 2026 pool directly online.</p>
+
+    <div class="info-box">
+      <div class="info-label">// Bottom Line</div>
+      <p>The 2026 pool is a modernization, not a reinvention. If you understand the material — not just the answers — you'll be fine on either pool version. The new questions reward people who are actually curious about how radio works, which is exactly the right direction for the exam to move.</p>
+    </div>
+
+  </article>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <span class="card-label">// Pool Dates</span>
+      <div class="pool-dates">
+        <div class="pool-date-row">
+          <span class="label">Old pool valid until</span>
+          <span class="value">June 30, 2026</span>
+        </div>
+        <div class="pool-date-row">
+          <span class="label">New pool effective</span>
+          <span class="value active">July 1, 2026</span>
+        </div>
+        <div class="pool-date-row">
+          <span class="label">New pool expires</span>
+          <span class="value">June 30, 2030</span>
+        </div>
+        <div class="pool-date-row">
+          <span class="label">Total questions</span>
+          <span class="value">409</span>
+        </div>
+        <div class="pool-date-row">
+          <span class="label">Questions on your exam</span>
+          <span class="value">35</span>
+        </div>
+        <div class="pool-date-row">
+          <span class="label">Passing score</span>
+          <span class="value">74% (26/35)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card sidebar-toc">
+      <span class="card-label">// In This Article</span>
+      <ol>
+        <li><a href="#overview"><span class="toc-num">01 —</span> The Big Picture</a></li>
+        <li><a href="#new-topics"><span class="toc-num">02 —</span> New Topics Added</a></li>
+        <li><a href="#wording"><span class="toc-num">03 —</span> Wording Changes</a></li>
+        <li><a href="#removed"><span class="toc-num">04 —</span> What Got Removed</a></li>
+        <li><a href="#advice"><span class="toc-num">05 —</span> Study Advice</a></li>
+      </ol>
+    </div>
+
+    <div class="sidebar-card">
+      <span class="card-label">// Study Resources</span>
+      <h3>Ready to Start Studying?</h3>
+      <p>The full 2026 pool is available free on HamStudy.org. All 409 questions with explanations — no login required.</p>
+      <a href="https://hamstudy.org/tech2026" class="cta-btn" target="_blank" rel="noopener">Study the 2026 Pool →</a>
+      <a href="/technician-license-study-guide" class="outline-btn">Our Study Guide</a>
+    </div>
+
+    <div class="sidebar-card">
+      <span class="card-label">// Source</span>
+      <p>Pool data sourced from the official NCVEC release (December 18, 2025) and the HamStudy.org diff analysis. Questions are in the public domain per NCVEC.</p>
+      <p><a href="https://ncvec.org/index.php/2026-2030-technician-question-pool" target="_blank" rel="noopener" style="color: var(--orange); font-size: 0.8rem;">ncvec.org — Official Pool ↗</a></p>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="/technician-license-study-guide">Get Licensed</a>
+      <a href="/best-handheld-ham-radios">Gear Reviews</a>
+      <a href="/antenna-calculator">Antenna Calculator</a>
+      <a href="/what-is-aprs">What is APRS?</a>
+      <a href="/affiliate-disclosure">Affiliate Disclosure</a>
+      <a href="/privacy-policy">Privacy Policy</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com · KF0WEW</div>
+  </div>
+</footer>
+
+</body>
+</html>

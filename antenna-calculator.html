@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="CQOLBnTTIn3LsiW_gXBNtatt4Er_wrr58Tn5beri_Vk" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E1W7F87HNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1W7F87HNN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ham Radio Antenna Length Calculator – Ham Radio Lab</title>
+<meta name="description" content="Free ham radio antenna length calculator. Get exact cut lengths for dipole, quarter-wave vertical, 5/8 wave, and J-pole antennas. Enter your frequency and get results instantly.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+
+  /* NAV */
+  nav { position: sticky; top: 0; z-index: 500; background: rgba(14,14,14,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--head); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: var(--white); }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a { color: var(--dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; border-radius: 3px; transition: color 0.2s, background 0.2s; }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-cta { background: var(--orange); color: #fff; padding: 7px 16px; border-radius: 3px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background 0.2s; white-space: nowrap; }
+  .nav-cta:hover { background: var(--orange-dim); }
+
+  /* PAGE HEADER */
+  .tool-header { position: relative; overflow: hidden; padding: 3.5rem 2rem 2.5rem; background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .tool-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.04) 1px, transparent 1px); background-size: 40px 40px; }
+  .tool-header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 80% at 15% 50%, rgba(240,90,0,0.08), transparent 65%); }
+  .tool-header-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .tool-header-text {}
+  .tool-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 8px; }
+  .tool-label::before { content: ''; width: 20px; height: 1px; background: var(--orange); }
+  .tool-title { font-family: var(--head); font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; color: var(--white); line-height: 1; margin-bottom: 0.6rem; }
+  .tool-title em { color: var(--orange); font-style: normal; }
+  .tool-desc { font-size: 0.92rem; color: var(--dim); max-width: 480px; line-height: 1.6; }
+  .tool-badges { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .tool-badge { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 4px 10px; border-radius: 2px; border: 1px solid var(--border2); color: var(--muted); }
+  .tool-badge.active { border-color: rgba(240,90,0,0.4); color: var(--orange); background: var(--orange-glow); }
+
+  /* MAIN LAYOUT */
+  .tool-layout { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; display: grid; grid-template-columns: 380px 1fr; gap: 2rem; align-items: start; }
+
+  /* INPUT PANEL */
+  .input-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; position: sticky; top: 80px; }
+  .input-panel-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.9rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+  .input-panel-title { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .input-panel-body { padding: 1.4rem; }
+
+  /* Frequency input */
+  .freq-section { margin-bottom: 1.4rem; }
+  .input-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; display: block; }
+  .freq-input-wrap { display: flex; align-items: stretch; border: 1px solid var(--border2); border-radius: 3px; overflow: hidden; transition: border-color 0.2s; }
+  .freq-input-wrap:focus-within { border-color: var(--orange); }
+  .freq-input { flex: 1; background: var(--panel2); border: none; padding: 11px 14px; color: var(--white); font-size: 1.1rem; font-family: var(--mono); outline: none; }
+  .freq-input::placeholder { color: var(--muted); font-size: 0.9rem; }
+  .freq-unit { background: var(--panel2); border-left: 1px solid var(--border); padding: 0 14px; display: flex; align-items: center; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+
+  /* Band quick-select */
+  .band-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; display: block; }
+  .band-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; margin-bottom: 1.4rem; }
+  .band-btn { background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 0.5rem 0.3rem; cursor: pointer; text-align: center; transition: all 0.15s; font-family: var(--mono); }
+  .band-btn:hover { border-color: var(--orange); background: var(--orange-glow); }
+  .band-btn.selected { border-color: var(--orange); background: var(--orange-glow); }
+  .band-btn-name { font-size: 0.78rem; color: var(--white); font-weight: 700; display: block; }
+  .band-btn-freq { font-size: 0.6rem; color: var(--muted); display: block; margin-top: 1px; }
+
+  /* Velocity factor */
+  .vf-section { margin-bottom: 1.4rem; }
+  .vf-row { display: flex; align-items: center; gap: 0.8rem; }
+  .vf-input { width: 80px; background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 8px 10px; color: var(--white); font-family: var(--mono); font-size: 0.9rem; outline: none; text-align: center; transition: border-color 0.2s; }
+  .vf-input:focus { border-color: var(--orange); }
+  .vf-note { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+
+  /* Units toggle */
+  .units-row { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; }
+  .unit-btn { flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 8px; cursor: pointer; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); transition: all 0.15s; text-align: center; }
+  .unit-btn.active { border-color: var(--orange); color: var(--orange); background: var(--orange-glow); }
+
+  /* Calculate button */
+  .calc-btn { width: 100%; background: var(--orange); color: #fff; border: none; padding: 13px; border-radius: 3px; font-family: var(--head); font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: background 0.2s, transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .calc-btn:hover { background: var(--orange-dim); transform: translateY(-1px); }
+  .calc-btn:active { transform: translateY(0); }
+
+  /* RESULTS PANEL */
+  .results-panel {}
+  .results-empty { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 3rem 2rem; text-align: center; }
+  .results-empty-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+  .results-empty-text { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
+
+  /* Antenna result card */
+  .antenna-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.2rem; transition: border-color 0.2s; }
+  .antenna-card:hover { border-color: var(--border2); }
+  .antenna-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.9rem 1.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .antenna-card-name { font-family: var(--head); font-size: 1.2rem; font-weight: 900; color: var(--white); }
+  .antenna-card-tag { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 2px; }
+  .tag-beginner { background: rgba(57,217,138,0.1); color: var(--green); }
+  .tag-intermediate { background: rgba(240,90,0,0.1); color: var(--orange); }
+  .tag-advanced { background: rgba(74,158,255,0.1); color: var(--blue); }
+
+  .antenna-card-body { padding: 1.2rem; display: grid; grid-template-columns: 1fr auto; gap: 1.2rem; align-items: start; }
+
+  /* Dimension results */
+  .dim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.6rem; }
+  .dim-box { background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 0.8rem; }
+  .dim-box-label { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; display: block; }
+  .dim-box-value { font-family: var(--mono); font-size: 1.3rem; color: var(--orange); font-weight: 700; display: block; line-height: 1; }
+  .dim-box-sub { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 2px; display: block; }
+
+  /* SVG diagram */
+  .antenna-diagram { flex-shrink: 0; }
+  .antenna-diagram svg { display: block; }
+
+  /* Notes */
+  .antenna-notes { margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+  .antenna-notes strong { color: var(--dim); }
+
+  /* Frequency display */
+  .freq-display { background: var(--panel2); border: 1px solid var(--border); border-radius: 3px; padding: 0.6rem 1rem; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+  .freq-display-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .freq-display-val { font-family: var(--mono); font-size: 1rem; color: var(--orange); }
+
+  /* Explainer section */
+  .explainer { margin-top: 2.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+  .explainer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+  .explainer-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem; }
+  .explainer-title { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 0.4rem; }
+  .explainer-formula { font-family: var(--mono); font-size: 0.78rem; color: var(--orange); background: var(--panel2); padding: 4px 8px; border-radius: 2px; display: inline-block; margin-bottom: 0.5rem; }
+  .explainer-text { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .sec-label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); display: flex; align-items: center; gap: 10px; }
+  .sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border2); }
+  .sec-title { font-family: var(--head); font-size: 1.6rem; font-weight: 900; color: var(--white); margin-top: 0.4rem; }
+
+  footer { background: #0E0E0E; border-top: 1px solid var(--border); padding: 2rem; margin-top: 3rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeIn 0.3s ease both; }
+
+  @media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } .input-panel { position: static; } .nav-links { display: none; } }
+  @media (max-width: 500px) { .antenna-card-body { grid-template-columns: 1fr; } .band-grid { grid-template-columns: repeat(3, 1fr); } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<!-- HEADER -->
+<div class="tool-header">
+  <div class="tool-header-inner">
+    <div class="tool-header-text">
+      <div class="tool-label">Free Tool</div>
+      <h1 class="tool-title">Antenna <em>Length</em><br>Calculator</h1>
+      <p class="tool-desc">Enter your target frequency and get exact cut lengths for the most common ham radio antenna builds — dipole, vertical, and J-pole.</p>
+    </div>
+    <div class="tool-badges">
+      <span class="tool-badge active">Half-Wave Dipole</span>
+      <span class="tool-badge active">¼ Wave Vertical</span>
+      <span class="tool-badge active">⅝ Wave Vertical</span>
+      <span class="tool-badge active">J-Pole</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOOL LAYOUT -->
+<div class="tool-layout">
+
+  <!-- INPUT PANEL -->
+  <div class="input-panel">
+    <div class="input-panel-head">
+      <span class="input-panel-title">// Input Parameters</span>
+      <span style="font-family:var(--mono); font-size:0.6rem; color:var(--muted);">v1.0</span>
+    </div>
+    <div class="input-panel-body">
+
+      <div class="freq-section">
+        <label class="input-label" for="freqInput">Target Frequency</label>
+        <div class="freq-input-wrap">
+          <input class="freq-input" type="number" id="freqInput" placeholder="146.520" step="0.001" min="1" max="10000">
+          <div class="freq-unit">MHz</div>
+        </div>
+      </div>
+
+      <span class="band-label">Quick Select — Common Ham Bands</span>
+      <div class="band-grid">
+        <button class="band-btn" onclick="setBand(146.52, this)">
+          <span class="band-btn-name">2m</span>
+          <span class="band-btn-freq">146.520</span>
+        </button>
+        <button class="band-btn" onclick="setBand(446.0, this)">
+          <span class="band-btn-name">70cm</span>
+          <span class="band-btn-freq">446.000</span>
+        </button>
+        <button class="band-btn" onclick="setBand(52.525, this)">
+          <span class="band-btn-name">6m</span>
+          <span class="band-btn-freq">52.525</span>
+        </button>
+        <button class="band-btn" onclick="setBand(29.6, this)">
+          <span class="band-btn-name">10m</span>
+          <span class="band-btn-freq">29.600</span>
+        </button>
+        <button class="band-btn" onclick="setBand(14.225, this)">
+          <span class="band-btn-name">20m</span>
+          <span class="band-btn-freq">14.225</span>
+        </button>
+        <button class="band-btn" onclick="setBand(7.2, this)">
+          <span class="band-btn-name">40m</span>
+          <span class="band-btn-freq">7.200</span>
+        </button>
+      </div>
+
+      <div class="vf-section">
+        <label class="input-label">Velocity Factor</label>
+        <div class="vf-row">
+          <input class="vf-input" type="number" id="vfInput" value="0.95" step="0.01" min="0.5" max="1.0">
+          <p class="vf-note">Use 0.95 for bare wire, 0.66–0.80 for coax, 0.97 for aluminum tubing.</p>
+        </div>
+      </div>
+
+      <label class="input-label">Output Units</label>
+      <div class="units-row">
+        <button class="unit-btn active" id="btnImperial" onclick="setUnit('imperial')">Inches / Feet</button>
+        <button class="unit-btn" id="btnMetric" onclick="setUnit('metric')">Centimeters / Meters</button>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/><path d="M8 4v4l3 1.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Calculate Lengths
+      </button>
+
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-panel" id="resultsPanel">
+    <div class="results-empty" id="emptyState">
+      <div class="results-empty-icon">📡</div>
+      <div class="results-empty-text">Enter a frequency and click calculate<br>to see antenna dimensions</div>
+    </div>
+    <div id="resultsContent" style="display:none;"></div>
+
+    <!-- EXPLAINER -->
+    <div class="explainer">
+      <div class="sec-label">The Engineering Behind It</div>
+      <div class="sec-title">How Antenna Length is Calculated</div>
+      <div class="explainer-grid">
+        <div class="explainer-card">
+          <div class="explainer-title">Half-Wave Dipole</div>
+          <div class="explainer-formula">L = 468 / f(MHz)</div>
+          <p class="explainer-text">The classic dipole — two equal legs fed at the center. The 468 constant accounts for the velocity factor of bare wire (vs. the theoretical 492 for speed of light). Each leg is half the total length. Most forgiving antenna to build and tune.</p>
+        </div>
+        <div class="explainer-card">
+          <div class="explainer-title">¼ Wave Vertical</div>
+          <div class="explainer-formula">L = 234 / f(MHz)</div>
+          <p class="explainer-text">A vertical radiator of one quarter wavelength, requiring a ground plane of 2–4 radials at roughly 90° to the element. Simple and compact. The standard for mobile and base VHF/UHF installations.</p>
+        </div>
+        <div class="explainer-card">
+          <div class="explainer-title">⅝ Wave Vertical</div>
+          <div class="explainer-formula">L = 585 / f(MHz) × VF</div>
+          <p class="explainer-text">Slightly longer than a quarter wave, the 5/8 wave vertical has lower radiation angle and modest gain (~3 dBi) over a quarter wave. Popular for 2m and 70cm mobile antennas where low-angle radiation is an advantage.</p>
+        </div>
+        <div class="explainer-card">
+          <div class="explainer-title">J-Pole</div>
+          <div class="explainer-formula">¾λ + matching stub</div>
+          <p class="explainer-text">A half-wave radiator fed with a quarter-wave matching stub (the "J" shape). Requires no ground plane, making it ideal for portable and rooftop installations. The long element is ½λ, the stub is ¼λ, with a 2" gap at the feed point.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a><a href="#">Sitemap</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+
+<script>
+  let currentUnit = 'imperial';
+
+  function setUnit(unit) {
+    currentUnit = unit;
+    document.getElementById('btnImperial').classList.toggle('active', unit === 'imperial');
+    document.getElementById('btnMetric').classList.toggle('active', unit === 'metric');
+    // Recalculate if results are showing
+    if (document.getElementById('resultsContent').style.display !== 'none') {
+      calculate();
+    }
+  }
+
+  function setBand(freq, btn) {
+    document.getElementById('freqInput').value = freq;
+    document.querySelectorAll('.band-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  // Convert meters to display units
+  function fmt(meters) {
+    if (currentUnit === 'imperial') {
+      const totalInches = meters * 39.3701;
+      const feet = Math.floor(totalInches / 12);
+      const inches = (totalInches % 12).toFixed(2);
+      const inchFrac = formatFraction(parseFloat(inches));
+      if (feet === 0) return { primary: `${inchFrac}"`, secondary: `${(meters * 100).toFixed(1)} cm` };
+      return { primary: `${feet}' ${inchFrac}"`, secondary: `${(meters * 100).toFixed(1)} cm` };
+    } else {
+      const cm = meters * 100;
+      if (cm >= 100) return { primary: `${(cm/100).toFixed(3)} m`, secondary: `${cm.toFixed(1)} cm` };
+      return { primary: `${cm.toFixed(1)} cm`, secondary: `${(meters * 39.3701).toFixed(2)}"` };
+    }
+  }
+
+  function formatFraction(inches) {
+    const whole = Math.floor(inches);
+    const frac = inches - whole;
+    const fractions = [
+      [0, ''], [0.0625, '1/16'], [0.125, '1/8'], [0.1875, '3/16'],
+      [0.25, '1/4'], [0.3125, '5/16'], [0.375, '3/8'], [0.4375, '7/16'],
+      [0.5, '1/2'], [0.5625, '9/16'], [0.625, '5/8'], [0.6875, '11/16'],
+      [0.75, '3/4'], [0.8125, '13/16'], [0.875, '7/8'], [0.9375, '15/16'], [1, '']
+    ];
+    let closest = fractions[0], minDiff = 1;
+    for (const [val, label] of fractions) {
+      const diff = Math.abs(frac - val);
+      if (diff < minDiff) { minDiff = diff; closest = [val, label]; }
+    }
+    if (closest[0] >= 1) return `${whole + 1}`;
+    return closest[1] ? `${whole > 0 ? whole + ' ' : ''}${closest[1]}` : `${whole}`;
+  }
+
+  function dipoleSVG(freqMhz) {
+    const totalM = 468 / freqMhz * 0.3048;
+    const halfM = totalM / 2;
+    const d = fmt(halfM);
+    return `
+    <svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Feed point -->
+      <rect x="93" y="34" width="14" height="12" rx="2" fill="#222" stroke="#F05A00" stroke-width="1"/>
+      <text x="100" y="43" text-anchor="middle" fill="#F05A00" font-family="monospace" font-size="7">⚡</text>
+      <!-- Left element -->
+      <line x1="93" y1="40" x2="10" y2="40" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="32" x2="10" y2="48" stroke="#F05A00" stroke-width="2" stroke-linecap="round"/>
+      <!-- Right element -->
+      <line x1="107" y1="40" x2="190" y2="40" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="190" y1="32" x2="190" y2="48" stroke="#F05A00" stroke-width="2" stroke-linecap="round"/>
+      <!-- Dimension arrows -->
+      <line x1="10" y1="58" x2="93" y2="58" stroke="#444" stroke-width="0.8" marker-start="url(#arr)" marker-end="url(#arr)"/>
+      <text x="51" y="68" text-anchor="middle" fill="#666" font-family="monospace" font-size="7">${d.primary}</text>
+      <text x="51" y="76" text-anchor="middle" fill="#444" font-family="monospace" font-size="6">each leg</text>
+      <!-- Coax down -->
+      <line x1="100" y1="46" x2="100" y2="72" stroke="#555" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="104" y="70" fill="#555" font-family="monospace" font-size="7">coax</text>
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#444"/>
+        </marker>
+      </defs>
+    </svg>`;
+  }
+
+  function verticalSVG(freqMhz, fiveEighths = false) {
+    const L = fiveEighths ? (585 / freqMhz * 0.95) * 0.3048 : 234 / freqMhz * 0.3048;
+    const d = fmt(L);
+    return `
+    <svg width="100" height="130" viewBox="0 0 100 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ground radials -->
+      <line x1="50" y1="90" x2="10" y2="110" stroke="#444" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="50" y1="90" x2="30" y2="115" stroke="#444" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="50" y1="90" x2="50" y2="118" stroke="#444" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="50" y1="90" x2="70" y2="115" stroke="#444" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="50" y1="90" x2="90" y2="110" stroke="#444" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Feed point -->
+      <rect x="43" y="82" width="14" height="10" rx="2" fill="#222" stroke="#F05A00" stroke-width="1"/>
+      <!-- Vertical element -->
+      <line x1="50" y1="82" x2="50" y2="15" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="43" y1="15" x2="57" y2="15" stroke="#F05A00" stroke-width="2" stroke-linecap="round"/>
+      <!-- Dim line -->
+      <line x1="64" y1="15" x2="64" y2="82" stroke="#444" stroke-width="0.8"/>
+      <line x1="60" y1="15" x2="68" y2="15" stroke="#444" stroke-width="0.8"/>
+      <line x1="60" y1="82" x2="68" y2="82" stroke="#444" stroke-width="0.8"/>
+      <text x="70" y="${fiveEighths ? 50 : 52}" fill="#F05A00" font-family="monospace" font-size="7">${d.primary}</text>
+      <text x="70" y="${fiveEighths ? 60 : 62}" fill="#555" font-family="monospace" font-size="6">${d.secondary}</text>
+      <text x="22" y="126" fill="#555" font-family="monospace" font-size="6">ground radials</text>
+    </svg>`;
+  }
+
+  function jpoleSVG(freqMhz) {
+    return `
+    <svg width="110" height="140" viewBox="0 0 110 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Long element (half wave) -->
+      <line x1="40" y1="10" x2="40" y2="110" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="33" y1="10" x2="47" y2="10" stroke="#F05A00" stroke-width="2" stroke-linecap="round"/>
+      <!-- Short element (quarter wave stub) -->
+      <line x1="60" y1="60" x2="60" y2="110" stroke="#F5EFE0" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Bottom curve (J shape) -->
+      <path d="M40,110 Q40,125 50,125 Q60,125 60,110" stroke="#F5EFE0" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Gap marker (feed point) -->
+      <rect x="53" y="54" width="14" height="12" rx="2" fill="#222" stroke="#F05A00" stroke-width="1"/>
+      <text x="60" y="63" text-anchor="middle" fill="#F05A00" font-family="monospace" font-size="7">⚡</text>
+      <!-- Coax -->
+      <line x1="60" y1="66" x2="85" y2="85" stroke="#555" stroke-width="1.5" stroke-dasharray="3,2"/>
+      <text x="78" y="95" fill="#555" font-family="monospace" font-size="7">coax</text>
+      <!-- Labels -->
+      <text x="5" y="62" fill="#666" font-family="monospace" font-size="6">½λ</text>
+      <text x="66" y="88" fill="#666" font-family="monospace" font-size="6">¼λ</text>
+      <text x="5" y="10" fill="#555" font-family="monospace" font-size="6">tip</text>
+    </svg>`;
+  }
+
+  function calculate() {
+    const freqVal = parseFloat(document.getElementById('freqInput').value);
+    const vf = parseFloat(document.getElementById('vfInput').value) || 0.95;
+
+    if (!freqVal || freqVal <= 0 || freqVal > 10000) {
+      document.getElementById('freqInput').style.borderColor = '#F05A00';
+      document.getElementById('freqInput').focus();
+      return;
+    }
+    document.getElementById('freqInput').style.borderColor = '';
+
+    const f = freqVal;
+    const speedOfLight = 299792458; // m/s
+    const wavelength = (speedOfLight / (f * 1e6)) * vf;
+
+    // Calculate all antenna lengths in meters
+    const dipoleTotal = (468 / f) * 0.3048;  // ft to meters, standard formula
+    const dipoleEachLeg = dipoleTotal / 2;
+
+    const quarterWave = (234 / f) * 0.3048;
+    const quarterRadial = quarterWave * 1.05; // radials slightly longer
+
+    const fiveEighths = (585 / f) * 0.3048 * vf;
+
+    const jpoleHalf = (wavelength / 2);     // ½λ long element
+    const jpoleStub = (wavelength / 4);     // ¼λ stub
+    const jpoleGap = 0.0508;                 // ~2 inches fixed gap
+
+    const freqDisplay = `${f} MHz`;
+
+    const content = document.getElementById('resultsContent');
+    content.innerHTML = `
+      <div class="freq-display animate-in">
+        <span class="freq-display-label">// Calculated for</span>
+        <span class="freq-display-val">${freqDisplay} — λ = ${fmt(wavelength).primary}</span>
+      </div>
+
+      <!-- DIPOLE -->
+      <div class="antenna-card animate-in" style="animation-delay:0.05s">
+        <div class="antenna-card-head">
+          <div class="antenna-card-name">Half-Wave Dipole</div>
+          <span class="antenna-card-tag tag-beginner">Best for Beginners</span>
+        </div>
+        <div class="antenna-card-body">
+          <div>
+            <div class="dim-grid">
+              <div class="dim-box">
+                <span class="dim-box-label">Total Length</span>
+                <span class="dim-box-value">${fmt(dipoleTotal).primary}</span>
+                <span class="dim-box-sub">${fmt(dipoleTotal).secondary}</span>
+              </div>
+              <div class="dim-box">
+                <span class="dim-box-label">Each Leg</span>
+                <span class="dim-box-value">${fmt(dipoleEachLeg).primary}</span>
+                <span class="dim-box-sub">${fmt(dipoleEachLeg).secondary}</span>
+              </div>
+            </div>
+            <div class="antenna-notes">
+              <strong>Build notes:</strong> Cut two equal lengths of wire. Connect at center to a balun or coax. Each leg is ${fmt(dipoleEachLeg).primary}. Add 2–3% extra wire when cutting — it's easier to trim than add. Final tuning: shorten both legs equally until SWR is minimum.
+            </div>
+          </div>
+          <div class="antenna-diagram">${dipoleSVG(f)}</div>
+        </div>
+      </div>
+
+      <!-- QUARTER WAVE VERTICAL -->
+      <div class="antenna-card animate-in" style="animation-delay:0.1s">
+        <div class="antenna-card-head">
+          <div class="antenna-card-name">¼ Wave Vertical</div>
+          <span class="antenna-card-tag tag-beginner">Easy Build</span>
+        </div>
+        <div class="antenna-card-body">
+          <div>
+            <div class="dim-grid">
+              <div class="dim-box">
+                <span class="dim-box-label">Vertical Element</span>
+                <span class="dim-box-value">${fmt(quarterWave).primary}</span>
+                <span class="dim-box-sub">${fmt(quarterWave).secondary}</span>
+              </div>
+              <div class="dim-box">
+                <span class="dim-box-label">Each Radial</span>
+                <span class="dim-box-value">${fmt(quarterRadial).primary}</span>
+                <span class="dim-box-sub">${fmt(quarterRadial).secondary}</span>
+              </div>
+            </div>
+            <div class="antenna-notes">
+              <strong>Build notes:</strong> Requires a ground plane of 3–4 radials angled downward at 45°. Radials slightly longer than the vertical element (shown above). Feed directly with 50Ω coax — no balun needed. SWR should be near 1.5:1 without tuning.
+            </div>
+          </div>
+          <div class="antenna-diagram">${verticalSVG(f, false)}</div>
+        </div>
+      </div>
+
+      <!-- 5/8 WAVE VERTICAL -->
+      <div class="antenna-card animate-in" style="animation-delay:0.15s">
+        <div class="antenna-card-head">
+          <div class="antenna-card-name">⅝ Wave Vertical</div>
+          <span class="antenna-card-tag tag-intermediate">Intermediate</span>
+        </div>
+        <div class="antenna-card-body">
+          <div>
+            <div class="dim-grid">
+              <div class="dim-box">
+                <span class="dim-box-label">Vertical Element</span>
+                <span class="dim-box-value">${fmt(fiveEighths).primary}</span>
+                <span class="dim-box-sub">${fmt(fiveEighths).secondary}</span>
+              </div>
+              <div class="dim-box">
+                <span class="dim-box-label">VF Applied</span>
+                <span class="dim-box-value">${vf}</span>
+                <span class="dim-box-sub">velocity factor</span>
+              </div>
+            </div>
+            <div class="antenna-notes">
+              <strong>Build notes:</strong> Requires a matching coil at the base (~3 dBi gain vs. ¼ wave). Ground plane required — same radial setup as ¼ wave. The added length lowers the radiation angle, which improves range for ground-level contacts. Requires an L-network or base coil to match 50Ω.
+            </div>
+          </div>
+          <div class="antenna-diagram">${verticalSVG(f, true)}</div>
+        </div>
+      </div>
+
+      <!-- J-POLE -->
+      <div class="antenna-card animate-in" style="animation-delay:0.2s">
+        <div class="antenna-card-head">
+          <div class="antenna-card-name">J-Pole</div>
+          <span class="antenna-card-tag tag-intermediate">No Ground Plane Needed</span>
+        </div>
+        <div class="antenna-card-body">
+          <div>
+            <div class="dim-grid">
+              <div class="dim-box">
+                <span class="dim-box-label">Long Element (½λ)</span>
+                <span class="dim-box-value">${fmt(jpoleHalf).primary}</span>
+                <span class="dim-box-sub">${fmt(jpoleHalf).secondary}</span>
+              </div>
+              <div class="dim-box">
+                <span class="dim-box-label">Stub (¼λ)</span>
+                <span class="dim-box-value">${fmt(jpoleStub).primary}</span>
+                <span class="dim-box-sub">${fmt(jpoleStub).secondary}</span>
+              </div>
+              <div class="dim-box">
+                <span class="dim-box-label">Feed Gap</span>
+                <span class="dim-box-value">~2"</span>
+                <span class="dim-box-sub">5.1 cm fixed</span>
+              </div>
+            </div>
+            <div class="antenna-notes">
+              <strong>Build notes:</strong> No ground plane required — ideal for portable and rooftop installs. Connect coax center to long element, shield to stub. Feed tap point is ~2" up from the bottom of the stub. Can be built from 300Ω twin-lead or copper pipe. Final tuning: slide feed point up/down stub to minimize SWR.
+            </div>
+          </div>
+          <div class="antenna-diagram">${jpoleSVG(f)}</div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('emptyState').style.display = 'none';
+    content.style.display = 'block';
+  }
+
+  // Allow Enter key to calculate
+  document.getElementById('freqInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+</body>
+</html>

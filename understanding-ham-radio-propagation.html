@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Understanding Ham Radio Propagation: A Beginner's Guide to Radio Waves - Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --orange: #F05A00;
+    --orange-dim: #C24500;
+    --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414;
+    --panel: #1C1C1C;
+    --panel2: #222;
+    --border: #2A2A2A;
+    --border2: #333;
+    --muted: #666;
+    --dim: #999;
+    --body: #C8C0B0;
+    --white: #F5EFE0;
+    --green: #39D98A;
+    --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Barlow Condensed', sans-serif;
+    --body-font: 'Barlow', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body-font);
+    background: var(--charcoal);
+    color: var(--body);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* --- SCANLINE OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 9999;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+  }
+
+  /* --- NAV --- */
+  nav {
+    position: sticky; top: 0; z-index: 500;
+    background: rgba(14,14,14,0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border2);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+
+  nav::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+    font-family: var(--head);
+    font-size: 1.5rem; font-weight: 900; letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .logo-svg { flex-shrink: 0; }
+
+  .logo span { color: var(--orange); }
+
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 6px 12px; border-radius: 3px;
+    transition: color 0.2s, background 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+
+  .nav-cta {
+    background: var(--orange); color: #fff;
+    padding: 7px 16px; border-radius: 3px;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+
+  /* --- MAIN CONTENT --- */
+  .main-content {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+  }
+
+  .main-content h1 {
+    font-family: var(--head);
+    font-size: 3rem;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .main-content h2 {
+    font-family: var(--head);
+    font-size: 2rem;
+    color: var(--orange);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .main-content p {
+    margin-bottom: 1rem;
+  }
+
+  .main-content ul {
+    margin-bottom: 1rem;
+    margin-left: 1.5rem;
+  }
+
+  .main-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    background: var(--panel);
+    border-top: 1px solid var(--border2);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--head);
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  .footer-logo span {
+    color: var(--orange);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-links a {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover {
+    color: var(--orange);
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="main-content">
+  <h1>Understanding Ham Radio Propagation: A Beginner's Guide to Radio Waves</h1>
+  <p>One of the most fascinating aspects of amateur radio is understanding how radio waves travel, or propagate, across the globe. Unlike line-of-sight communication, ham radio operators can communicate over vast distances by utilizing various propagation phenomena. For beginners, grasping these concepts is key to making successful contacts and maximizing your radio's potential. This guide will introduce you to the basics of ham radio propagation.</p>
+
+  <h2>What is Radio Wave Propagation?</h2>
+  <p>Radio wave propagation refers to how radio waves travel from a transmitting antenna to a receiving antenna. The path these waves take can be influenced by many factors, including the frequency of the signal, the time of day, the season, and solar activity. Understanding these influences allows hams to predict when and where they can make contacts.</p>
+
+  <h2>Key Propagation Modes</h2>
+  <p>Different frequency bands utilize different propagation modes:</p>
+  <ul>
+    <li>**Ground Wave:** This mode follows the contour of the Earth and is most effective at lower frequencies (longwave, medium wave, and lower shortwave bands). It's reliable for short to medium distances, especially over saltwater.</li>
+    <li>**Skywave (Ionospheric Propagation):** This is the most exciting mode for long-distance (DX) communication. Radio waves are refracted (bent) by layers of charged particles in the Earth's ionosphere, allowing them to travel beyond the horizon and return to Earth hundreds or thousands of miles away. This is prevalent on HF (High Frequency) bands.</li>
+    <li>**Line-of-Sight (Tropospheric Propagation):** At VHF (Very High Frequency) and UHF (Ultra High Frequency) bands, radio waves typically travel in a straight line, similar to light. Communication is generally limited to the visual horizon, making antenna height crucial. However, atmospheric conditions can sometimes extend this range.</li>
+    <li>**Tropospheric Ducting:** Under certain atmospheric conditions, temperature inversions can create 

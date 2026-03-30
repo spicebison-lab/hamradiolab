@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RF Frequency & Wavelength Calculator – Ham Radio Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif; --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+  #nav-placeholder { position: sticky; top: 0; z-index: 500; }
+  .tool-header { position: relative; overflow: hidden; padding: 4rem 2rem 3rem; background: var(--charcoal); border-bottom: 1px solid var(--border); text-align: center; }
+  .tool-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+  .tool-header-inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+  .tool-tag { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--orange); margin-bottom: 1rem; display: block; }
+  .tool-title { font-family: var(--head); font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 900; color: var(--white); line-height: 1; margin-bottom: 1rem; }
+  .tool-desc { font-size: 1.1rem; color: var(--dim); max-width: 600px; margin: 0 auto; }
+  .main-content { max-width: 1000px; margin: 3rem auto; padding: 0 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .tool-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+  .tool-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.8rem 1.2rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); display: flex; justify-content: space-between; align-items: center; }
+  .tool-card-body { padding: 1.5rem; flex: 1; }
+  .form-group { margin-bottom: 1.2rem; }
+  label { display: block; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+  input, select { width: 100%; padding: 0.8rem; background: var(--panel2); border: 1px solid var(--border2); color: var(--white); border-radius: 3px; font-family: var(--mono); font-size: 1rem; transition: border-color 0.2s; }
+  input:focus { outline: none; border-color: var(--orange); }
+  .calc-btn { width: 100%; padding: 0.8rem; background: var(--orange); color: #fff; border: none; border-radius: 3px; font-family: var(--head); font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin-top: 0.5rem; }
+  .calc-btn:hover { background: var(--orange-dim); }
+  .calc-btn:active { transform: translateY(1px); }
+  .result-display { margin-top: 1.5rem; padding: 1.2rem; background: rgba(0,0,0,0.2); border: 1px dashed var(--border2); border-radius: 3px; display: none; }
+  .result-item { margin-bottom: 1rem; }
+  .result-item:last-child { margin-bottom: 0; }
+  .result-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .result-value { font-family: var(--mono); font-size: 1.4rem; color: var(--green); margin-top: 0.2rem; }
+  .result-value span { font-size: 0.8rem; color: var(--dim); margin-left: 4px; }
+  footer { background: var(--panel); border-top: 1px solid var(--border2); padding: 3rem 2rem; text-align: center; margin-top: 5rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.8rem; font-weight: 900; letter-spacing: 1px; color: var(--white); text-decoration: none; }
+  .footer-logo span { color: var(--orange); }
+  @media (max-width: 800px) { .main-content { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html").then(r => r.text()).then(d => document.getElementById("nav-placeholder").innerHTML = d);
+</script>
+
+<header class="tool-header">
+  <div class="tool-header-inner">
+    <span class="tool-tag">// RF Engineering Lab</span>
+    <h1 class="tool-title">Frequency <em>&</em> Wavelength</h1>
+    <p class="tool-desc">Precision RF calculations for antenna design and spectrum analysis. Built for engineers, not content farms.</p>
+  </div>
+</header>
+
+<div class="main-content">
+  <!-- CONVERTER -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <span>Converter</span>
+      <span style="color: var(--muted);">v1.0.4</span>
+    </div>
+    <div class="tool-card-body">
+      <div class="form-group">
+        <label>Frequency (MHz)</label>
+        <input type="number" id="freq-in" placeholder="e.g. 144.200" step="0.001">
+      </div>
+      <div style="text-align: center; margin: 0.5rem 0; color: var(--muted); font-family: var(--mono); font-size: 0.7rem;">— OR —</div>
+      <div class="form-group">
+        <label>Wavelength (Meters)</label>
+        <input type="number" id="wave-in" placeholder="e.g. 2.07" step="0.01">
+      </div>
+      <button class="calc-btn" onclick="runConvert()">Execute Calculation</button>
+      
+      <div id="res-convert" class="result-display">
+        <div class="result-item">
+          <div class="result-label">Calculated Frequency</div>
+          <div class="result-value" id="out-freq">0.000 <span>MHz</span></div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">Calculated Wavelength</div>
+          <div class="result-value" id="out-wave">0.00 <span>m</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HARMONICS -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <span>Harmonic Analysis</span>
+      <span style="color: var(--muted);">RF-SPEC-02</span>
+    </div>
+    <div class="tool-card-body">
+      <div class="form-group">
+        <label>Fundamental Frequency (MHz)</label>
+        <input type="number" id="fund-in" placeholder="e.g. 7.150" step="0.001">
+      </div>
+      <button class="calc-btn" onclick="runHarmonics()">Analyze Harmonics</button>
+      
+      <div id="res-harmonics" class="result-display">
+        <div class="result-item">
+          <div class="result-label">2nd Harmonic (2f)</div>
+          <div class="result-value" id="h2-out">0.000 <span>MHz</span></div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">3rd Harmonic (3f)</div>
+          <div class="result-value" id="h3-out">0.000 <span>MHz</span></div>
+        </div>
+        <div class="result-item">
+          <div class="result-label">4th Harmonic (4f)</div>
+          <div class="result-value" id="h4-out">0.000 <span>MHz</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/index.html" class="footer-logo">Ham Radio<span>Lab</span>.com</a>
+    <div class="footer-copy">© 2026 HamRadioLab.com // Engineer-Written Content</div>
+  </div>
+</footer>
+
+<script>
+  const C = 299.792458; // Speed of light in vacuum (MHz·m)
+
+  function runConvert() {
+    const f = parseFloat(document.getElementById('freq-in').value);
+    const w = parseFloat(document.getElementById('wave-in').value);
+    const res = document.getElementById('res-convert');
+    
+    if (f > 0) {
+      const calcW = C / f;
+      document.getElementById('out-freq').innerHTML = f.toFixed(3) + ' <span>MHz</span>';
+      document.getElementById('out-wave').innerHTML = calcW.toFixed(3) + ' <span>m</span>';
+      res.style.display = 'block';
+    } else if (w > 0) {
+      const calcF = C / w;
+      document.getElementById('out-freq').innerHTML = calcF.toFixed(3) + ' <span>MHz</span>';
+      document.getElementById('out-wave').innerHTML = w.toFixed(3) + ' <span>m</span>';
+      res.style.display = 'block';
+    }
+  }
+
+  function runHarmonics() {
+    const f = parseFloat(document.getElementById('fund-in').value);
+    const res = document.getElementById('res-harmonics');
+    
+    if (f > 0) {
+      document.getElementById('h2-out').innerHTML = (f * 2).toFixed(3) + ' <span>MHz</span>';
+      document.getElementById('h3-out').innerHTML = (f * 3).toFixed(3) + ' <span>MHz</span>';
+      document.getElementById('h4-out').innerHTML = (f * 4).toFixed(3) + ' <span>MHz</span>';
+      res.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>

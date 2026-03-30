@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="google-site-verification" content="CQOLBnTTIn3LsiW_gXBNtatt4Er_wrr58Tn5beri_Vk" />
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E1W7F87HNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-E1W7F87HNN');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What is APRS? A Beginner's Guide for New Ham Radio Operators – Ham Radio Lab</title>
+<meta name="description" content="APRS explained from scratch — what it is, how it works, and why new ham radio operators should care about it. A plain-English guide from a licensed engineer.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Barlow:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --orange: #F05A00; --orange-dim: #C24500; --orange-glow: rgba(240,90,0,0.18);
+    --charcoal: #141414; --panel: #1C1C1C; --panel2: #222;
+    --border: #2A2A2A; --border2: #333; --muted: #666; --dim: #999;
+    --body: #C8C0B0; --white: #F5EFE0; --green: #39D98A; --blue: #4A9EFF;
+    --mono: 'Share Tech Mono', monospace; --head: 'Barlow Condensed', sans-serif; --body-font: 'Barlow', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body-font); background: var(--charcoal); color: var(--body); line-height: 1.6; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; z-index: 9999; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; }
+  nav { position: sticky; top: 0; z-index: 500; background: rgba(14,14,14,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border2); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--orange), transparent); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--head); font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; color: var(--white); }
+  .logo span { color: var(--orange); }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a { color: var(--dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; padding: 6px 12px; border-radius: 3px; transition: color 0.2s, background 0.2s; }
+  .nav-links a:hover { color: var(--orange); background: var(--orange-glow); }
+  .nav-cta { background: var(--orange); color: #fff; padding: 7px 16px; border-radius: 3px; font-size: 0.78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+  .nav-cta:hover { background: var(--orange-dim); transform: translateY(-1px); }
+  .article-header { position: relative; overflow: hidden; padding: 4rem 2rem 3rem; background: var(--charcoal); border-bottom: 1px solid var(--border); }
+  .article-header::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(240,90,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(240,90,0,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+  .article-header::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(240,90,0,0.07), transparent 70%); }
+  .article-header-inner { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .breadcrumb a { color: var(--orange); text-decoration: none; }
+  .breadcrumb-sep { color: var(--border2); }
+  .article-tag { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; }
+  .article-tag::before { content: ''; width: 20px; height: 1px; background: var(--orange); }
+  .article-title { font-family: var(--head); font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 900; line-height: 1; color: var(--white); letter-spacing: -0.5px; margin-bottom: 1.2rem; }
+  .article-title em { color: var(--orange); font-style: normal; }
+  .article-deck { font-size: 1.05rem; color: var(--dim); line-height: 1.7; max-width: 640px; margin-bottom: 1.8rem; }
+  .article-meta-bar { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1rem 1.2rem; background: var(--panel); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+  .meta-item { display: flex; align-items: center; gap: 6px; }
+  .meta-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); }
+  .article-layout { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; display: grid; grid-template-columns: 1fr 280px; gap: 3rem; align-items: start; }
+  .article-body h2 { font-family: var(--head); font-size: 1.7rem; font-weight: 900; color: var(--white); line-height: 1.1; margin: 2.5rem 0 0.8rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .article-body h2:first-child { margin-top: 0; padding-top: 0; border-top: none; }
+  .article-body h3 { font-family: var(--head); font-size: 1.2rem; font-weight: 700; color: var(--white); margin: 1.8rem 0 0.5rem; }
+  .article-body p { color: var(--body); font-size: 0.97rem; line-height: 1.75; margin-bottom: 1.1rem; }
+  .article-body a { color: var(--orange); text-decoration: none; border-bottom: 1px solid rgba(240,90,0,0.3); transition: border-color 0.2s; }
+  .article-body a:hover { border-color: var(--orange); }
+  .article-body strong { color: var(--white); font-weight: 600; }
+  .callout { border-left: 3px solid var(--orange); background: var(--panel); padding: 1rem 1.2rem; border-radius: 0 4px 4px 0; margin: 1.5rem 0; }
+  .callout-label { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); margin-bottom: 0.4rem; }
+  .callout p { color: var(--dim); font-size: 0.9rem; margin-bottom: 0; }
+  .callout.green { border-left-color: var(--green); }
+  .callout.green .callout-label { color: var(--green); }
+  .callout.blue { border-left-color: var(--blue); }
+  .callout.blue .callout-label { color: var(--blue); }
+
+  /* APRS diagram */
+  .aprs-diagram {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.5rem; margin: 1.5rem 0;
+    font-family: var(--mono); font-size: 0.78rem;
+  }
+  .aprs-diagram-label { color: var(--orange); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+  .aprs-flow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .aprs-node { background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 0.6rem 0.9rem; text-align: center; flex: 1; min-width: 100px; }
+  .aprs-node-title { color: var(--white); font-size: 0.78rem; font-weight: 700; }
+  .aprs-node-sub { color: var(--muted); font-size: 0.65rem; margin-top: 3px; }
+  .aprs-arrow { color: var(--orange); font-size: 1.2rem; flex-shrink: 0; }
+
+  /* Use case grid */
+  .use-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin: 1.5rem 0; }
+  .use-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 1rem; }
+  .use-card-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .use-card-title { font-family: var(--head); font-size: 1rem; font-weight: 700; color: var(--white); margin-bottom: 0.3rem; }
+  .use-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+
+  .article-cta { background: var(--panel); border: 1px solid var(--border); border-top: 2px solid var(--orange); border-radius: 4px; padding: 1.8rem; margin: 2.5rem 0; text-align: center; }
+  .article-cta h3 { font-family: var(--head); font-size: 1.5rem; font-weight: 900; color: var(--white); margin-bottom: 0.4rem; }
+  .article-cta p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .cta-form { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+  .cta-input { flex: 1; min-width: 200px; background: var(--panel2); border: 1px solid var(--border2); border-radius: 3px; padding: 10px 14px; color: var(--white); font-size: 0.88rem; font-family: var(--body-font); }
+  .cta-input:focus { outline: none; border-color: var(--orange); }
+  .cta-input::placeholder { color: var(--muted); }
+  .cta-btn { background: var(--orange); color: #fff; border: none; padding: 10px 20px; border-radius: 3px; font-weight: 700; font-size: 0.88rem; cursor: pointer; font-family: var(--body-font); transition: background 0.2s; }
+  .cta-btn:hover { background: var(--orange-dim); }
+  .sidebar { position: sticky; top: 80px; }
+  .sidebar-card { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
+  .sidebar-card-head { background: var(--panel2); border-bottom: 1px solid var(--border); padding: 0.7rem 1rem; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--orange); }
+  .sidebar-card-body { padding: 1rem; }
+  .toc-list { list-style: none; }
+  .toc-list li { margin-bottom: 0.5rem; }
+  .toc-list a { color: var(--muted); text-decoration: none; font-size: 0.82rem; line-height: 1.4; display: flex; align-items: flex-start; gap: 6px; transition: color 0.2s; }
+  .toc-list a::before { content: '//'; font-family: var(--mono); font-size: 0.65rem; color: var(--border2); flex-shrink: 0; margin-top: 2px; }
+  .toc-list a:hover { color: var(--orange); }
+  .sidebar-author { display: flex; gap: 0.8rem; align-items: center; }
+  .sidebar-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--orange), var(--orange-dim)); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .sidebar-author-name { font-family: var(--head); font-size: 0.95rem; font-weight: 700; color: var(--white); }
+  .sidebar-author-bio { font-size: 0.75rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .callsign-badge { font-family: var(--mono); font-size: 0.65rem; background: var(--panel2); border: 1px solid var(--orange); color: var(--orange); padding: 1px 6px; border-radius: 2px; display: inline-block; margin-top: 4px; }
+  footer { background: #0E0E0E; border-top: 1px solid var(--border); padding: 2rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: var(--head); font-size: 1.1rem; font-weight: 900; color: var(--white); }
+  .footer-logo span { color: var(--orange); }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--orange); }
+  .footer-copy { font-family: var(--mono); font-size: 0.68rem; color: #3A3A3A; }
+  @media (max-width: 768px) { .nav-links { display: none; } .article-layout { grid-template-columns: 1fr; } .sidebar { position: static; } .use-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- SHARED NAV START -->
+<div id="nav-placeholder"></div>
+<script>
+  fetch("/nav-include.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("nav-placeholder").innerHTML = data;
+    });
+</script>
+<!-- SHARED NAV END -->
+
+<div class="article-header">
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="#">Telemetry & APRS</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>What is APRS?</span>
+    </div>
+    <div class="article-tag">Telemetry & APRS</div>
+    <h1 class="article-title">What is <em>APRS?</em><br>A Beginner's Guide for New Ham Operators</h1>
+    <p class="article-deck">APRS stands for Automatic Packet Reporting System. It sounds technical — and it is — but the core concept is simple and genuinely useful from day one. Here's what it is, how it works, and why you should care about it as a new licensee.</p>
+    <div class="article-meta-bar">
+      <span class="meta-item"><span class="meta-dot"></span> KF0WEW</span>
+      <span class="meta-item"><span class="meta-dot"></span> 10 min read</span>
+      <span class="meta-item"><span class="meta-dot"></span> Beginner</span>
+      <span class="meta-item"><span class="meta-dot"></span> Updated 2026</span>
+    </div>
+  </div>
+</div>
+
+<div class="article-layout">
+  <article class="article-body">
+
+    <h2>The Simple Version First</h2>
+    <p>APRS is a real-time data network built on top of amateur radio. Stations transmit short digital packets on a shared frequency — 144.390 MHz in North America — and those packets get picked up by digipeaters (repeaters for digital data) and internet gateways, then displayed on a live map at <strong>aprs.fi</strong>.</p>
+    <p>The most common use is position tracking: a radio with GPS attached transmits your location every few minutes, and anyone can see where you are on the map in real time. But APRS can carry much more than just position data — weather readings, text messages between stations, telemetry from remote sensors, and status messages are all part of the protocol.</p>
+    <p>As someone with a background in process controls and SCADA, APRS immediately made sense to me as a concept. It's essentially a distributed telemetry network running on a licensed radio spectrum — no internet required, no monthly fees, no central server that can go down. That combination of characteristics makes it genuinely interesting from an engineering standpoint and practically useful for emergency communications.</p>
+
+    <div class="callout">
+      <div class="callout-label">// One Sentence Definition</div>
+      <p>APRS is a real-time digital data network on 144.390 MHz where ham radio stations share position, weather, telemetry, and text data visible to anyone on a live map at aprs.fi.</p>
+    </div>
+
+    <h2>How APRS Actually Works</h2>
+    <p>The protocol was developed by Bob Bruninga (WB4APR) starting in the late 1980s and has been a core part of amateur radio digital operations ever since. Understanding the three main components makes everything else click.</p>
+
+    <div class="aprs-diagram">
+      <div class="aprs-diagram-label">// APRS Network Architecture</div>
+      <div class="aprs-flow">
+        <div class="aprs-node">
+          <div class="aprs-node-title">Your Station</div>
+          <div class="aprs-node-sub">Radio + GPS<br>Transmits packets</div>
+        </div>
+        <div class="aprs-arrow">→</div>
+        <div class="aprs-node">
+          <div class="aprs-node-title">Digipeater</div>
+          <div class="aprs-node-sub">Repeats packets<br>to extend range</div>
+        </div>
+        <div class="aprs-arrow">→</div>
+        <div class="aprs-node">
+          <div class="aprs-node-title">IGate</div>
+          <div class="aprs-node-sub">Bridges RF to<br>the internet</div>
+        </div>
+        <div class="aprs-arrow">→</div>
+        <div class="aprs-node">
+          <div class="aprs-node-title">aprs.fi</div>
+          <div class="aprs-node-sub">Live map visible<br>to everyone</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>The Transmitting Station</h3>
+    <p>This is you. Your station needs a radio capable of transmitting on 144.390 MHz (any standard 2m handheld or mobile works) and a way to encode and transmit APRS packets. The simplest approach for a new operator is a smartphone app like <strong>APRSdroid</strong> (Android) or <strong>APRS.fi app</strong> connected to your radio via a cable, or a dedicated APRS-capable radio like the Kenwood TH-D74A which has everything built in.</p>
+
+    <h3>Digipeaters</h3>
+    <p>A digipeater is essentially a repeater for digital packets. When your station transmits an APRS packet, nearby digipeaters pick it up and re-transmit it, extending the range of your signal far beyond what your handheld radio could achieve on its own. Colorado Springs has solid digipeater coverage — you can check the current digipeater network for your area at aprs.fi before you ever transmit.</p>
+
+    <h3>IGates</h3>
+    <p>IGates (internet gateways) are stations that receive APRS packets over RF and forward them to the internet-connected APRS-IS (APRS Internet Service) network. This is what puts your position on the aprs.fi map. Some IGates also work in reverse, injecting internet-sourced APRS data back onto the RF network — these are called two-way IGates and they're what allows internet-connected stations to be visible on RF.</p>
+
+    <h2>What You Can Do With APRS</h2>
+
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-card-icon">📍</div>
+        <div class="use-card-title">Position Tracking</div>
+        <div class="use-card-desc">Transmit your GPS location in real time. Useful for hiking, driving, or any situation where others need to know where you are without internet.</div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-icon">🌤️</div>
+        <div class="use-card-title">Weather Stations</div>
+        <div class="use-card-desc">Connect a weather station to an APRS transmitter and contribute real-time local weather data to the network. Your readings show up on weather maps.</div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-icon">💬</div>
+        <div class="use-card-title">Text Messaging</div>
+        <div class="use-card-desc">Send short text messages between APRS-capable stations — no cell service or internet required. Practical for field operations and EmComm.</div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-icon">📡</div>
+        <div class="use-card-title">Remote Telemetry</div>
+        <div class="use-card-desc">Transmit sensor data from remote locations — temperature, voltage, water levels — back to a base station over ham radio with no internet required.</div>
+      </div>
+    </div>
+
+    <h2>Why APRS Matters for Emergency Communications</h2>
+    <p>The EmComm case for APRS is straightforward: it works when the infrastructure that everything else depends on has failed. No cell towers, no internet, no power grid required beyond a battery for your radio. During a major incident, APRS gives emergency managers a real-time operational picture of where their resources are located — something that's genuinely hard to replicate any other way in a communications-degraded environment.</p>
+    <p>ARES (Amateur Radio Emergency Service) groups use APRS extensively for resource tracking during activations. If you're planning to get involved in EmComm — which is one of the most practically valuable things a licensed operator can do — understanding and being able to operate APRS is a meaningful skill to develop early.</p>
+
+    <div class="callout blue">
+      <div class="callout-label">// The SCADA Parallel</div>
+      <p>If you have any background in industrial controls or SCADA, APRS will feel immediately familiar. It's essentially a distributed telemetry network: remote terminal units (your APRS stations) transmit data over a shared medium (144.390 MHz) to a central data aggregator (APRS-IS) displayed on a supervisory interface (aprs.fi). The implementation is different but the architecture is the same concept.</p>
+    </div>
+
+    <h2>How to Get Started With APRS</h2>
+    <p>The lowest-friction way to get started is to simply go to <strong>aprs.fi</strong> and look at what's already active in your area before you ever transmit anything. You'll see local digipeaters, active stations, and get a feel for the network density in Colorado Springs. This is free and requires nothing but a web browser.</p>
+    <p>To actually transmit, the most accessible starting point for a new Technician is the <strong>Mobilinkd TNC</strong> (about $70) — a Bluetooth device that connects your smartphone to your radio and handles the packet encoding. Pair it with APRSdroid on Android and you can be transmitting your position within an afternoon of setup. No soldering, no complex configuration.</p>
+    <p>If you already have or are considering the Kenwood TH-D74A, APRS is fully built in — GPS, packet encoding, and display all integrated. You just turn it on and configure your callsign. That radio is overkill for most beginners but if APRS and digital modes are why you got licensed, it makes the entry point very clean.</p>
+
+    <div class="callout green">
+      <div class="callout-label">// Start Here: 3 Steps to Your First APRS Transmission</div>
+      <p>1. Go to aprs.fi and find the nearest digipeater to you — confirm there's coverage in your area. 2. Get a Mobilinkd TNC and install APRSdroid on your phone. 3. Connect it to your 2m radio, configure your callsign, and transmit on 144.390 MHz. You'll show up on the map within minutes.</p>
+    </div>
+
+    <h2>The Bigger Picture</h2>
+    <p>APRS is one of the clearest examples of what makes amateur radio technically interesting beyond just voice communications. It's a working digital network, built and maintained entirely by licensed volunteers, that operates independently of any commercial infrastructure. For operators with an engineering background, it opens up a whole category of projects — remote sensing, automated reporting stations, telemetry experiments — that aren't possible with any other licensed radio service at this cost and accessibility level.</p>
+    <p>It's also just genuinely fun to pull up aprs.fi and see the real-time pulse of radio activity across the country. Once you're transmitting and your own callsign shows up on that map, the hobby starts to feel very real very fast.</p>
+
+    <div class="article-cta">
+      <h3>Get the Free Ham Radio Quick-Start Guide</h3>
+      <p>Everything you need to go from zero to licensed — plus my top gear picks for new operators.</p>
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="your@email.com">
+        <button class="cta-btn">Send It →</button>
+      </div>
+    </div>
+
+  </article>
+
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">In This Article</div>
+      <div class="sidebar-card-body">
+        <ul class="toc-list">
+          <li><a href="#">The Simple Version First</a></li>
+          <li><a href="#">How APRS Works</a></li>
+          <li><a href="#">What You Can Do With APRS</a></li>
+          <li><a href="#">APRS for EmComm</a></li>
+          <li><a href="#">How to Get Started</a></li>
+          <li><a href="#">The Bigger Picture</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">APRS Gear to Start</div>
+      <div class="sidebar-card-body">
+        <div style="padding:0.8rem; border:1px solid var(--border); border-radius:3px; margin-bottom:0.7rem;">
+          <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:0.3rem;">Easiest Entry</div>
+          <div style="font-family:var(--head); font-size:0.95rem; font-weight:700; color:var(--white);">Mobilinkd TNC</div>
+          <div style="font-family:var(--mono); font-size:0.85rem; color:var(--orange);">~$70</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px; line-height:1.4;">Bluetooth TNC + APRSdroid. No soldering required.</div>
+        </div>
+        <div style="padding:0.8rem; border:1px solid var(--border); border-radius:3px;">
+          <div style="font-family:var(--mono); font-size:0.6rem; letter-spacing:1px; text-transform:uppercase; color:var(--orange); margin-bottom:0.3rem;">All-In-One</div>
+          <div style="font-family:var(--head); font-size:0.95rem; font-weight:700; color:var(--white);">Kenwood TH-D74A</div>
+          <div style="font-family:var(--mono); font-size:0.85rem; color:var(--orange);">~$500</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:3px; line-height:1.4;">Built-in GPS, APRS, and D-STAR. No extra hardware needed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-card">
+      <div class="sidebar-card-head">About the Author</div>
+      <div class="sidebar-card-body">
+        <div class="sidebar-author">
+          <div class="sidebar-avatar">👨‍🔬</div>
+          <div>
+            <div class="sidebar-author-name">Ham Radio Lab</div>
+            <div class="sidebar-author-bio">Chemical engineer. Process controls & SCADA. Recently licensed operator based in Colorado Springs.</div>
+            <div class="callsign-badge">KF0WEW</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Ham Radio<span>Lab</span>.com</div>
+    <div class="footer-links">
+      <a href="#">About</a><a href="#">Contact</a><a href="#">Affiliate Disclosure</a><a href="#">Privacy Policy</a><a href="#">Sitemap</a>
+    </div>
+    <div class="footer-copy">© 2026 HamRadioLab.com</div>
+  </div>
+</footer>
+</body>
+</html>
